@@ -374,12 +374,12 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   -webkit-flex-direction:column;flex-direction:column;
   gap:6px;
   -webkit-flex:1;flex:1;
-  padding:55px 14px 12px; /* Recuo de 55px para o livro encaixar perfeitamente ABAIXO da luz */
+  padding:55px 14px 12px;
   align-items: center;
   text-align: center;
 }
 
-/* book cover - Proporção perfeita para não tampar a lâmpada do fundo */
+/* book cover */
 .niche-cover{
   width:68%;
   margin:0 auto 6px;
@@ -409,7 +409,6 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   z-index:3;
 }
 
-/* Letras harmônicas com o tamanho do livro */
 .niche-title{font-family:var(--font-title);font-size:11.5px;font-weight:600;color:var(--cream);line-height:1.25;letter-spacing:0.01em;width:100%;word-wrap:break-word;}
 .niche-author{font-size:11px;font-style:italic;color:var(--text-sub);width:100%;}
 
@@ -501,6 +500,25 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 .empty-state{text-align:center;padding:4rem 1rem;color:var(--text-dim);font-size:16px;font-style:italic;letter-spacing:0.05em;}
 
+/* Botão de retorno quando um livro é isolado */
+.back-shelf-container {
+  padding: 1rem 1.5rem 0;
+}
+.btn-back-shelf {
+  background: rgba(20,12,4,0.85);
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+  font-family: var(--font-title);
+  font-size: 12px;
+  padding: 0 16px;
+  height: 34px;
+  letter-spacing: 0.05em;
+}
+.btn-back-shelf:hover {
+  background: var(--wood-rich);
+  color: var(--gold-light);
+}
+
 /* ─── AJUSTES DE RESPONSIVIDADE (MOBILE) ─── */
 @media(max-width:600px){
   .site-header{
@@ -536,7 +554,6 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   }
   .header-right input{ width: 110px; }
   
-  /* Alinhamento fluido no celular */
   .niche-grid {
     padding: 0 4px;
     gap: 4px;
@@ -549,28 +566,26 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   }
   .niche-col-divider { display: none; }
   .niche-content { 
-    padding: 45px 8px 10px; /* Recuo proporcional para o celular */
+    padding: 45px 8px 10px;
     gap: 4px;
   }
   .niche-cover { width: 70%; }
 
   .list-card{padding:0.9rem 1rem;gap:12px;}
   .list-cover-wrap{width:58px;}
+  .back-shelf-container { padding: 0.8rem 1rem 0; }
 }
 </style>
 </head>
 <body>
 
 <header class="site-header">
-
   <div class="candle-scene">
     <img src="./candle-scene2_png.png" alt="Cena com vela acesa" style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;"/>
   </div>
-
   <div class="decor-scene">
     <img src="./decor-scene_png.png" alt="Decoração" />
   </div>
-
   <div class="header-right">
     <span class="user-icon">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -584,7 +599,6 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
       <button id="btn-list">Lista</button>
     </div>
   </div>
-
   <div class="orn-top">✦ ✦ ✦</div>
   <h1 class="site-title">Capítulo Compartilhado</h1>
   <div class="orn-bot">— ✦ —</div>
@@ -615,9 +629,9 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 <div id="form-area"></div>
 
+<div id="back-container"></div>
+
 <div id="books-area"><p class="empty-state">✦ Carregando a estante... ✦</p></div>
-
-
 
 <script>
 const firebaseConfig={
@@ -644,7 +658,9 @@ const COVER_BG=[
   'linear-gradient(135deg,#1a2c2c,#2a4848)',
 ];
 
-let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null;
+// isolatedBookId guardará o ID do livro se o usuário clicou nele a partir da Grade
+let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null,isolatedBookId=null;
+
 function escHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 function cvColor(t){let s=0;for(let i=0;i<(t||'').length;i++)s+=t.charCodeAt(i);return COVER_BG[s%COVER_BG.length];}
 function sKey(n){return(n||'').replace(/[.#$\[\]\/]/g,'_');}
@@ -662,9 +678,16 @@ booksRef.on('value',snap=>{
   var ct=document.getElementById('conn-text');
   if(ct){ct.textContent='Erro: '+err.message;}
 });
+
 function booksArr(){return Object.keys(books).map(function(id){return Object.assign({id:id},books[id]);});}
 function myStatus(b){var s=(b.statuses||{})[sKey(currentUser)];return s||b.status||'Quero ler';}
+
 function filtered(){
+  // Se houver um livro isolado via clique na grade, ignora os filtros temporariamente e mostra apenas ele
+  if(viewMode==='list' && isolatedBookId && books[isolatedBookId]) {
+    return [Object.assign({id:isolatedBookId}, books[isolatedBookId])];
+  }
+  
   var list=booksArr();
   if(filterStatus!=='Todos')list=list.filter(function(b){return myStatus(b)===filterStatus;});
   if(searchTerm.trim()){var t=searchTerm.trim().toLowerCase();list=list.filter(function(b){return(b.title||'').toLowerCase().indexOf(t)>-1||(b.author||'').toLowerCase().indexOf(t)>-1;});}
@@ -680,15 +703,36 @@ function render(){
   if(bc)bc.textContent=total+(total===1?' livro':' livros')+' na estante';
   var ui=document.getElementById('user-input');
   if(ui)ui.value=currentUser;
+  
   var bg=document.getElementById('btn-grid'),bl=document.getElementById('btn-list');
   if(bg){bg.classList.toggle('active',viewMode==='grid');}
   if(bl){bl.classList.toggle('active',viewMode==='list');}
+  
   var si=document.getElementById('search-input'),fs=document.getElementById('filter-status'),sm=document.getElementById('sort-mode');
   if(si)si.value=searchTerm;
   if(fs)fs.value=filterStatus;
   if(sm)sm.value=sortMode;
+  
   renderForm();
+  renderBackContainer();
   renderBooks();
+}
+
+/* ── CONTAINER DO BOTÃO VOLTAR ── */
+function renderBackContainer() {
+  var container = document.getElementById('back-container');
+  if(viewMode === 'list' && isolatedBookId) {
+    container.innerHTML = '<div class="back-shelf-container">'
+      +'<button class="btn-back-shelf" id="btn-back-shelf">↩ Ver todos os livros</button>'
+      +'</div>';
+    document.getElementById('btn-back-shelf').onclick = function() {
+      isolatedBookId = null;
+      viewMode = 'grid';
+      render();
+    };
+  } else {
+    container.innerHTML = '';
+  }
 }
 
 /* ── FORM ── */
@@ -751,7 +795,7 @@ function renderForm(){
   };
   attachRemove();
   var del=document.getElementById('f-delete');
-  if(del)del.onclick=function(){var id=editingId;editingId=null;pendingCoverData=null;booksRef.child(id).remove();};
+  if(del)del.onclick=function(){var id=editingId;editingId=null;pendingCoverData=null;booksRef.child(id).remove();isolatedBookId=null;};
 }
 
 function attachRemove(){
@@ -832,12 +876,11 @@ function renderBooks(){
       if(card)card.onclick=function(e){
         if(e.target.closest('.no-open')||e.target.closest('.edit-btn'))return;
         if(viewMode==='grid'){
+          // ATUALIZAÇÃO CRUCIAL: Ativa o isolamento do livro e muda para lista
+          isolatedBookId = book.id;
           viewMode='list';
           render();
-          setTimeout(function(){
-            var lc=document.getElementById('lcard-'+book.id);
-            if(lc)lc.scrollIntoView({behavior:'smooth',block:'center'});
-          },80);
+          window.scrollTo({top: 0, behavior: 'smooth'});
         }
       };
       var editBtn=document.getElementById('edit-btn-'+book.id);
@@ -1022,8 +1065,16 @@ function saveRating(book,value){
 }
 
 /* ── wiring ── */
-document.getElementById('btn-grid').onclick=function(){viewMode='grid';render();};
-document.getElementById('btn-list').onclick=function(){viewMode='list';render();};
+document.getElementById('btn-grid').onclick=function(){
+  isolatedBookId=null; // Reseta o isolamento se o usuário alternar manualmente pelas abas
+  viewMode='grid';
+  render();
+};
+document.getElementById('btn-list').onclick=function(){
+  isolatedBookId=null; // Reseta o isolamento para ver a lista cheia se clicar no botão Lista
+  viewMode='list';
+  render();
+};
 document.getElementById('btn-add').onclick=function(){
   editingId='new';pendingCoverData=null;render();
   setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
