@@ -361,18 +361,10 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   cursor:pointer;
   display:-webkit-flex;display:flex;
   -webkit-flex-direction:column;flex-direction:column;
-  /* Gradiente simula luz vindo de cima focado no centro do nicho */
-  background:
-    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255,210,120,0.15) 0%, transparent 75%),
-    url('./niche-bg.jpg.png') center center / cover no-repeat;
+  background: url('./niche-bg.jpg.png') center center / cover no-repeat;
   border-right:1px solid rgba(0,0,0,0.4);
-  min-height:320px;
+  min-height:340px;
   -webkit-transition:background 0.25s;transition:background 0.25s;
-}
-.niche:hover{
-  background:
-    radial-gradient(ellipse 75% 50% at 50% 0%, rgba(255,210,120,0.22) 0%, transparent 70%),
-    url('./niche-bg.jpg.png') center center / cover no-repeat;
 }
 
 .niche-content{
@@ -382,14 +374,14 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   -webkit-flex-direction:column;flex-direction:column;
   gap:6px;
   -webkit-flex:1;flex:1;
-  padding:24px 14px 12px;
+  padding:55px 14px 12px; /* Recuo de 55px para o livro encaixar perfeitamente ABAIXO da luz */
   align-items: center;
   text-align: center;
 }
 
-/* book cover - aumentado e posicionado dentro do nicho iluminado */
+/* book cover - Proporção perfeita para não tampar a lâmpada do fundo */
 .niche-cover{
-  width:75%;
+  width:68%;
   margin:0 auto 6px;
   aspect-ratio:2/3;
   border-radius:3px 3px 2px 2px;
@@ -417,7 +409,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   z-index:3;
 }
 
-/* Letras ajustadas para melhor harmonia com o livro maior */
+/* Letras harmônicas com o tamanho do livro */
 .niche-title{font-family:var(--font-title);font-size:11.5px;font-weight:600;color:var(--cream);line-height:1.25;letter-spacing:0.01em;width:100%;word-wrap:break-word;}
 .niche-author{font-size:11px;font-style:italic;color:var(--text-sub);width:100%;}
 
@@ -544,7 +536,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   }
   .header-right input{ width: 110px; }
   
-  /* Mantém a grade alinhada e sem quebrar no celular */
+  /* Alinhamento fluido no celular */
   .niche-grid {
     padding: 0 4px;
     gap: 4px;
@@ -553,11 +545,14 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
     min-width:140px;
     -webkit-flex:1 1 140px;flex:1 1 140px;
     max-width: 48%;
-    min-height: 290px;
+    min-height: 310px;
   }
-  .niche-col-divider { display: none; } /* Oculta os divisores rígidos no mobile para fluir em grid */
-  .niche-content { padding: 16px 8px 10px; gap: 4px;}
-  .niche-cover { width: 80%; }
+  .niche-col-divider { display: none; }
+  .niche-content { 
+    padding: 45px 8px 10px; /* Recuo proporcional para o celular */
+    gap: 4px;
+  }
+  .niche-cover { width: 70%; }
 
   .list-card{padding:0.9rem 1rem;gap:12px;}
   .list-cover-wrap{width:58px;}
@@ -870,7 +865,7 @@ function renderBooks(){
 }
 
 function peopleOf(book){
-  var p=book.progress||{},r=book.ratings||{},s=book.statuses||{},d=book.dates||{};
+  var p=book.progress||{},r=book.ratings||{},s=book.statuses||{}, d=book.dates||{};
   var keys=[];
   var allKeys=Object.keys(p).concat(Object.keys(r)).concat(Object.keys(s)).concat(Object.keys(d));
   for(var i=0;i<allKeys.length;i++){if(keys.indexOf(allKeys[i])===-1)keys.push(allKeys[i]);}
