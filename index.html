@@ -79,7 +79,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .site-header{
   position:relative;
   text-align:center;
-  padding:1.8rem 220px 1.4rem;
+  padding:1.2rem 170px 1rem;
   overflow:hidden;
   background:url('./wood-bg.jpg.png') center center / cover no-repeat;
   border-bottom:2px solid var(--wood-edge);
@@ -111,7 +111,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .decor-scene{
   position:absolute;
   top:0;right:0;
-  width:210px;
+  width:160px;
   height:100%;
   pointer-events:none;
   overflow:hidden;
@@ -126,7 +126,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .candle-scene{
   position:absolute;
   top:0;left:0;
-  width:200px;
+  width:160px;
   height:100%;
   pointer-events:none;
   overflow:hidden;
@@ -135,7 +135,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 /* header right */
 .header-right{
   position:absolute;
-  top:0.8rem;right:1.2rem;
+  top:0.6rem;right:0.8rem;
   display:-webkit-flex;
   display:flex;
   -webkit-align-items:center;
@@ -177,7 +177,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 .site-title{
   font-family:var(--font-title);
-  font-size:clamp(1.8rem,5.5vw,3.8rem);
+  font-size:clamp(1.4rem,3.8vw,2.8rem);
   font-weight:700;
   color:var(--gold-light);
   letter-spacing:0.07em;
@@ -331,8 +331,8 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 /* each book niche */
 .niche{
-  -webkit-flex:1 1 180px;flex:1 1 180px;
-  min-width:150px;max-width:260px;
+  -webkit-flex:1 1 160px;flex:1 1 160px;
+  min-width:140px;max-width:220px;
   position:relative;
   padding:22px 14px 14px;
   cursor:pointer;
@@ -345,7 +345,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
     radial-gradient(ellipse 75% 55% at 50% -5%, rgba(212,130,42,0.18) 0%, transparent 65%),
     url('./niche-bg.jpg.png') center center / cover no-repeat;
   border-right:1px solid rgba(0,0,0,0.5);
-  min-height:360px;
+  min-height:300px;
   -webkit-transition:opacity 0.25s;transition:opacity 0.25s;
 }
 .niche:hover{
@@ -369,11 +369,11 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   z-index:1;
 }
 
-.niche-content{position:relative;z-index:2;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:7px;-webkit-flex:1;flex:1;padding:8px 10px 10px;}
+.niche-content{position:relative;z-index:2;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:7px;-webkit-flex:1;flex:1;padding:18px 18px 14px;}
 
 /* book cover */
 .niche-cover{
-  width:75%;margin:0 auto;aspect-ratio:2/3;
+  width:55%;margin:0 auto;aspect-ratio:2/3;
   border-radius:3px 3px 2px 2px;overflow:hidden;
   -webkit-box-shadow:2px 4px 16px rgba(0,0,0,0.75),inset -2px 0 5px rgba(0,0,0,0.4);
   box-shadow:2px 4px 16px rgba(0,0,0,0.75),inset -2px 0 5px rgba(0,0,0,0.4);
