@@ -180,6 +180,32 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .view-toggle button{height:34px;padding:0 13px;font-family:var(--font-title);font-size:11px;letter-spacing:0.1em;background:rgba(10,6,2,0.85);color:var(--gold);border-color:var(--gold-dim);}
 .view-toggle button.active{background:-webkit-linear-gradient(135deg,#5a2a0a,#3d1a06);background:linear-gradient(135deg,#5a2a0a,#3d1a06);color:var(--gold-light);border-color:var(--gold);}
 
+/* Botão de Lista de Desejos Exclusivo */
+.wishlist-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0px 24px 8px;
+  margin-top: -4px;
+  background:-webkit-linear-gradient(180deg,#1a1006 0%,#140c04 100%);
+  background:linear-gradient(180deg,#1a1006 0%,#140c04 100%);
+}
+.btn-wishlist-view {
+  height: 32px;
+  padding: 0 14px;
+  font-family: var(--font-title);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  background: rgba(20,12,4,0.7);
+  color: var(--text-sub);
+  border-color: var(--wood-edge);
+}
+.btn-wishlist-view.active {
+  background: #7a2218;
+  color: #ffdddd;
+  border-color: #b03a2e;
+  box-shadow: 0 0 8px rgba(122, 34, 24, 0.4);
+}
+
 .orn-top{
   display:-webkit-flex;
   display:flex;
@@ -234,10 +260,9 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   -webkit-flex-wrap:wrap;flex-wrap:wrap;
   gap:8px;
   -webkit-align-items:center;align-items:center;
-  padding:0.85rem 1.5rem;
+  padding:0.85rem 1.5rem 0.4rem;
   background:-webkit-linear-gradient(180deg,#1a1006 0%,#140c04 100%);
   background:linear-gradient(180deg,#1a1006 0%,#140c04 100%);
-  border-bottom:3px solid var(--wood-edge);
   -webkit-box-shadow:0 4px 18px rgba(0,0,0,0.55);
   box-shadow:0 4px 18px rgba(0,0,0,0.55);
   border-top:1px solid rgba(201,168,76,0.18);
@@ -414,6 +439,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 /* status badge */
 .sb{font-size:10px;padding:2px 6px;border-radius:var(--radius-sm);letter-spacing:0.04em;display:inline-block;margin:2px 0;}
+.sb-estante{background:rgba(74,53,30,0.5);color:#dfbc88;}
 .sb-quero{background:rgba(100,80,40,0.45);color:#c4a96a;}
 .sb-lendo{background:rgba(140,90,10,0.5);color:#f0c060;}
 .sb-lido{background:rgba(40,80,35,0.5);color:#80c070;}
@@ -489,18 +515,40 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 }
 .btn-del-prog svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;}
 
+/* AJUSTADO: Seção de andamento para celular ficar em grade alinhada lado-a-lado */
 .my-progress{
-  display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;
-  gap:8px;-webkit-flex-wrap:wrap;flex-wrap:wrap;
-  padding:10px 12px;
-  background:rgba(16,9,3,0.65);
-  border:1px solid rgba(74,46,16,0.5);border-radius:var(--radius-md);margin-top:8px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  row-gap: 8px;
+  column-gap: 12px;
+  padding: 12px;
+  background: rgba(16,9,3,0.65);
+  border: 1px solid rgba(74,46,16,0.5);
+  border-radius: var(--radius-md);
+  margin-top: 8px;
 }
-.my-progress label{font-size:13px;font-style:italic;color:var(--text-sub);}
-.my-progress input[type="number"]{width:76px;height:32px;font-size:14px;}
-.my-progress input[type="date"]{width:145px;height:32px;font-size:13px;color-scheme:dark;}
-.my-progress select{height:32px;font-size:14px;}
-.my-progress button{height:32px;padding:0 14px;font-size:14px;}
+.my-progress label{
+  font-size:13px;
+  font-style:italic;
+  color:var(--text-sub);
+  justify-self: end;
+  white-space: nowrap;
+}
+.my-progress input, .my-progress select {
+  width: 100% !important;
+  height: 34px;
+}
+.my-progress input[type="date"]{
+  color-scheme:dark;
+}
+.my-progress button.btn-save-progress {
+  grid-column: 1 / span 2;
+  height:34px;
+  width: 100%;
+  margin-top: 4px;
+}
+
 .no-user-hint{font-size:13px;font-style:italic;color:var(--text-dim);margin-top:8px;}
 
 .ratings-row{display:-webkit-flex;display:flex;gap:16px;-webkit-flex-wrap:wrap;flex-wrap:wrap;font-size:13px;color:var(--text-sub);margin-top:8px;}
@@ -587,11 +635,20 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   .list-card{padding:0.9rem 1rem;gap:12px;}
   .list-cover-wrap{width:58px;}
   .back-shelf-container { padding: 0.8rem 1rem 0; }
+  
+  /* Mantém layout lado a lado impecável no mobile */
+  .my-progress {
+    grid-template-columns: 60px 1fr;
+    column-gap: 8px;
+    row-gap: 6px;
+    padding: 10px;
+  }
 }
 </style>
 </head>
 <body>
 
+<!-- ═══════════════ HEADER ═══════════════ -->
 <header class="site-header">
   <div class="candle-scene">
     <img src="./candle-scene2_png.png" alt="Cena com vela acesa" style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;"/>
@@ -617,15 +674,23 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   <div class="orn-bot">— ✦ —</div>
 </header>
 
+<!-- BARRA DE SELEÇÃO DA LISTA DE DESEJOS -->
+<div class="wishlist-toggle-container">
+  <button id="btn-wishlist-toggle" class="btn-wishlist-view">LISTA DE DESEJOS</button>
+</div>
+
+<!-- CONN -->
 <div class="conn-bar">
   <span class="conn-dot" id="conn-dot"></span>
   <span id="conn-text">Conectando...</span>
 </div>
 
+<!-- TOOLBAR -->
 <div class="toolbar">
   <input type="text" id="search-input" placeholder="🔍  Buscar por autor ou título"/>
   <select id="filter-status">
     <option value="Todos">Todos os status</option>
+    <option value="Na estante">Na estante</option>
     <option value="Quero ler">Quero ler</option>
     <option value="Lendo">Lendo</option>
     <option value="Lido">Lido</option>
@@ -640,10 +705,13 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 </div>
 <div class="book-count-bar" id="book-count">—</div>
 
+<!-- FORM -->
 <div id="form-area"></div>
 
+<!-- BACK BUTTON CONTAINER FOR SINGLE BOOK VIEW -->
 <div id="back-container"></div>
 
+<!-- BOOKS -->
 <div id="books-area"><p class="empty-state">✦ Carregando a estante... ✦</p></div>
 
 <script>
@@ -660,8 +728,8 @@ firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 const booksRef=db.ref("books");
 
-const STATUS_OPTIONS=['Quero ler','Lendo','Lido','Abandonado'];
-const STATUS_CLS={'Quero ler':'sb-quero','Lendo':'sb-lendo','Lido':'sb-lido','Abandonado':'sb-aband'};
+const STATUS_OPTIONS=['Na estante','Quero ler','Lendo','Lido','Abandonado'];
+const STATUS_CLS={'Na estante':'sb-estante','Quero ler':'sb-quero','Lendo':'sb-lendo','Lido':'sb-lido','Abandonado':'sb-aband'};
 const COVER_BG=[
   'linear-gradient(135deg,#3d2510,#5a3418)',
   'linear-gradient(135deg,#1a2d18,#2a4a28)',
@@ -671,13 +739,12 @@ const COVER_BG=[
   'linear-gradient(135deg,#1a2c2c,#2a4848)',
 ];
 
-let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null,isolatedBookId=null;
+let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null,isolatedBookId=null,showWishlistOnly=false;
 
 function escHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 function cvColor(t){let s=0;for(let i=0;i<(t||'').length;i++)s+=t.charCodeAt(i);return COVER_BG[s%COVER_BG.length];}
 function sKey(n){return(n||'').replace(/[.#$\[\]\/]/g,'_');}
 
-// NOVA FUNÇÃO: Padroniza o Nome com Primeira Letra Maiúscula e o restante minúscula
 function padronizarNome(n){
   if(!n) return '';
   var limpo = n.trim();
@@ -708,31 +775,65 @@ booksRef.on('value',snap=>{
 });
 
 function booksArr(){return Object.keys(books).map(function(id){return Object.assign({id:id},books[id]);});}
-function myStatus(b){var s=(b.statuses||{})[sKey(currentUser)];return s||b.status||'Quero ler';}
+function myStatus(b){var s=(b.statuses||{})[sKey(currentUser)];return s||b.status||'Na estante';}
+
+// Função auxiliar para ordenação alfanumérica natural (ex: 1, 2, 10, 11)
+function naturalCompare(a, b) {
+  var ax = [], bx = [];
+  a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]); });
+  b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]); });
+  while(ax.length && bx.length) {
+    var an = ax.shift(), bn = bx.shift();
+    var nn = (an[0] - bn[0]);
+    if(nn) return nn;
+    var sn = an[1].localeCompare(bn[1], 'pt-BR');
+    if(sn) return sn;
+  }
+  return ax.length - bx.length;
+}
 
 function filtered(){
   if(viewMode==='list' && isolatedBookId && books[isolatedBookId]) {
     return [Object.assign({id:isolatedBookId}, books[isolatedBookId])];
   }
   var list=booksArr();
+  
+  // REGRA: Filtrar de acordo com o botão "Lista de Desejos"
+  list = list.filter(function(b){
+    return showWishlistOnly ? (b.wishlist === true) : (!b.wishlist);
+  });
+
   if(filterStatus!=='Todos')list=list.filter(function(b){return myStatus(b)===filterStatus;});
   if(searchTerm.trim()){var t=searchTerm.trim().toLowerCase();list=list.filter(function(b){return(b.title||'').toLowerCase().indexOf(t)>-1||(b.author||'').toLowerCase().indexOf(t)>-1;});}
-  if(sortMode==='recent')list.sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0);});
-  else if(sortMode==='title')list.sort(function(a,b){return(a.title||'').localeCompare(b.title||'','pt-BR');});
-  else if(sortMode==='author')list.sort(function(a,b){return(a.author||'').localeCompare(b.author||'','pt-BR');});
+  
+  if(sortMode=='recent') {
+    list.sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0);});
+  } else if(sortMode==='title') {
+    list.sort(function(a,b){return naturalCompare(a.title||'', b.title||'');});
+  } else if(sortMode==='author') {
+    list.sort(function(a,b){
+      var compAuthor = (a.author||'').localeCompare(b.author||'','pt-BR');
+      if(compAuthor !== 0) return compAuthor;
+      return naturalCompare(a.title||'', b.title||'');
+    });
+  }
   return list;
 }
 
 function render(){
-  var total=booksArr().length;
+  var total=filtered().length;
   var bc=document.getElementById('book-count');
-  if(bc)bc.textContent=total+(total===1?' livro':' livros')+' na estante';
+  if(bc) bc.textContent=total+(total===1?' livro':' livros')+(showWishlistOnly?' na lista de desejos':' na estante');
+  
   var ui=document.getElementById('user-input');
   if(ui)ui.value=currentUser;
   
   var bg=document.getElementById('btn-grid'),bl=document.getElementById('btn-list');
   if(bg){bg.classList.toggle('active',viewMode==='grid');}
   if(bl){bl.classList.toggle('active',viewMode==='list');}
+  
+  var btnWish = document.getElementById('btn-wishlist-toggle');
+  if(btnWish) { btnWish.classList.toggle('active', showWishlistOnly); }
   
   var si=document.getElementById('search-input'),fs=document.getElementById('filter-status'),sm=document.getElementById('sort-mode');
   if(si)si.value=searchTerm;
@@ -781,7 +882,7 @@ function renderForm(){
     +'<div class="wish-row">'
       +'<input type="checkbox" id="f-wishlist"'+(book.wishlist?' checked':'')+'/>'
       +'<label for="f-wishlist">📌 Lista de desejos</label>'
-      +'<span class="wish-desc">— livro ainda não comprado (aparece com $ nos cards)</span>'
+      +'<span class="wish-desc">— move o livro para a aba separada de desejos</span>'
     +'</div>'
     +'<div class="form-field" style="margin-bottom:12px;">'
       +'<label>Foto da capa</label>'
@@ -861,22 +962,26 @@ function saveForm(existing){
   var errEl=document.getElementById('form-error');
   if(!title||!author||!pages||pages<=0){errEl.textContent='Preencha título, autor e páginas.';errEl.style.display='block';return;}
   errEl.style.display='none';
-  var nb;
-  if(editingId==='new'){
-    nb={title:title,author:author,pages:pages,wishlist:wishlist,cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
-    booksRef.push(nb).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
+  
+  // AJUSTADO: Status Default agora é "Na estante"
+  if(editingId=='new'){
+    var nb={title:title,author:author,pages:pages,wishlist:wishlist,status:'Na estante',cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
+    booksRef.push(nb).then(function() {
+       editingId=null;pendingCoverData=null; // FECHA AUTOMATICAMENTE APÓS SALVAR
+    }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
   } else {
-    nb=Object.assign({},existing);
+    var nb=Object.assign({},existing);
     nb.title=title;nb.author=author;nb.pages=pages;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
-    booksRef.child(editingId).set(nb).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
+    booksRef.child(editingId).set(nb).then(function() {
+       editingId=null;pendingCoverData=null; // FECHA AUTOMATICAMENTE APÓS SALVAR
+    }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
   }
-  editingId=null;pendingCoverData=null;
 }
 
 function renderBooks(){
   var area=document.getElementById('books-area');
   var list=filtered();
-  if(list.length===0){area.innerHTML='<p class="empty-state">✦ Nenhum livro encontrado ✦</p>';return;}
+  if(list.length===0){area.innerHTML='<p class="empty-state">✦ Nenhum livro encontrado nesta seção ✦</p>';return;}
 
   if(viewMode==='grid'){
     var html='<div class="shelf-area"><div class="shelf-rail-top"></div><div class="niche-grid">';
@@ -912,7 +1017,6 @@ function renderBooks(){
         setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
       };
       
-      // Mapeamento dos botões de lixeira dinamicamente
       var people=peopleOf(book);
       for(var pIdx=0;pIdx<people.length;pIdx++){
         (function(pName){
@@ -957,7 +1061,6 @@ function peopleOf(book){
   for(var i=0;i<allKeys.length;i++){if(keys.indexOf(allKeys[i])===-1)keys.push(allKeys[i]);}
   var names=keys.map(function(k){return(p[k]&&p[k].name)||k;});
   
-  // Trata e padroniza os nomes lidos da base para evitar duplicidades ocultas
   var formattedNames = [];
   for(var i=0;i<names.length;i++){
     var standard = padronizarNome(names[i]);
@@ -971,7 +1074,7 @@ function peopleOf(book){
 
 function renderNiche(book){
   var ms=myStatus(book);
-  var scls=STATUS_CLS[ms]||'sb-quero';
+  var scls=STATUS_CLS[ms]||'sb-estante';
   var progress=book.progress||{};
   var people=peopleOf(book);
 
@@ -987,9 +1090,9 @@ function renderNiche(book){
 
   var coverHtml;
   if(book.cover){
-    coverHtml='<div class="niche-cover"><img src="'+book.cover+'" alt="Capa"/>'+(book.wishlist?'<div class="wish-badge">$</div>':'')+'</div>';
+    coverHtml='<div class="niche-cover"><img src="'+book.cover+'" alt="Capa"/></div>';
   } else {
-    coverHtml='<div class="niche-cover no-img" style="background:'+cvColor(book.title)+'">📖'+(book.wishlist?'<div class="wish-badge">$</div>':'')+'</div>';
+    coverHtml='<div class="niche-cover no-img" style="background:'+cvColor(book.title)+'">📖</div>';
   }
 
   return '<div id="card-'+book.id+'" class="niche">'
@@ -1020,11 +1123,10 @@ function renderListCard(book){
   for(var i=0;i<people.length;i++){
     var name=people[i],key=sKey(name),p=progress[key];
     var pct=p?Math.min(100,Math.round((p.page/book.pages)*100)):0;
-    var ps=statuses[key]||'Quero ler',pcls=STATUS_CLS[ps]||'sb-quero';
+    var ps=statuses[key]||'Na estante',pcls=STATUS_CLS[ps]||'sb-estante';
     var d=dates[key]||{};
     var dstr=d.start||d.end?'<span style="font-size:11px;color:var(--text-dim);">📅 '+(d.start||'')+(d.start&&d.end?' → ':'')+d.end+'</span>':'';
     
-    // ATUALIZAÇÃO CRUCIAL: Inclusão do botão de lixeira SVG ao lado de cada leitor
     progHtml+='<div class="progress-row-item">'
       +'<div class="progress-row-content">'
         +'<div class="progress-row-label">'
@@ -1052,6 +1154,7 @@ function renderListCard(book){
     coverHtml='<div class="list-cover no-img" style="background:'+cvColor(book.title)+'">📖</div>';
   }
 
+  // REESTRUTURADO EM GRID: Alinhamentos móveis e caixas corrigidas
   var myControls=currentUser
     ?'<div class="my-progress no-open">'
       +'<label>Status</label>'
@@ -1064,14 +1167,13 @@ function renderListCard(book){
       +'<input type="date" id="date-start-'+book.id+'" value="'+myDs+'"/>'
       +'<label>Fim</label>'
       +'<input type="date" id="date-end-'+book.id+'" value="'+myDe+'"/>'
-      +'<button id="prog-save-'+book.id+'" class="primary">Salvar</button>'
+      +'<button id="prog-save-'+book.id+'" class="primary btn-save-progress">Salvar</button>'
     +'</div>'
   :'<p class="no-user-hint">Digite seu nome no topo para registrar progresso.</p>';
 
   return '<div id="lcard-'+book.id+'" class="list-card">'
     +'<div class="list-cover-wrap">'
       +coverHtml
-      +(book.wishlist?'<div style="text-align:center;margin-top:5px;"><span class="list-wish-badge">$ Lista de desejos</span></div>':'')
     +'</div>'
     +'<div class="list-body">'
       +'<div class="list-head"><div>'
@@ -1106,9 +1208,8 @@ function saveProgress(book){
   var ds=document.getElementById('date-start-'+book.id);
   var de=document.getElementById('date-end-'+book.id);
   var page=Math.max(0,Math.min(book.pages,parseInt((pi&&pi.value)||0,10)||0));
-  var status=ss?ss.value:'Quero ler';
+  var status=ss?ss.value:'Na estante';
   
-  // Garante o nome padronizado antes de enviar as atualizações pro banco
   var sName = padronizarNome(currentUser);
   var key=sKey(sName);
   var updates={};
@@ -1137,6 +1238,14 @@ document.getElementById('btn-list').onclick=function(){
   viewMode='list';
   render();
 };
+
+// Toggle Exclusivo para alternar a Visualização da Lista de Desejos
+document.getElementById('btn-wishlist-toggle').onclick=function(){
+  showWishlistOnly = !showWishlistOnly;
+  isolatedBookId = null; 
+  render();
+};
+
 document.getElementById('btn-add').onclick=function(){
   editingId='new';pendingCoverData=null;render();
   setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
