@@ -180,24 +180,30 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .view-toggle button{height:34px;padding:0 13px;font-family:var(--font-title);font-size:11px;letter-spacing:0.1em;background:rgba(10,6,2,0.85);color:var(--gold);border-color:var(--gold-dim);}
 .view-toggle button.active{background:-webkit-linear-gradient(135deg,#5a2a0a,#3d1a06);background:linear-gradient(135deg,#5a2a0a,#3d1a06);color:var(--gold-light);border-color:var(--gold);}
 
-/* Botão de Lista de Desejos Exclusivo */
+/* CORRIGIDO: Container da Lista de Desejos centralizado e alinhado */
 .wishlist-toggle-container {
   display: flex;
-  justify-content: flex-end;
-  padding: 0px 24px 8px;
-  margin-top: -4px;
-  background:-webkit-linear-gradient(180deg,#1a1006 0%,#140c04 100%);
-  background:linear-gradient(180deg,#1a1006 0%,#140c04 100%);
+  justify-content: center;
+  padding: 12px 24px;
+  background: var(--wood-dark);
+  border-bottom: 1px solid rgba(74,46,16,0.3);
 }
 .btn-wishlist-view {
-  height: 32px;
-  padding: 0 14px;
+  height: 36px;
+  padding: 0 24px;
   font-family: var(--font-title);
   font-size: 11px;
   letter-spacing: 0.08em;
   background: rgba(20,12,4,0.7);
-  color: var(--text-sub);
-  border-color: var(--wood-edge);
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+.btn-wishlist-view:hover {
+  background: rgba(40,25,10,0.8);
+  border-color: var(--gold);
+  color: var(--gold-light);
 }
 .btn-wishlist-view.active {
   background: #7a2218;
@@ -515,7 +521,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 }
 .btn-del-prog svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;}
 
-/* AJUSTADO: Seção de andamento para celular ficar em grade alinhada lado-a-lado */
+/* Seção de andamento para celular */
 .my-progress{
   display: grid;
   grid-template-columns: auto 1fr;
@@ -636,7 +642,6 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   .list-cover-wrap{width:58px;}
   .back-shelf-container { padding: 0.8rem 1rem 0; }
   
-  /* Mantém layout lado a lado impecável no mobile */
   .my-progress {
     grid-template-columns: 60px 1fr;
     column-gap: 8px;
@@ -674,7 +679,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   <div class="orn-bot">— ✦ —</div>
 </header>
 
-<!-- BARRA DE SELEÇÃO DA LISTA DE DESEJOS -->
+<!-- BARRA DE SELEÇÃO DA LISTA DE DESEJOS (CORRIGIDO ALINHAMENTO ABAIXO) -->
 <div class="wishlist-toggle-container">
   <button id="btn-wishlist-toggle" class="btn-wishlist-view">LISTA DE DESEJOS</button>
 </div>
@@ -777,7 +782,6 @@ booksRef.on('value',snap=>{
 function booksArr(){return Object.keys(books).map(function(id){return Object.assign({id:id},books[id]);});}
 function myStatus(b){var s=(b.statuses||{})[sKey(currentUser)];return s||b.status||'Na estante';}
 
-// Função auxiliar para ordenação alfanumérica natural (ex: 1, 2, 10, 11)
 function naturalCompare(a, b) {
   var ax = [], bx = [];
   a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]); });
@@ -798,7 +802,6 @@ function filtered(){
   }
   var list=booksArr();
   
-  // REGRA: Filtrar de acordo com o botão "Lista de Desejos"
   list = list.filter(function(b){
     return showWishlistOnly ? (b.wishlist === true) : (!b.wishlist);
   });
@@ -963,17 +966,16 @@ function saveForm(existing){
   if(!title||!author||!pages||pages<=0){errEl.textContent='Preencha título, autor e páginas.';errEl.style.display='block';return;}
   errEl.style.display='none';
   
-  // AJUSTADO: Status Default agora é "Na estante"
   if(editingId=='new'){
     var nb={title:title,author:author,pages:pages,wishlist:wishlist,status:'Na estante',cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
     booksRef.push(nb).then(function() {
-       editingId=null;pendingCoverData=null; // FECHA AUTOMATICAMENTE APÓS SALVAR
+       editingId=null;pendingCoverData=null;render(); // CORRIGIDO: render() acionado fecha automaticamente
     }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
   } else {
     var nb=Object.assign({},existing);
     nb.title=title;nb.author=author;nb.pages=pages;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
     booksRef.child(editingId).set(nb).then(function() {
-       editingId=null;pendingCoverData=null; // FECHA AUTOMATICAMENTE APÓS SALVAR
+       editingId=null;pendingCoverData=null;render(); // CORRIGIDO: render() acionado fecha automaticamente
     }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
   }
 }
@@ -1154,7 +1156,6 @@ function renderListCard(book){
     coverHtml='<div class="list-cover no-img" style="background:'+cvColor(book.title)+'">📖</div>';
   }
 
-  // REESTRUTURADO EM GRID: Alinhamentos móveis e caixas corrigidas
   var myControls=currentUser
     ?'<div class="my-progress no-open">'
       +'<label>Status</label>'
@@ -1239,7 +1240,6 @@ document.getElementById('btn-list').onclick=function(){
   render();
 };
 
-// Toggle Exclusivo para alternar a Visualização da Lista de Desejos
 document.getElementById('btn-wishlist-toggle').onclick=function(){
   showWishlistOnly = !showWishlistOnly;
   isolatedBookId = null; 
