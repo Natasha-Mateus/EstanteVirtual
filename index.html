@@ -180,7 +180,6 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .view-toggle button{height:34px;padding:0 13px;font-family:var(--font-title);font-size:11px;letter-spacing:0.1em;background:rgba(10,6,2,0.85);color:var(--gold);border-color:var(--gold-dim);}
 .view-toggle button.active{background:-webkit-linear-gradient(135deg,#5a2a0a,#3d1a06);background:linear-gradient(135deg,#5a2a0a,#3d1a06);color:var(--gold-light);border-color:var(--gold);}
 
-/* CORRIGIDO: Container da Lista de Desejos centralizado e alinhado */
 .wishlist-toggle-container {
   display: flex;
   justify-content: center;
@@ -653,10 +652,9 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 </head>
 <body>
 
-<!-- ═══════════════ HEADER ═══════════════ -->
 <header class="site-header">
   <div class="candle-scene">
-    <img src="./candle-scene2_png.png" alt="Cena com vela acesa" style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;"/>
+    <img src="./candle-scene_2.png" alt="Cena com vela acesa" style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;"/>
   </div>
   <div class="decor-scene">
     <img src="./decor-scene_png.png" alt="Decoração" />
@@ -679,18 +677,15 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   <div class="orn-bot">— ✦ —</div>
 </header>
 
-<!-- BARRA DE SELEÇÃO DA LISTA DE DESEJOS (CORRIGIDO ALINHAMENTO ABAIXO) -->
 <div class="wishlist-toggle-container">
   <button id="btn-wishlist-toggle" class="btn-wishlist-view">LISTA DE DESEJOS</button>
 </div>
 
-<!-- CONN -->
 <div class="conn-bar">
   <span class="conn-dot" id="conn-dot"></span>
   <span id="conn-text">Conectando...</span>
 </div>
 
-<!-- TOOLBAR -->
 <div class="toolbar">
   <input type="text" id="search-input" placeholder="🔍  Buscar por autor ou título"/>
   <select id="filter-status">
@@ -710,13 +705,10 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 </div>
 <div class="book-count-bar" id="book-count">—</div>
 
-<!-- FORM -->
 <div id="form-area"></div>
 
-<!-- BACK BUTTON CONTAINER FOR SINGLE BOOK VIEW -->
 <div id="back-container"></div>
 
-<!-- BOOKS -->
 <div id="books-area"><p class="empty-state">✦ Carregando a estante... ✦</p></div>
 
 <script>
@@ -969,13 +961,13 @@ function saveForm(existing){
   if(editingId=='new'){
     var nb={title:title,author:author,pages:pages,wishlist:wishlist,status:'Na estante',cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
     booksRef.push(nb).then(function() {
-       editingId=null;pendingCoverData=null;render(); // CORRIGIDO: render() acionado fecha automaticamente
+       editingId=null;pendingCoverData=null;render();
     }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
   } else {
     var nb=Object.assign({},existing);
     nb.title=title;nb.author=author;nb.pages=pages;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
     booksRef.child(editingId).set(nb).then(function() {
-       editingId=null;pendingCoverData=null;render(); // CORRIGIDO: render() acionado fecha automaticamente
+       editingId=null;pendingCoverData=null;render();
     }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
   }
 }
