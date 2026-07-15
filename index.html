@@ -75,6 +75,24 @@ button.primary:hover{background:-webkit-linear-gradient(135deg,#6e3410,#4d2208);
 button.danger{color:#c07070;border-color:rgba(160,60,60,0.5);}
 button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
+/* Erro global flutuante */
+#global-error-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(100, 20, 20, 0.95);
+  border: 1px solid #c07070;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  font-family: var(--font-body);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+
 /* ─── HEADER ─── */
 .site-header{
   position:relative;
@@ -452,7 +470,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .niche-prog-row{font-size:11px;}
 .niche-prog-label{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;color:var(--text-sub);margin-bottom:2px;font-size:10.5px;}
 .prog-track{height:4px;background:rgba(90,52,24,0.5);border-radius:2px;overflow:hidden;}
-.prog-fill{height:100%;background:gradient(linear,left top,right top,from(#d4822a),to(#c9a84c));background:linear-gradient(90deg,#d4822a,#c9a84c);}
+.prog-fill{height:100%;background:-webkit-linear-gradient(left,#d4822a,#c9a84c);background:linear-gradient(90deg,#d4822a,#c9a84c);}
 
 /* niche ornament */
 .niche-ornament{text-align:center;color:var(--gold-dim);font-size:10px;letter-spacing:0.15em;margin-top:4px;opacity:0.4;}
@@ -472,6 +490,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 /* shelf bottom rail */
 .shelf-rail-bot{
   height:22px;
+  background:-webkit-linear-gradient(top,var(--wood-rich) 0%,var(--wood-edge) 40%,var(--wood-rail) 100%);
   background:linear-gradient(180deg,var(--wood-rich) 0%,var(--wood-edge) 40%,var(--wood-rail) 100%);
   border-top:2px solid rgba(255,200,80,0.12);
   -webkit-box-shadow:0 6px 20px rgba(0,0,0,0.8);box-shadow:0 6px 20px rgba(0,0,0,0.8);
@@ -481,6 +500,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .list-wrap{padding:1.2rem 1.5rem 3rem;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:14px;}
 .list-card{
   cursor:pointer;
+  background:-webkit-linear-gradient(135deg,rgba(26,16,7,0.97),rgba(18,10,3,0.97));
   background:linear-gradient(135deg,rgba(26,16,7,0.97),rgba(18,10,3,0.97));
   border:1px solid var(--border-gold);border-radius:var(--radius-lg);
   padding:1.1rem 1.4rem;display:-webkit-flex;display:flex;gap:18px;
@@ -503,7 +523,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .progress-row-content{-webkit-flex:1;flex:1;min-width:0;}
 .progress-row-label{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;font-size:13px;color:var(--text-sub);margin-bottom:3px;align-items:center;flex-wrap:wrap;gap:4px;}
 .progress-track{height:5px;background:rgba(90,52,24,0.5);border-radius:3px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#d4822a,#c9a84c);}
+.progress-fill{height:100%;background:-webkit-linear-gradient(left,#d4822a,#c9a84c);background:linear-gradient(90deg,#d4822a,#c9a84c);}
 .progress-empty{font-size:13px;font-style:italic;color:var(--text-dim);}
 
 /* Botão de excluir progresso (Lixeira) */
@@ -594,6 +614,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   gap:12px;margin-bottom:1.4rem;
 }
 .crono-stat-card{
+  background:-webkit-linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
   background:linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
   border:1px solid var(--border-gold);border-radius:var(--radius-md);
   padding:0.9rem 0.8rem;text-align:center;
@@ -604,6 +625,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .crono-stat-delta{font-size:11px;color:#80c070;margin-top:3px;}
 
 .crono-session-card{
+  background:-webkit-linear-gradient(135deg,rgba(26,16,7,0.97),rgba(18,10,3,0.99));
   background:linear-gradient(135deg,rgba(26,16,7,0.97),rgba(18,10,3,0.99));
   border:1px solid var(--border-gold);border-radius:var(--radius-lg);
   padding:1.3rem 1.4rem;margin-bottom:1.4rem;
@@ -718,6 +740,11 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 </head>
 <body>
 
+<div id="global-error-toast">
+  <span style="font-weight:bold; font-size:18px;">⚠️</span>
+  <span id="global-error-text">Ocorreu um erro no banco de dados.</span>
+</div>
+
 <header class="site-header">
   <div class="candle-scene">
     <img src="./candle-scene_2_removebg.png" alt="Cena com vela acesa" style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;"/>
@@ -809,6 +836,20 @@ let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',s
 let allSessions={},myActiveSession=null,myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
 let activeSessionListenerRef=null,statsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null;
 
+// Função utilitária para capturar e exibir erros visíveis do Firebase
+function mostrarErro(err) {
+  console.error("Erro do Firebase:", err);
+  const toast = document.getElementById("global-error-toast");
+  const text = document.getElementById("global-error-text");
+  if (toast && text) {
+    text.textContent = `Erro: ${err.message || "Falha na gravação dos dados. Verifique suas regras do Firebase."}`;
+    toast.style.display = "flex";
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 6000);
+  }
+}
+
 function escHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 function cvColor(t){let s=0;for(let i=0;i<(t||'').length;i++)s+=t.charCodeAt(i);return COVER_BG[s%COVER_BG.length];}
 function sKey(n){return(n||'').replace(/[.#$\[\]\/]/g,'_');}
@@ -840,755 +881,872 @@ function attachUserListeners(){
   myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
   if(!currentUser){render();return;}
   var key=sKey(currentUser);
-  activeSessionListenerRef=activeSessionsRef.child(key);
-  activeSessionListenerRef.on('value',function(snap){
-    myActiveSession=snap.val()||null;
-    if(myActiveSession)myActiveSession.id=key;
-    if(activeTab==='cronometro')renderCronometro();
-    manageCronoTimer();
-  });
-  statsListenerRef=statsRef.child(key);
-  statsListenerRef.on('value',function(snap){
-    var v=snap.val()||{};
-    myStats={currentStreak:v.currentStreak||0,longestStreak:v.longestStreak||0,lastSessionDate:v.lastSessionDate||''};
-    if(activeTab==='cronometro')renderCronometro();
-  });
+  
+  activeSessionListenerRef = activeSessionsRef.child(key);
+  activeSessionListenerRef.on("value", snap => {
+    myActiveSession = snap.val();
+    render();
+  }, err => mostrarErro(err));
+
+  statsListenerRef = statsRef.child(key);
+  statsListenerRef.on("value", snap => {
+    if(snap.exists()) {
+      myStats = snap.val();
+    }
+    render();
+  }, err => mostrarErro(err));
 }
 
-booksRef.on('value',snap=>{
-  books=snap.val()||{};
-  var dot=document.getElementById('conn-dot');
-  if(dot){dot.classList.add('ok');}
-  var ct=document.getElementById('conn-text');
-  if(ct){ct.textContent='Conectado';}
+// Monitorar conexao
+db.ref(".info/connected").on("value", snap => {
+  const dot=document.getElementById("conn-dot");
+  const txt=document.getElementById("conn-text");
+  if(!dot||!txt)return;
+  if(snap.val()===true){
+    dot.className="conn-dot ok";
+    txt.textContent="Conectado";
+  }else{
+    dot.className="conn-dot";
+    txt.textContent="Conectando...";
+  }
+}, err => mostrarErro(err));
+
+// Monitorar livros global
+booksRef.on("value", snap => {
+  books = snap.val()||{};
   render();
-},err=>{
-  var ct=document.getElementById('conn-text');
-  if(ct){ct.textContent='Erro: '+err.message;}
-});
+}, err => mostrarErro(err));
 
-sessionsRef.on('value',snap=>{
-  allSessions=snap.val()||{};
-  if(activeTab==='cronometro')renderCronometro();
-});
+// Monitorar sessões geral (histórico)
+sessionsRef.on("value", snap => {
+  allSessions = snap.val()||{};
+  render();
+}, err => mostrarErro(err));
 
-function booksArr(){return Object.keys(books).map(function(id){return Object.assign({id:id},books[id]);});}
-function myStatus(b){var s=(b.statuses||{})[sKey(currentUser)];return s||b.status||'Na estante';}
+document.addEventListener("DOMContentLoaded",()=>{
+  loadUser();
+  const ui = document.getElementById("user-input");
+  if(ui) ui.value = currentUser;
 
-function naturalCompare(a, b) {
-  var ax = [], bx = [];
-  a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]); });
-  b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]); });
-  while(ax.length && bx.length) {
-    var an = ax.shift(), bn = bx.shift();
-    var nn = (an[0] - bn[0]);
-    if(nn) return nn;
-    var sn = an[1].localeCompare(bn[1], 'pt-BR');
-    if(sn) return sn;
-  }
-  return ax.length - bx.length;
-}
-
-function filtered(){
-  if(viewMode==='list' && isolatedBookId && books[isolatedBookId]) {
-    return [Object.assign({id:isolatedBookId}, books[isolatedBookId])];
-  }
-  var list=booksArr();
-  
-  list = list.filter(function(b){
-    return activeTab==='desejos' ? (b.wishlist === true) : (!b.wishlist);
+  document.getElementById("btn-user-search").addEventListener("click",()=>{
+    const n = document.getElementById("user-input").value;
+    saveUser(n);
+  });
+  document.getElementById("user-input").addEventListener("keyup",e=>{
+    if(e.key==='Enter') saveUser(e.target.value);
   });
 
-  if(filterStatus!=='Todos')list=list.filter(function(b){return myStatus(b)===filterStatus;});
-  if(searchTerm.trim()){var t=searchTerm.trim().toLowerCase();list=list.filter(function(b){return(b.title||'').toLowerCase().indexOf(t)>-1||(b.author||'').toLowerCase().indexOf(t)>-1;});}
-  
-  if(sortMode=='recent') {
-    list.sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0);});
-  } else if(sortMode==='title') {
-    list.sort(function(a,b){return naturalCompare(a.title||'', b.title||'');});
-  } else if(sortMode==='author') {
-    list.sort(function(a,b){
-      var compAuthor = (a.author||'').localeCompare(b.author||'','pt-BR');
-      if(compAuthor !== 0) return compAuthor;
-      return naturalCompare(a.title||'', b.title||'');
-    });
+  document.getElementById("tab-estante").addEventListener("click",()=>{ switchTab('estante'); });
+  document.getElementById("tab-desejos").addEventListener("click",()=>{ switchTab('desejos'); });
+  document.getElementById("tab-cronometro").addEventListener("click",()=>{ switchTab('cronometro'); });
+
+  document.getElementById("search-input").addEventListener("input",e=>{
+    searchTerm = e.target.value.toLowerCase();
+    render();
+  });
+  document.getElementById("filter-status").addEventListener("change",e=>{
+    filterStatus = e.target.value;
+    render();
+  });
+  document.getElementById("sort-mode").addEventListener("change",e=>{
+    sortMode = e.target.value;
+    render();
+  });
+  document.getElementById("btn-add").addEventListener("click",()=>{
+    showForm();
+  });
+
+  setInterval(tickCrono, 1000);
+});
+
+function switchTab(t){
+  activeTab = t;
+  document.getElementById("tab-estante").classList.remove("active");
+  document.getElementById("tab-desejos").classList.remove("active");
+  document.getElementById("tab-cronometro").classList.remove("active");
+
+  const tb = document.querySelector(".toolbar");
+  const bc = document.getElementById("book-count");
+
+  if(t==='estante'){
+    document.getElementById("tab-estante").classList.add("active");
+    tb.style.display = "flex";
+    bc.style.display = "block";
+    isolatedBookId = null;
+  } else if(t==='desejos'){
+    document.getElementById("tab-desejos").classList.add("active");
+    tb.style.display = "flex";
+    bc.style.display = "block";
+    isolatedBookId = null;
+  } else {
+    document.getElementById("tab-cronometro").classList.add("active");
+    tb.style.display = "none";
+    bc.style.display = "none";
   }
-  return list;
+  render();
+}
+
+function showForm(id=null){
+  editingId = id;
+  pendingCoverData = null;
+  const area = document.getElementById("form-area");
+  
+  let bk = {title:'',author:'',pages:0,status:'Na estante',rating:0,review:'',coverUrl:'',wishlist:false};
+  if(id && books[id]) bk = books[id];
+
+  const isWish = (activeTab === 'desejos');
+  const checked = (id ? bk.wishlist : isWish) ? 'checked' : '';
+
+  area.innerHTML = `
+    <div class="form-overlay">
+      <h2>${id ? '✦ Editar Livro' : '✦ Adicionar Novo Livro'}</h2>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Título *</label>
+          <input type="text" id="f-title" value="${escHtml(bk.title)}" placeholder="Ex: O Hobbit"/>
+        </div>
+        <div class="form-field">
+          <label>Autor</label>
+          <input type="text" id="f-author" value="${escHtml(bk.author)}" placeholder="Ex: J.R.R. Tolkien"/>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Total de Páginas</label>
+          <input type="number" id="f-pages" value="${bk.pages||''}" placeholder="Ex: 270"/>
+        </div>
+        <div class="form-field">
+          <label>Status</label>
+          <select id="f-status">
+            ${STATUS_OPTIONS.map(o=>`<option value="${o}" ${bk.status===o?'selected':''}>${o}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+
+      <div class="wish-row">
+        <input type="checkbox" id="f-wish" ${checked}/>
+        <div>
+          <label for="f-wish">Lista de Desejos</label>
+          <div class="wish-desc">Marque se você ainda não possui o livro físico/digital.</div>
+        </div>
+      </div>
+
+      <div class="cover-row">
+        <div class="cover-preview" id="f-cover-prev">
+          ${bk.coverUrl ? `<img src="${bk.coverUrl}"/>` : '📖'}
+        </div>
+        <div class="cover-controls">
+          <label style="font-size:13px;color:var(--text-sub);font-style:italic;">Capa do Livro</label>
+          <input type="file" id="f-file" accept="image/*"/>
+          <div class="hint">Escolha uma imagem para usar como capa.</div>
+        </div>
+      </div>
+
+      <div class="form-error" id="f-err"></div>
+      <div class="form-actions">
+        <button class="primary" id="btn-f-save">✦ Salvar</button>
+        <button id="btn-f-cancel">Cancelar</button>
+        ${id ? `<button class="danger spacer-btn" id="btn-f-del">Excluir Livro</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  document.getElementById("f-file").addEventListener("change", e=>{
+    const file = e.target.files[0];
+    if(!file)return;
+    const reader = new FileReader();
+    reader.onload = ev=>{
+      pendingCoverData = ev.target.result;
+      document.getElementById("f-cover-prev").innerHTML = `<img src="${pendingCoverData}"/>`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("btn-f-cancel").addEventListener("click", hideForm);
+  document.getElementById("btn-f-save").addEventListener("click", saveForm);
+  if(id){
+    document.getElementById("btn-f-del").addEventListener("click", deleteBook);
+  }
+
+  area.scrollIntoView({behavior:'smooth'});
+}
+
+function hideForm(){
+  document.getElementById("form-area").innerHTML = "";
+  editingId = null;
+  pendingCoverData = null;
+}
+
+function saveForm(){
+  const title = document.getElementById("f-title").value.trim();
+  const author = document.getElementById("f-author").value.trim();
+  const pages = parseInt(document.getElementById("f-pages").value)||0;
+  const status = document.getElementById("f-status").value;
+  const wishlist = document.getElementById("f-wish").checked;
+  const errDiv = document.getElementById("f-err");
+
+  if(!title){
+    errDiv.textContent = "O título é obrigatório.";
+    errDiv.style.display = "block";
+    return;
+  }
+  errDiv.style.display = "none";
+
+  let old = {progress:{}};
+  if(editingId && books[editingId]) old = books[editingId];
+
+  let coverUrl = old.coverUrl||'';
+  if(pendingCoverData) coverUrl = pendingCoverData;
+
+  const data = {
+    title,
+    author,
+    pages,
+    status,
+    coverUrl,
+    wishlist,
+    rating: old.rating||0,
+    review: old.review||'',
+    progress: old.progress||{},
+    updatedAt: firebase.database.ServerValue.TIMESTAMP
+  };
+
+  if(!editingId){
+    data.createdAt = firebase.database.ServerValue.TIMESTAMP;
+    booksRef.push(data)
+      .then(() => hideForm())
+      .catch(err => {
+        mostrarErro(err);
+        errDiv.textContent = "Falha ao gravar no Firebase: " + err.message;
+        errDiv.style.display = "block";
+      });
+  } else {
+    booksRef.child(editingId).update(data)
+      .then(() => hideForm())
+      .catch(err => {
+        mostrarErro(err);
+        errDiv.textContent = "Falha ao atualizar no Firebase: " + err.message;
+        errDiv.style.display = "block";
+      });
+  }
+}
+
+function deleteBook(){
+  if(!editingId)return;
+  if(!confirm("Tem certeza que deseja excluir permanentemente este livro?"))return;
+  booksRef.child(editingId).remove()
+    .then(()=>{
+      hideForm();
+      isolatedBookId = null;
+    })
+    .catch(err => mostrarErro(err));
+}
+
+function getBookUserProgress(bk, u){
+  if(!bk.progress||!u) return null;
+  const k = sKey(u);
+  return bk.progress[k]||null;
+}
+
+function saveBookUserProgress(bookId, pgVal, dVal, finished){
+  if(!bookId||!currentUser)return;
+  const k = sKey(currentUser);
+  const bk = books[bookId];
+  if(!bk)return;
+
+  let progressUpdate = {
+    page: pgVal,
+    date: dVal||new Date().toISOString().split('T')[0]
+  };
+
+  const tasks = [];
+
+  // Se progresso atingiu o limite de paginas e esta Lendo, muda pra Lido
+  if(bk.pages > 0 && pgVal >= bk.pages && bk.status === 'Lendo' && finished) {
+    tasks.push(booksRef.child(bookId).child("status").set("Lido").catch(err => mostrarErro(err)));
+  }
+
+  tasks.push(booksRef.child(bookId).child("progress").child(k).set(progressUpdate).catch(err => mostrarErro(err)));
+
+  Promise.all(tasks).then(()=>{
+    render();
+  });
+}
+
+function removeBookUserProgress(bookId){
+  if(!bookId||!currentUser)return;
+  if(!confirm("Deseja mesmo zerar seu progresso neste livro?"))return;
+  const k = sKey(currentUser);
+  booksRef.child(bookId).child("progress").child(k).remove()
+    .then(() => render())
+    .catch(err => mostrarErro(err));
+}
+
+function rateBook(bookId, stars){
+  if(!bookId)return;
+  booksRef.child(bookId).child("rating").set(stars)
+    .catch(err => mostrarErro(err));
 }
 
 function render(){
-  var ui=document.getElementById('user-input');
-  if(ui)ui.value=currentUser;
-
-  var tE=document.getElementById('tab-estante'),tD=document.getElementById('tab-desejos'),tC=document.getElementById('tab-cronometro');
-  if(tE)tE.classList.toggle('active',activeTab==='estante');
-  if(tD)tD.classList.toggle('active',activeTab==='desejos');
-  if(tC)tC.classList.toggle('active',activeTab==='cronometro');
-
-  var toolbar=document.querySelector('.toolbar');
-  var bookCountBar=document.getElementById('book-count');
-  var booksArea=document.getElementById('books-area');
-  var cronoArea=document.getElementById('crono-area');
-  var formArea=document.getElementById('form-area');
+  const listMode = (currentUser && !isolatedBookId);
+  const booksArea = document.getElementById("books-area");
+  const cronoArea = document.getElementById("crono-area");
+  const backContainer = document.getElementById("back-container");
 
   if(activeTab==='cronometro'){
-    if(toolbar)toolbar.style.display='none';
-    if(bookCountBar)bookCountBar.style.display='none';
-    if(booksArea)booksArea.style.display='none';
-    if(cronoArea)cronoArea.style.display='';
-    if(formArea)formArea.innerHTML='';
-    document.getElementById('back-container').innerHTML='';
+    booksArea.style.display = "none";
+    backContainer.innerHTML = "";
+    cronoArea.style.display = "block";
     renderCronometro();
-    manageCronoTimer();
     return;
   }
-  if(toolbar)toolbar.style.display='';
-  if(bookCountBar)bookCountBar.style.display='';
-  if(booksArea)booksArea.style.display='';
-  if(cronoArea)cronoArea.style.display='none';
-  manageCronoTimer();
 
-  var total=filtered().length;
-  var bc=document.getElementById('book-count');
-  if(bc) bc.textContent=total+(total===1?' livro':' livros')+(activeTab==='desejos'?' na lista de desejos':' na estante');
+  cronoArea.style.display = "none";
+  booksArea.style.display = "block";
 
-  var si=document.getElementById('search-input'),fs=document.getElementById('filter-status'),sm=document.getElementById('sort-mode');
-  if(si)si.value=searchTerm;
-  if(fs)fs.value=filterStatus;
-  if(sm)sm.value=sortMode;
+  // Filtrar lista de desejos vs estante normal
+  let arr = Object.keys(books).map(id=>({id, ...books[id]}));
   
-  renderForm();
-  renderBackContainer();
-  renderBooks();
-}
-
-function renderBackContainer() {
-  var container = document.getElementById('back-container');
-  if(viewMode === 'list' && isolatedBookId) {
-    container.innerHTML = '<div class="back-shelf-container">'
-      +'<button class="btn-back-shelf" id="btn-back-shelf">↩ Ver todos os livros</button>'
-      +'</div>';
-    document.getElementById('btn-back-shelf').onclick = function() {
-      isolatedBookId = null;
-      viewMode = 'grid';
-      render();
-    };
+  if(activeTab==='desejos'){
+    arr = arr.filter(b => b.wishlist === true);
   } else {
-    container.innerHTML = '';
+    arr = arr.filter(b => b.wishlist !== true);
   }
-}
 
-function renderForm(){
-  var area=document.getElementById('form-area');
-  if(!editingId){area.innerHTML='';return;}
-  var book={title:'',author:'',pages:'',cover:'',wishlist:false};
-  if(editingId!=='new'){
-    book=books[editingId];
-    if(!book){editingId=null;area.innerHTML='';return;}
-    book=Object.assign({id:editingId},book);
-    if(pendingCoverData===null)pendingCoverData=book.cover||null;
-  }
-  var prev=pendingCoverData;
-  area.innerHTML='<div class="form-overlay" id="form-card">'
-    +'<h2>'+(editingId==='new'?'✦ Adicionar livro':'✦ Editar livro')+'</h2>'
-    +'<div class="form-grid">'
-      +'<div class="form-field"><label>Título</label><input type="text" id="f-title" value="'+escHtml(book.title)+'"/></div>'
-      +'<div class="form-field"><label>Autor</label><input type="text" id="f-author" value="'+escHtml(book.author)+'"/></div>'
-      +'<div class="form-field"><label>Total de páginas</label><input type="number" id="f-pages" min="1" value="'+(book.pages||'')+'"/></div>'
-    +'</div>'
-    +'<div class="wish-row">'
-      +'<input type="checkbox" id="f-wishlist"'+(book.wishlist?' checked':'')+'/>'
-      +'<label for="f-wishlist">📌 Lista de desejos</label>'
-      +'<span class="wish-desc">— move o livro para a aba separada de desejos</span>'
-    +'</div>'
-    +'<div class="form-field" style="margin-bottom:12px;">'
-      +'<label>Foto da capa</label>'
-      +'<div class="cover-row">'
-        +'<div class="cover-preview" id="cover-preview">'+(prev?'<img src="'+prev+'"/>':'📖')+'</div>'
-        +'<div class="cover-controls">'
-          +'<input type="file" id="f-cover-file" accept="image/*"/>'
-          +'<div id="cover-remove-slot">'+(prev?'<button id="f-cover-remove" type="button" style="font-size:12px;height:28px;padding:0 10px;">Remover foto</button>':'')+'</div>'
-          +'<p class="hint" id="cover-status">JPG ou PNG. Será redimensionada automaticamente.</p>'
-        +'</div>'
-      +'</div>'
-    +'</div>'
-    +'<div class="form-error" id="form-error"></div>'
-    +'<div class="form-actions">'
-      +'<button id="f-save" class="primary">Salvar</button>'
-      +'<button id="f-cancel">Cancelar</button>'
-      +(editingId!=='new'?'<button id="f-delete" class="danger spacer-btn">Excluir livro</button>':'')
-    +'</div>'
-  +'</div>';
-  document.getElementById('f-cancel').onclick=function(){editingId=null;pendingCoverData=null;render();};
-  document.getElementById('f-save').onclick=function(){saveForm(book);};
-  document.getElementById('f-cover-file').onchange=function(e){
-    var file=e.target.files[0];if(!file)return;
-    var st=document.getElementById('cover-status');st.textContent='Processando...';
-    resizeImg(file,400,600).then(function(url){
-      pendingCoverData=url;
-      document.getElementById('cover-preview').innerHTML='<img src="'+url+'"/>';
-      st.textContent='Pronta. Clique em salvar.';
-      var slot=document.getElementById('cover-remove-slot');
-      if(!document.getElementById('f-cover-remove')){
-        slot.innerHTML='<button id="f-cover-remove" type="button" style="font-size:12px;height:28px;padding:0 10px;">Remover foto</button>';
-        attachRemove();
-      }
-    }).catch(function(){st.textContent='Erro ao processar.';});
-  };
-  attachRemove();
-  var del=document.getElementById('f-delete');
-  if(del)del.onclick=function(){var id=editingId;editingId=null;pendingCoverData=null;booksRef.child(id).remove();isolatedBookId=null;};
-}
-
-function attachRemove(){
-  var btn=document.getElementById('f-cover-remove');
-  if(btn)btn.onclick=function(){
-    pendingCoverData=null;
-    document.getElementById('cover-preview').innerHTML='📖';
-    document.getElementById('cover-status').textContent='Foto removida.';
-    document.getElementById('cover-remove-slot').innerHTML='';
-  };
-}
-
-function resizeImg(file,maxW,maxH){
-  return new Promise(function(resolve,reject){
-    var reader=new FileReader();
-    reader.onload=function(e){
-      var img=new Image();
-      img.onload=function(){
-        var w=img.width,h=img.height;
-        var r=Math.min(maxW/w,maxH/h,1);
-        w=Math.round(w*r);h=Math.round(h*r);
-        var c=document.createElement('canvas');c.width=w;c.height=h;
-        c.getContext('2d').drawImage(img,0,0,w,h);
-        var q=0.8,url=c.toDataURL('image/jpeg',q);
-        while(url.length>300000&&q>0.3){q-=0.1;url=c.toDataURL('image/jpeg',q);}
-        resolve(url);
-      };
-      img.onerror=reject;img.src=e.target.result;
-    };
-    reader.onerror=reject;reader.readAsDataURL(file);
-  });
-}
-
-function saveForm(existing){
-  var title=document.getElementById('f-title').value.trim();
-  var author=document.getElementById('f-author').value.trim();
-  var pages=parseInt(document.getElementById('f-pages').value,10);
-  var wishlist=document.getElementById('f-wishlist').checked;
-  var errEl=document.getElementById('form-error');
-  if(!title||!author||!pages||pages<=0){errEl.textContent='Preencha título, autor e páginas.';errEl.style.display='block';return;}
-  errEl.style.display='none';
-  
-  if(editingId=='new'){
-    var nb={title:title,author:author,pages:pages,wishlist:wishlist,status:'Na estante',cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
-    booksRef.push(nb).then(function() {
-       editingId=null;pendingCoverData=null;render();
-    }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
+  // Filtro de isolamento de livro (ao clicar num livro sem usuário logado)
+  if(isolatedBookId){
+    arr = arr.filter(b => b.id === isolatedBookId);
+    backContainer.innerHTML = `
+      <div class="back-shelf-container">
+        <button class="btn-back-shelf" onclick="isolatedBookId=null; render();">← Voltar para Estante</button>
+      </div>
+    `;
   } else {
-    var nb=Object.assign({},existing);
-    nb.title=title;nb.author=author;nb.pages=pages;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
-    booksRef.child(editingId).set(nb).then(function() {
-       editingId=null;pendingCoverData=null;render();
-    }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
+    backContainer.innerHTML = "";
   }
-}
 
-function renderBooks(){
-  var area=document.getElementById('books-area');
-  var list=filtered();
-  if(list.length===0){area.innerHTML='<p class="empty-state">✦ Nenhum livro encontrado nesta seção ✦</p>';return;}
-
-  if(viewMode==='grid'){
-    var html='<div class="shelf-area"><div class="shelf-rail-top"></div><div class="niche-grid">';
-    for(var i=0;i<list.length;i++){
-      html+=renderNiche(list[i]);
-      if(i<list.length-1)html+='<div class="niche-col-divider"></div>';
+  // Filtros de busca e status
+  if(!isolatedBookId){
+    if(filterStatus!=='Todos'){
+      arr = arr.filter(b => b.status === filterStatus);
     }
-    html+='</div><div class="shelf-rail-bot"></div></div>';
-    area.innerHTML=html;
+    if(searchTerm){
+      arr = arr.filter(b => 
+        (b.title||'').toLowerCase().includes(searchTerm) || 
+        (b.author||'').toLowerCase().includes(searchTerm)
+      );
+    }
+    // Ordenação
+    if(sortMode==='title'){
+      arr.sort((a,b)=>(a.title||'').localeCompare(b.title||''));
+    } else if(sortMode==='author'){
+      arr.sort((a,b)=>(a.author||'').localeCompare(b.author||''));
+    } else {
+      arr.sort((a,b)=>(b.updatedAt||0) - (a.updatedAt||0));
+    }
+  }
+
+  document.getElementById("book-count").textContent = `Exibindo ${arr.length} livro(s)`;
+
+  if(arr.length===0){
+    booksArea.innerHTML = `<p class="empty-state">✦ Nenhum livro encontrado nesta seção ✦</p>`;
+    return;
+  }
+
+  if(listMode){
+    // Exibição em Lista com Andamento de cada Leitor
+    booksArea.className = "list-wrap";
+    booksArea.innerHTML = arr.map(b => renderListCard(b)).join('');
   } else {
-    var html2='<div class="list-wrap">';
-    for(var j=0;j<list.length;j++)html2+=renderListCard(list[j]);
-    html2+='</div>';
-    area.innerHTML=html2;
-  }
-
-  for(var k=0;k<list.length;k++){
-    (function(book){
-      var card=document.getElementById('card-'+book.id);
-      if(card)card.onclick=function(e){
-        if(e.target.closest('.no-open')||e.target.closest('.edit-btn'))return;
-        if(viewMode==='grid'){
-          isolatedBookId = book.id;
-          viewMode='list';
-          render();
-          window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-      };
-      var editBtn=document.getElementById('edit-btn-'+book.id);
-      if(editBtn)editBtn.onclick=function(e){
-        e.stopPropagation();
-        editingId=book.id;pendingCoverData=null;render();
-        setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
-      };
-      
-      var people=peopleOf(book);
-      for(var pIdx=0;pIdx<people.length;pIdx++){
-        (function(pName){
-          var delProgBtn=document.getElementById('btn-del-'+book.id+'-'+sKey(pName));
-          if(delProgBtn){
-            delProgBtn.onclick=function(e){
-              e.stopPropagation();
-              if(confirm('Deseja realmente remover o progresso de "'+pName+'" neste livro?')){
-                var key=sKey(pName);
-                booksRef.child(book.id).child('progress').child(key).remove();
-                booksRef.child(book.id).child('statuses').child(key).remove();
-                booksRef.child(book.id).child('dates').child(key).remove();
-                booksRef.child(book.id).child('ratings').child(key).remove();
-              }
-            };
-          }
-        })(people[pIdx]);
-      }
-
-      var pi=document.getElementById('prog-input-'+book.id);
-      var pb=document.getElementById('prog-save-'+book.id);
-      var ds=document.getElementById('date-start-'+book.id);
-      var de=document.getElementById('date-end-'+book.id);
-      var ss=document.getElementById('status-input-'+book.id);
-      if(ds)ds.onclick=function(e){e.stopPropagation();};
-      if(de)de.onclick=function(e){e.stopPropagation();};
-      if(ss)ss.onclick=function(e){e.stopPropagation();};
-      if(pb)pb.onclick=function(e){e.stopPropagation();saveProgress(book);};
-      if(pi){pi.onclick=function(e){e.stopPropagation();};pi.onkeydown=function(e){if(e.key==='Enter'){e.stopPropagation();saveProgress(book);}};}
-      var stars=document.querySelectorAll('.rs-'+book.id);
-      for(var s=0;s<stars.length;s++){
-        (function(star){star.onclick=function(e){e.stopPropagation();saveRating(book,parseInt(star.dataset.value,10));};})(stars[s]);
-      }
-    })(list[k]);
-  }
-}
-
-function peopleOf(book){
-  var p=book.progress||{},r=book.ratings||{},s=book.statuses||{}, d=book.dates||{};
-  var keys=[];
-  var allKeys=Object.keys(p).concat(Object.keys(r)).concat(Object.keys(s)).concat(Object.keys(d));
-  for(var i=0;i<allKeys.length;i++){if(keys.indexOf(allKeys[i])===-1)keys.push(allKeys[i]);}
-  var names=keys.map(function(k){return(p[k]&&p[k].name)||k;});
-  
-  var formattedNames = [];
-  for(var i=0;i<names.length;i++){
-    var standard = padronizarNome(names[i]);
-    if(standard && formattedNames.indexOf(standard)===-1) formattedNames.push(standard);
-  }
-  
-  if(currentUser && formattedNames.indexOf(currentUser)===-1) formattedNames.push(currentUser);
-  formattedNames.sort(function(a,b){return a.localeCompare(b,'pt-BR');});
-  return formattedNames;
-}
-
-function renderNiche(book){
-  var ms=myStatus(book);
-  var scls=STATUS_CLS[ms]||'sb-estante';
-  var progress=book.progress||{};
-  var people=peopleOf(book);
-
-  var progHtml='';
-  for(var i=0;i<people.length;i++){
-    var name=people[i],key=sKey(name),p=progress[key];
-    var pct=p?Math.min(100,Math.round((p.page/book.pages)*100)):0;
-    progHtml+='<div class="niche-prog-row">'
-      +'<div class="niche-prog-label"><span>'+escHtml(name)+'</span><span>'+(p?pct+'%':'—')+'</span></div>'
-      +'<div class="prog-track"><div class="prog-fill" style="width:'+pct+'%"></div></div>'
-    +'</div>';
-  }
-
-  var coverHtml;
-  if(book.cover){
-    coverHtml='<div class="niche-cover"><img src="'+book.cover+'" alt="Capa"/></div>';
-  } else {
-    coverHtml='<div class="niche-cover no-img" style="background:'+cvColor(book.title)+'">📖</div>';
-  }
-
-  return '<div id="card-'+book.id+'" class="niche">'
-    +'<div class="niche-content">'
-      +'<button id="edit-btn-'+book.id+'" class="edit-btn no-open" title="Editar livro" style="position:absolute;top:6px;right:6px;z-index:10;width:24px;height:24px;padding:0;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
-        +'<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
-      +'</button>'
-      +coverHtml
-      +'<p class="niche-title">'+escHtml(book.title)+'</p>'
-      +'<p class="niche-author">'+escHtml(book.author)+'</p>'
-      +'<span class="sb '+scls+'">'+escHtml(ms)+'</span>'
-      +(progHtml?'<div class="niche-progress">'+progHtml+'</div>':'')
-      +'<div class="niche-ornament">— ✦ —</div>'
-    +'</div>'
-  +'</div>';
-}
-
-function renderListCard(book){
-  var ms=myStatus(book);
-  var progress=book.progress||{},ratings=book.ratings||{},statuses=book.statuses||{},dates=book.dates||{};
-  var people=peopleOf(book);
-  var mk=sKey(currentUser);
-  var myPage=(progress[mk]&&progress[mk].page)!=null?(progress[mk].page):'';
-  var myDs=(dates[mk]&&dates[mk].start)||'';
-  var myDe=(dates[mk]&&dates[mk].end)||'';
-
-  var progHtml='';
-  for(var i=0;i<people.length;i++){
-    var name=people[i],key=sKey(name),p=progress[key];
-    var pct=p?Math.min(100,Math.round((p.page/book.pages)*100)):0;
-    var ps=statuses[key]||'Na estante',pcls=STATUS_CLS[ps]||'sb-estante';
-    var d=dates[key]||{};
-    var dstr=d.start||d.end?'<span style="font-size:11px;color:var(--text-dim);">📅 '+(d.start||'')+(d.start&&d.end?' → ':'')+d.end+'</span>':'';
+    // Exibição Tradicional em Nichos da Estante
+    booksArea.className = "shelf-area";
     
-    progHtml+='<div class="progress-row-item">'
-      +'<div class="progress-row-content">'
-        +'<div class="progress-row-label">'
-          +'<span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">'+escHtml(name)+' <span class="sb '+pcls+'" style="font-size:10px;padding:1px 7px;">'+escHtml(ps)+'</span> '+dstr+'</span>'
-          +'<span>'+(p?p.page+' / '+book.pages+' · '+pct+'%':'sem registro')+'</span>'
-        +'</div>'
-        +'<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>'
-      +'</div>'
-      +'<button id="btn-del-'+book.id+'-'+key+'" class="btn-del-prog no-open" title="Remover leitor">'
-        +'<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>'
-      +'</button>'
-    +'</div>';
-  }
-
-  var ratHtml='';
-  for(var j=0;j<people.length;j++){
-    var rn=people[j],rk=sKey(rn),rv=(ratings[rk])||0;
-    ratHtml+='<span>'+escHtml(rn)+': '+starRow(rv,book.id,rn===currentUser)+'</span>';
-  }
-
-  var coverHtml;
-  if(book.cover){
-    coverHtml='<div class="list-cover"><img src="'+book.cover+'" alt="Capa"/></div>';
-  } else {
-    coverHtml='<div class="list-cover no-img" style="background:'+cvColor(book.title)+'">📖</div>';
-  }
-
-  var myControls=currentUser
-    ?'<div class="my-progress no-open">'
-      +'<label>Status</label>'
-      +'<select id="status-input-'+book.id+'">'
-        +STATUS_OPTIONS.map(function(s){return'<option value="'+s+'"'+(ms===s?' selected':'')+'>'+s+'</option>';}).join('')
-      +'</select>'
-      +'<label>Página</label>'
-      +'<input type="number" min="0" max="'+book.pages+'" id="prog-input-'+book.id+'" value="'+myPage+'"/>'
-      +'<label>Início</label>'
-      +'<input type="date" id="date-start-'+book.id+'" value="'+myDs+'"/>'
-      +'<label>Fim</label>'
-      +'<input type="date" id="date-end-'+book.id+'" value="'+myDe+'"/>'
-      +'<button id="prog-save-'+book.id+'" class="primary btn-save-progress">Salvar</button>'
-    +'</div>'
-  :'<p class="no-user-hint">Digite seu nome no topo para registrar progresso.</p>';
-
-  return '<div id="lcard-'+book.id+'" class="list-card">'
-    +'<div class="list-cover-wrap">'
-      +coverHtml
-    +'</div>'
-    +'<div class="list-body">'
-      +'<div class="list-head"><div>'
-        +'<p class="list-title">'+escHtml(book.title)+'</p>'
-        +'<p class="list-meta">'+escHtml(book.author)+' · '+book.pages+' páginas</p>'
-      +'</div>'
-      +'<button class="edit-btn no-open" id="edit-btn-'+book.id+'" title="Editar livro" style="width:30px;height:30px;padding:0;font-size:14px;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
-        +'<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
-      +'</button>'
-      +'</div>'
-      +'<div class="progress-rows">'+(progHtml||'<p class="progress-empty">Ainda sem registros.</p>')+'</div>'
-      +myControls
-      +(ratHtml?'<div class="ratings-row no-open">'+ratHtml+'</div>':'')
-    +'</div>'
-  +'</div>';
-}
-
-function starRow(current,bookId,interactive){
-  var html='';
-  for(var i=1;i<=5;i++){
-    var filled=i<=current;
-    var cls='star'+(interactive?' interactive rs-'+bookId:'')+(filled?' filled':' empty');
-    html+='<span class="'+cls+'" data-value="'+i+'">'+(filled?'★':'☆')+'</span>';
-  }
-  return html;
-}
-
-function saveProgress(book){
-  if(!currentUser)return;
-  var pi=document.getElementById('prog-input-'+book.id);
-  var ss=document.getElementById('status-input-'+book.id);
-  var ds=document.getElementById('date-start-'+book.id);
-  var de=document.getElementById('date-end-'+book.id);
-  var page=Math.max(0,Math.min(book.pages,parseInt((pi&&pi.value)||0,10)||0));
-  var status=ss?ss.value:'Na estante';
-  
-  var sName = padronizarNome(currentUser);
-  var key=sKey(sName);
-  var updates={};
-  updates['progress/'+key]={page:page,name:sName};
-  updates['statuses/'+key]=status;
-  if(ds||de)updates['dates/'+key]={start:ds?ds.value:'',end:de?de.value:''};
-  booksRef.child(book.id).update(updates);
-}
-
-function saveRating(book,value){
-  if(!currentUser)return;
-  var sName = padronizarNome(currentUser);
-  var key=sKey(sName);
-  var cur=(book.ratings||{})[key];
-  booksRef.child(book.id).child('ratings').child(key).set(cur===value?0:value);
-}
-
-/* ── CRONÔMETRO ── */
-function pad(n){return n<10?'0'+n:''+n;}
-function todayStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
-function daysBetween(a,b){var da=new Date(a+'T00:00:00'),db=new Date(b+'T00:00:00');return Math.round((db-da)/86400000);}
-function elapsedDisplay(totalSeconds){
-  var h=Math.floor(totalSeconds/3600),m=Math.floor((totalSeconds%3600)/60),s=totalSeconds%60;
-  if(h>0)return h+':'+pad(m)+':'+pad(s);
-  return pad(m)+':'+pad(s);
-}
-function formatDuration(totalSeconds){
-  var h=Math.floor(totalSeconds/3600),m=Math.round((totalSeconds%3600)/60);
-  if(h>0)return h+'h '+m+'m';
-  return m+'m';
-}
-
-function getMySessions(){
-  var key=sKey(currentUser);
-  var arr=Object.keys(allSessions).map(function(id){return Object.assign({id:id},allSessions[id]);});
-  arr=arr.filter(function(s){return s.userKey===key;});
-  arr.sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0);});
-  return arr;
-}
-
-function computeCronoStats(){
-  var mySessions=getMySessions();
-  var weekAgo=Date.now()-7*86400000;
-  var totalSeconds=0,totalSecondsWeek=0,totalPages=0,totalPagesWeek=0;
-  for(var i=0;i<mySessions.length;i++){
-    var s=mySessions[i];
-    totalSeconds+=s.durationSeconds||0;
-    totalPages+=s.pagesRead||0;
-    if((s.createdAt||0)>=weekAgo){
-      totalSecondsWeek+=s.durationSeconds||0;
-      totalPagesWeek+=s.pagesRead||0;
-    }
-  }
-  var key=sKey(currentUser);
-  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
-  var booksLido=0,booksLidoMonth=0,now=new Date();
-  for(var j=0;j<allBooksArr.length;j++){
-    var b=allBooksArr[j];
-    var st=(b.statuses&&b.statuses[key])||b.status||'Na estante';
-    if(st==='Lido'){
-      booksLido++;
-      var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
-      if(dend){
-        var dd=new Date(dend+'T00:00:00');
-        if(dd.getFullYear()===now.getFullYear()&&dd.getMonth()===now.getMonth())booksLidoMonth++;
+    let shelfHtml = `<div class="shelf-rail-top"></div><div class="niche-grid">`;
+    arr.forEach((b, idx) => {
+      if(idx > 0 && idx % 4 === 0){
+        shelfHtml += `</div><div class="shelf-rail-bot"></div><div class="shelf-rail-top"></div><div class="niche-grid">`;
+      } else if (idx > 0) {
+        shelfHtml += `<div class="niche-col-divider"></div>`;
       }
+      shelfHtml += renderNiche(b);
+    });
+    shelfHtml += `</div><div class="shelf-rail-bot"></div>`;
+    booksArea.innerHTML = shelfHtml;
+  }
+}
+
+function renderNiche(b){
+  const color = cvColor(b.title);
+  const hasCover = !!b.coverUrl;
+  
+  // Calcula progresso geral (primeiro leitor que achar, se houver)
+  let progHtml = '';
+  let maxPct = 0;
+  if(b.progress && Object.keys(b.progress).length > 0){
+    const readers = Object.keys(b.progress);
+    const firstReader = readers[0];
+    const pData = b.progress[firstReader];
+    if(b.pages > 0 && pData && pData.page){
+      maxPct = Math.min(100, Math.round((pData.page / b.pages) * 100));
+      progHtml = `
+        <div class="niche-progress">
+          <div class="niche-prog-row">
+            <div class="niche-prog-label">
+              <span>Leitor: ${escHtml(padronizarNome(firstReader))}</span>
+              <span>${maxPct}%</span>
+            </div>
+            <div class="prog-track"><div class="prog-fill" style="width:${maxPct}%"></div></div>
+          </div>
+        </div>
+      `;
     }
   }
-  return {totalSeconds:totalSeconds,totalSecondsWeek:totalSecondsWeek,totalPages:totalPages,totalPagesWeek:totalPagesWeek,booksLido:booksLido,booksLidoMonth:booksLidoMonth,mySessions:mySessions};
+
+  const editIcon = `
+    <span class="edit-btn" style="position:absolute;bottom:6px;right:6px;z-index:10;" onclick="event.stopPropagation(); showForm('${b.id}');">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </span>
+  `;
+
+  return `
+    <div class="niche" onclick="onBookClick('${b.id}')">
+      <div class="niche-content">
+        <div class="niche-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
+          ${hasCover ? `<img src="${b.coverUrl}"/>` : '📖'}
+          ${b.wishlist ? `<div class="wish-badge">❤</div>` : ''}
+        </div>
+        <div class="niche-title">${escHtml(b.title)}</div>
+        <div class="niche-author">${escHtml(b.author||'Autor desconhecido')}</div>
+        <div><span class="sb ${STATUS_CLS[b.status]||'sb-estante'}">${b.status}</span></div>
+        ${progHtml}
+        <div class="niche-ornament">❦</div>
+      </div>
+      ${editIcon}
+    </div>
+  `;
 }
 
-function startSession(){
-  if(!currentUser)return;
-  var sel=document.getElementById('crono-book-select');
-  var bookId=sel?sel.value:'';
-  if(!bookId)return;
-  var book=books[bookId];
-  if(!book)return;
-  var key=sKey(currentUser);
-  var startPage=(book.progress&&book.progress[key]&&book.progress[key].page)||0;
-  var payload={bookId:bookId,bookTitle:book.title,bookAuthor:book.author||'',bookCover:book.cover||'',bookPages:book.pages,startTime:Date.now(),startPage:startPage,currentPage:startPage};
-  activeSessionsRef.child(key).set(payload);
-}
+function renderListCard(b){
+  const color = cvColor(b.title);
+  const hasCover = !!b.coverUrl;
+  const myProg = getBookUserProgress(b, currentUser);
 
-function finishSession(){
-  if(!myActiveSession||!currentUser)return;
-  var key=sKey(currentUser);
-  var pageInput=document.getElementById('crono-page-input');
-  var endPage=Math.max(0,Math.min(myActiveSession.bookPages,parseInt((pageInput&&pageInput.value)!=null?pageInput.value:myActiveSession.currentPage,10)||0));
-  var endTime=Date.now();
-  var durationSeconds=Math.max(0,Math.round((endTime-myActiveSession.startTime)/1000));
-  var pagesRead=Math.max(0,endPage-myActiveSession.startPage);
-
-  var sessionRecord={
-    bookId:myActiveSession.bookId,bookTitle:myActiveSession.bookTitle,bookAuthor:myActiveSession.bookAuthor||'',bookCover:myActiveSession.bookCover||'',
-    userKey:key,userName:currentUser,
-    startTime:myActiveSession.startTime,endTime:endTime,durationSeconds:durationSeconds,
-    startPage:myActiveSession.startPage,endPage:endPage,pagesRead:pagesRead,
-    createdAt:endTime
-  };
-  sessionsRef.push(sessionRecord);
-
-  var book=books[myActiveSession.bookId];
-  if(book){
-    var updates={};
-    updates['progress/'+key]={page:endPage,name:currentUser};
-    var curStatus=(book.statuses&&book.statuses[key])||book.status||'Na estante';
-    var dates=(book.dates&&book.dates[key])||{};
-    if(endPage>=book.pages){
-      updates['statuses/'+key]='Lido';
-      updates['dates/'+key]={start:dates.start||'',end:dates.end||todayStr()};
-    } else if(pagesRead>0&&(curStatus==='Na estante'||curStatus==='Quero ler')){
-      updates['statuses/'+key]='Lendo';
-      updates['dates/'+key]={start:dates.start||todayStr(),end:dates.end||''};
-    }
-    booksRef.child(myActiveSession.bookId).update(updates);
+  // Calcula barra de progresso do usuário logado
+  let progBarHtml = '';
+  if(b.pages > 0){
+    const curPage = myProg ? (myProg.page||0) : 0;
+    const pct = Math.min(100, Math.round((curPage / b.pages) * 100));
+    progBarHtml = `
+      <div class="progress-row-item">
+        <div class="progress-row-content">
+          <div class="progress-row-label">
+            <span>Seu Progresso: pág. ${curPage} de ${b.pages}</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+        ${myProg ? `
+          <button class="btn-del-prog" title="Zerar progresso" onclick="event.stopPropagation(); removeBookUserProgress('${b.id}')">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </button>
+        ` : ''}
+      </div>
+    `;
+  } else {
+    progBarHtml = `<div class="progress-empty">Defina o total de páginas nas configurações para marcar progresso.</div>`;
   }
 
-  activeSessionsRef.child(key).remove();
+  // Estrelas interativas
+  let starHtml = '';
+  for(let i=1; i<=5; i++){
+    const isFilled = i <= (b.rating||0);
+    starHtml += `<span class="star interactive ${isFilled?'filled':'empty'}" onclick="event.stopPropagation(); rateBook('${b.id}', ${i})">★</span>`;
+  }
 
-  var today=todayStr();
-  var last=myStats.lastSessionDate;
-  var newStreak;
-  if(last===today)newStreak=myStats.currentStreak||1;
-  else if(last&&daysBetween(last,today)===1)newStreak=(myStats.currentStreak||0)+1;
-  else newStreak=1;
-  var newLongest=Math.max(myStats.longestStreak||0,newStreak);
-  statsRef.child(key).set({currentStreak:newStreak,longestStreak:newLongest,lastSessionDate:today});
+  // Inputs de andamento rápido
+  const curPageInput = myProg ? (myProg.page||0) : 0;
+  const curDateInput = myProg ? (myProg.date||'') : '';
+
+  const progressFormHtml = `
+    <div class="my-progress" onclick="event.stopPropagation();">
+      <label>Página atual:</label>
+      <input type="number" id="pg-${b.id}" value="${curPageInput||''}" placeholder="Ex: 45" style="width:90px;"/>
+      <label>Data leitura:</label>
+      <input type="date" id="dt-${b.id}" value="${curDateInput}"/>
+      <button class="primary btn-save-progress" onclick="saveQuickProgress('${b.id}')">Atualizar Progresso</button>
+    </div>
+  `;
+
+  return `
+    <div class="list-card" onclick="showForm('${b.id}')">
+      <div class="list-cover-wrap">
+        <div class="list-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
+          ${hasCover ? `<img src="${b.coverUrl}"/>` : '📖'}
+        </div>
+        ${b.wishlist ? `<div class="list-wish-badge">DESEJO</div>` : ''}
+      </div>
+      <div class="list-body">
+        <div class="list-head">
+          <div>
+            <div class="list-title">${escHtml(b.title)}</div>
+            <div class="list-meta">por ${escHtml(b.author||'Autor desconhecido')}</div>
+          </div>
+          <span class="sb ${STATUS_CLS[b.status]||'sb-estante'}">${b.status}</span>
+        </div>
+
+        <div class="progress-rows">
+          ${progBarHtml}
+        </div>
+
+        <div class="ratings-row">
+          <span>Avaliação: ${starHtml}</span>
+        </div>
+
+        ${progressFormHtml}
+      </div>
+    </div>
+  `;
 }
 
-function manageCronoTimer(){
-  if(cronoTimerInterval){clearInterval(cronoTimerInterval);cronoTimerInterval=null;}
-  if(activeTab==='cronometro'&&myActiveSession){
-    cronoTimerInterval=setInterval(updateLiveTimerDisplay,1000);
-    updateLiveTimerDisplay();
+function onBookClick(id){
+  if(currentUser) {
+    showForm(id);
+  } else {
+    isolatedBookId = id;
+    render();
   }
 }
-function updateLiveTimerDisplay(){
-  var el=document.getElementById('crono-live-timer');
-  if(!el||!myActiveSession)return;
-  var secs=Math.max(0,Math.round((Date.now()-myActiveSession.startTime)/1000));
-  el.textContent=elapsedDisplay(secs);
+
+function saveQuickProgress(bookId){
+  const pgVal = parseInt(document.getElementById(`pg-${bookId}`).value)||0;
+  const dVal = document.getElementById(`dt-${bookId}`).value;
+  saveBookUserProgress(bookId, pgVal, dVal, true);
+}
+
+
+/* ─── CRONÔMETRO LOGIC ─── */
+
+function tickCrono(){
+  if(activeTab !== 'cronometro'|| !myActiveSession) return;
+  const elapsed = Math.floor((Date.now() - myActiveSession.startTimestamp)/1000);
+  const display = document.getElementById("crono-live-timer");
+  if(display) display.textContent = formatSec(elapsed);
+}
+
+function formatSec(s){
+  const h = Math.floor(s/3600);
+  const m = Math.floor((s%3600)/60);
+  const sec = s%60;
+  return [
+    h.toString().padStart(2,'0'),
+    m.toString().padStart(2,'0'),
+    sec.toString().padStart(2,'0')
+  ].join(':');
 }
 
 function renderCronometro(){
-  var area=document.getElementById('crono-area');
-  if(!area)return;
+  const area = document.getElementById("crono-area");
   if(!currentUser){
-    area.innerHTML='<div class="crono-wrap"><div class="crono-intro"><h2>✦ Cronômetro de Leitura ✦</h2><p>Digite seu nome no topo da página para acompanhar sua jornada como um atleta da mente.</p></div></div>';
+    area.innerHTML = `
+      <div class="crono-wrap">
+        <div class="crono-intro">
+          <h2>Cronômetro de Leitura</h2>
+          <p class="no-user-hint">Defina seu nome no cabeçalho acima para gerenciar suas sessões e histórico de leitura.</p>
+        </div>
+      </div>
+    `;
     return;
   }
-  var stats=computeCronoStats();
-  var html='<div class="crono-wrap">';
-  html+='<div class="crono-intro"><h2>✦ Cronômetro de Leitura ✦</h2><p>Acompanhe sua jornada como um atleta da mente, '+escHtml(currentUser)+'.</p></div>';
 
-  html+='<div class="crono-stats-grid">'
-    +'<div class="crono-stat-card"><div class="crono-stat-label">Tempo total</div><div class="crono-stat-value">'+formatDuration(stats.totalSeconds)+'</div>'+(stats.totalSecondsWeek>0?'<div class="crono-stat-delta">+'+formatDuration(stats.totalSecondsWeek)+' esta semana</div>':'')+'</div>'
-    +'<div class="crono-stat-card"><div class="crono-stat-label">Páginas lidas</div><div class="crono-stat-value">'+stats.totalPages+'</div>'+(stats.totalPagesWeek>0?'<div class="crono-stat-delta">+'+stats.totalPagesWeek+' esta semana</div>':'')+'</div>'
-    +'<div class="crono-stat-card"><div class="crono-stat-label">Livros lidos</div><div class="crono-stat-value">'+stats.booksLido+'</div>'+(stats.booksLidoMonth>0?'<div class="crono-stat-delta">+'+stats.booksLidoMonth+' este mês</div>':'')+'</div>'
-    +'<div class="crono-stat-card"><div class="crono-stat-label">Dias seguidos</div><div class="crono-stat-value">'+myStats.currentStreak+'</div><div class="crono-stat-delta" style="color:var(--gold);">recorde: '+myStats.longestStreak+'</div></div>'
-  +'</div>';
+  // Filtragem dos livros: REMOVE LIVROS COM STATUS "LIDO"
+  const availableBooks = Object.keys(books)
+    .map(id => ({id, ...books[id]}))
+    .filter(b => b.status !== 'Lido');
 
-  html+='<div class="crono-session-card">';
+  // Calcular estatísticas locais do usuário logado
+  const userKey = sKey(currentUser);
+  const userSessions = Object.keys(allSessions)
+    .map(id => ({id, ...allSessions[id]}))
+    .filter(s => s.userKey === userKey);
+
+  const totalMin = userSessions.reduce((acc,curr)=> acc + (curr.durationMinutes||0), 0);
+  const totalPag = userSessions.reduce((acc,curr)=> acc + (curr.pagesRead||0), 0);
+  const countSess = userSessions.length;
+
+  let sessHtml = '';
   if(myActiveSession){
-    var elapsedNow=Math.max(0,Math.round((Date.now()-myActiveSession.startTime)/1000));
-    var cover=myActiveSession.bookCover;
-    var coverHtml=cover?'<div class="crono-session-cover"><img src="'+cover+'"/></div>':'<div class="crono-session-cover no-img" style="background:'+cvColor(myActiveSession.bookTitle)+'">📖</div>';
-    html+='<div class="crono-session-title">Sessão atual</div>'
-      +'<div class="crono-session-body">'
-        +coverHtml
-        +'<div class="crono-session-info">'
-          +'<div class="crono-session-book-title">'+escHtml(myActiveSession.bookTitle)+'</div>'
-          +'<div class="crono-session-book-author">'+escHtml(myActiveSession.bookAuthor||'')+'</div>'
-          +'<div class="crono-session-meta">'
-            +'<div class="crono-meta-item"><div class="crono-meta-label">TEMPO</div><div class="crono-meta-value" id="crono-live-timer">'+elapsedDisplay(elapsedNow)+'</div></div>'
-            +'<div class="crono-meta-item"><div class="crono-meta-label">PÁGINA</div><div class="crono-meta-value"><input type="number" min="0" max="'+myActiveSession.bookPages+'" id="crono-page-input" value="'+(myActiveSession.currentPage!=null?myActiveSession.currentPage:myActiveSession.startPage)+'"/> / '+myActiveSession.bookPages+'</div></div>'
-          +'</div>'
-        +'</div>'
-        +'<div class="crono-session-actions"><button class="primary" id="btn-finish-session">Finalizar sessão</button></div>'
-      +'</div>';
+    const bk = books[myActiveSession.bookId]||{title:'Livro desconhecido',author:'?'};
+    const color = cvColor(bk.title);
+    const hasCover = !!bk.coverUrl;
+    const elapsed = Math.floor((Date.now() - myActiveSession.startTimestamp)/1000);
+
+    // Progresso atual do livro para preview em tempo real
+    const myProg = getBookUserProgress(bk, currentUser);
+    const startPage = myProg ? (myProg.page || 0) : 0;
+    const totalPages = bk.pages || 0;
+
+    sessHtml = `
+      <div class="crono-session-card">
+        <div class="crono-session-title">Sessão em Andamento</div>
+        <div class="crono-session-body">
+          <div class="crono-session-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
+            ${hasCover ? `<img src="${bk.coverUrl}"/>` : '📖'}
+          </div>
+          <div class="crono-session-info">
+            <div class="crono-session-book-title">${escHtml(bk.title)}</div>
+            <div class="crono-session-book-author">por ${escHtml(bk.author)}</div>
+            <div class="crono-session-meta">
+              <div class="crono-meta-item">
+                <div class="crono-meta-label">TEMPO DECORRIDO</div>
+                <div class="crono-meta-value" id="crono-live-timer">${formatSec(elapsed)}</div>
+              </div>
+              <div class="crono-meta-item">
+                <div class="crono-meta-label">PÁGINAS LIDAS NESTA SESSÃO</div>
+                <div class="crono-meta-value">
+                  <input type="number" id="crono-pages-read" value="0" min="0" oninput="updatePagePreview(${startPage}, ${totalPages})"/>
+                  <span id="crono-preview-label" style="font-size: 13px; color: var(--text-sub); margin-left: 8px;">
+                    → chega na pág. ${startPage} de ${totalPages || '?' }
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="crono-session-actions">
+            <button class="primary" onclick="finalizarLeitura('${myActiveSession.bookId}')">Finalizar Sessão</button>
+            <button class="danger" onclick="cancelarLeitura()" style="margin-left:8px;">Descartar</button>
+          </div>
+        </div>
+      </div>
+    `;
   } else {
-    var candidates=booksArr().filter(function(b){return !b.wishlist;});
-    candidates.sort(function(a,b){return naturalCompare(a.title||'',b.title||'');});
-    if(candidates.length===0){
-      html+='<div class="crono-session-title">Sessão atual</div><p class="crono-empty-hint">Adicione um livro na sua estante para começar a cronometrar sua leitura.</p>';
-    } else {
-      html+='<div class="crono-session-title">Iniciar leitura</div>'
-        +'<div class="crono-start-form">'
-          +'<select id="crono-book-select">'
-            +candidates.map(function(b){return'<option value="'+b.id+'">'+escHtml(b.title)+' — '+escHtml(b.author)+'</option>';}).join('')
-          +'</select>'
-          +'<button class="primary" id="btn-start-session">▶ Iniciar leitura</button>'
-        +'</div>';
+    // Formulário de início de cronômetro
+    let options = `<option value="">-- Escolha um livro --</option>`;
+    availableBooks.forEach(b => {
+      options += `<option value="${b.id}" ${cronoSelectedBookId===b.id?'selected':''}>${escHtml(b.title)} (${b.status})</option>`;
+    });
+
+    sessHtml = `
+      <div class="crono-session-card">
+        <div class="crono-session-title">Nova Sessão</div>
+        ${availableBooks.length === 0 ? `
+          <p class="crono-empty-hint">Adicione ou altere livros na estante para iniciar (apenas livros não lidos estão listados).</p>
+        ` : `
+          <div class="crono-start-form">
+            <select id="crono-select-book" onchange="cronoSelectedBookId=this.value">
+              ${options}
+            </select>
+            <button class="primary" onclick="iniciarLeitura()">Iniciar Leitura ⏱</button>
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  // Lista do histórico
+  let histHtml = '';
+  const sortedHist = [...userSessions].sort((a,b)=>b.timestamp - a.timestamp);
+  if(sortedHist.length===0){
+    histHtml = `<p class="crono-empty-hint">Nenhuma sessão finalizada ainda.</p>`;
+  } else {
+    histHtml = `<div class="crono-history-list">`;
+    sortedHist.forEach(s => {
+      const bk = books[s.bookId]||{title:'Livro excluído',author:'?'};
+      const color = cvColor(bk.title);
+      const hasCover = !!bk.coverUrl;
+      const dateStr = new Date(s.timestamp).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+
+      histHtml += `
+        <div class="crono-history-item">
+          <div class="crono-history-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
+            ${hasCover ? `<img src="${bk.coverUrl}"/>` : '📖'}
+          </div>
+          <div class="crono-history-info">
+            <div class="crono-history-book">${escHtml(bk.title)}</div>
+            <div class="crono-history-date">${dateStr}</div>
+          </div>
+          <div class="crono-history-stats">
+            + ${s.pagesRead||0} pág.
+            <span>em ${s.durationMinutes||0} min</span>
+          </div>
+        </div>
+      `;
+    });
+    histHtml += `</div>`;
+  }
+
+  area.innerHTML = `
+    <div class="crono-wrap">
+      <div class="crono-intro">
+        <h2>Seu Diário de Leitura</h2>
+        <p>Acompanhe o tempo dedicado e as páginas viradas de sua jornada.</p>
+      </div>
+
+      <div class="crono-stats-grid">
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Minutos Lidos</div>
+          <div class="crono-stat-value">${totalMin}</div>
+        </div>
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Páginas Lidas</div>
+          <div class="crono-stat-value">${totalPag}</div>
+        </div>
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Sessões</div>
+          <div class="crono-stat-value">${countSess}</div>
+        </div>
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Sequência Atual</div>
+          <div class="crono-stat-value">${myStats.currentStreak||0} <span style="font-size:12px;">dias</span></div>
+          <div class="crono-stat-delta">Recorde: ${myStats.longestStreak||0}</div>
+        </div>
+      </div>
+
+      ${sessHtml}
+
+      <div class="crono-history-title">
+        <span>SESSÕES ANTERIORES</span>
+        <span>${countSess} registros</span>
+      </div>
+      ${histHtml}
+    </div>
+  `;
+}
+
+// Atualiza o preview ao vivo das páginas lidas no cronômetro
+function updatePagePreview(startPage, totalPages) {
+  const inputVal = parseInt(document.getElementById("crono-pages-read").value) || 0;
+  const previewLabel = document.getElementById("crono-preview-label");
+  if (previewLabel) {
+    const finalPage = startPage + inputVal;
+    const totalStr = totalPages ? totalPages : '?';
+    previewLabel.textContent = `→ chega na pág. ${finalPage} de ${totalStr}`;
+  }
+}
+
+function iniciarLeitura(){
+  const select = document.getElementById("crono-select-book");
+  if(!select)return;
+  const bookId = select.value;
+  if(!bookId){
+    alert("Escolha um livro primeiro!");
+    return;
+  }
+
+  const session = {
+    bookId: bookId,
+    startTimestamp: Date.now()
+  };
+
+  const userKey = sKey(currentUser);
+  activeSessionsRef.child(userKey).set(session)
+    .then(() => {
+      // Se o livro estava como "Na Estante" ou "Quero ler", muda para "Lendo" ao iniciar cronômetro
+      const bk = books[bookId];
+      if(bk && (bk.status === 'Na estante' || bk.status === 'Quero ler')) {
+        booksRef.child(bookId).child("status").set("Lendo")
+          .catch(err => mostrarErro(err));
+      }
+    })
+    .catch(err => mostrarErro(err));
+}
+
+function finalizarLeitura(bookId){
+  if(!myActiveSession)return;
+  const pageInput = document.getElementById("crono-pages-read");
+  const pagesRead = parseInt(pageInput.value)||0;
+
+  if(pagesRead < 0){
+    alert("A quantidade de páginas lidas não pode ser negativa.");
+    return;
+  }
+
+  const durationMs = Date.now() - myActiveSession.startTimestamp;
+  const durationMin = Math.max(1, Math.round(durationMs/60000));
+
+  const userKey = sKey(currentUser);
+  const nowStr = new Date().toISOString().split('T')[0];
+
+  // Obter progresso atualizado antes de salvar
+  const bk = books[bookId];
+  const myProg = getBookUserProgress(bk, currentUser);
+  const startPage = myProg ? (myProg.page || 0) : 0;
+  const finalPage = startPage + pagesRead;
+
+  const sessionData = {
+    userKey: userKey,
+    userName: currentUser,
+    bookId: bookId,
+    timestamp: Date.now(),
+    durationMinutes: durationMin,
+    pagesRead: pagesRead,
+    startPage: startPage,
+    endPage: finalPage
+  };
+
+  // Salvar a nova sessão no histórico de sessões
+  sessionsRef.push(sessionData)
+    .then(() => {
+      // Deletar a sessão ativa
+      return activeSessionsRef.child(userKey).remove();
+    })
+    .then(() => {
+      // Atualizar o progresso do leitor no livro com o valor acumulado
+      saveBookUserProgress(bookId, finalPage, nowStr, true);
+      // Atualizar as estatísticas de ofensiva (Streak)
+      updateStreak();
+    })
+    .catch(err => mostrarErro(err));
+}
+
+function cancelarLeitura(){
+  if(!confirm("Descartar esta sessão de leitura? O tempo decorrido não será gravado."))return;
+  const userKey = sKey(currentUser);
+  activeSessionsRef.child(userKey).remove()
+    .catch(err => mostrarErro(err));
+}
+
+function updateStreak(){
+  const userKey = sKey(currentUser);
+  const todayStr = new Date().toISOString().split('T')[0];
+  const lastDate = myStats.lastSessionDate||'';
+
+  if(lastDate === todayStr) {
+    // Já atualizou hoje, apenas atualiza a última data por garantia
+    statsRef.child(userKey).child("lastSessionDate").set(todayStr)
+      .catch(err => mostrarErro(err));
+    return;
+  }
+
+  let current = myStats.currentStreak||0;
+  let longest = myStats.longestStreak||0;
+
+  if(!lastDate){
+    current = 1;
+  } else {
+    const lastD = new Date(lastDate + 'T00:00:00');
+    const todayD = new Date(todayStr + 'T00:00:00');
+    const diffTime = Math.abs(todayD - lastD);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if(diffDays === 1) {
+      current += 1;
+    } else if(diffDays > 1) {
+      current = 1;
     }
   }
-  html+='</div>';
 
-  html+='<div class="crono-history-title">Histórico recente</div>';
-  if(stats.mySessions.length===0){
-    html+='<p class="crono-empty-hint">Suas sessões de leitura vão aparecer aqui.</p>';
-  } else {
-    html+='<div class="crono-history-list">';
-    var toShow=stats.mySessions.slice(0,10);
-    for(var i=0;i<toShow.length;i++){
-      var s=toShow[i];
-      var d=new Date(s.createdAt||s.endTime||Date.now());
-      var dateStr=pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
-      var coverH=s.bookCover?'<div class="crono-history-cover"><img src="'+s.bookCover+'"/></div>':'<div class="crono-history-cover no-img" style="background:'+cvColor(s.bookTitle)+'">📖</div>';
-      html+='<div class="crono-history-item">'
-        +coverH
-        +'<div class="crono-history-info"><div class="crono-history-book">'+escHtml(s.bookTitle)+'</div><div class="crono-history-date">'+dateStr+'</div></div>'
-        +'<div class="crono-history-stats">⏱ '+elapsedDisplay(s.durationSeconds||0)+'<span>'+(s.pagesRead||0)+' pág.</span></div>'
-      +'</div>';
-    }
-    html+='</div>';
-  }
+  if(current > longest) longest = current;
 
-  html+='</div>';
-  area.innerHTML=html;
+  const newStats = {
+    currentStreak: current,
+    longestStreak: longest,
+    lastSessionDate: todayStr
+  };
 
-  var btnStart=document.getElementById('btn-start-session');
-  if(btnStart)btnStart.onclick=function(){startSession();};
-  var btnFinish=document.getElementById('btn-finish-session');
-  if(btnFinish)btnFinish.onclick=function(){finishSession();};
-  var pageInputEl=document.getElementById('crono-page-input');
-  if(pageInputEl){
-    pageInputEl.onchange=function(){
-      if(!myActiveSession)return;
-      var v=Math.max(0,Math.min(myActiveSession.bookPages,parseInt(pageInputEl.value,10)||0));
-      pageInputEl.value=v;
-      activeSessionsRef.child(sKey(currentUser)).child('currentPage').set(v);
-    };
-  }
+  statsRef.child(userKey).set(newStats)
+    .catch(err => mostrarErro(err));
 }
-
-/* ── wiring ── */
-function goToTab(tab){
-  activeTab=tab;
-  isolatedBookId=null;
-  viewMode='grid';
-  render();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-document.getElementById('tab-estante').onclick=function(){goToTab('estante');};
-document.getElementById('tab-desejos').onclick=function(){goToTab('desejos');};
-document.getElementById('tab-cronometro').onclick=function(){goToTab('cronometro');};
-
-document.getElementById('btn-add').onclick=function(){
-  editingId='new';pendingCoverData=null;render();
-  setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
-};
-document.getElementById('search-input').oninput=function(e){searchTerm=e.target.value;renderBooks();};
-document.getElementById('filter-status').onchange=function(e){filterStatus=e.target.value;renderBooks();};
-document.getElementById('sort-mode').onchange=function(e){sortMode=e.target.value;renderBooks();};
-
-function applyUser(){
-  var n=document.getElementById('user-input').value.trim();
-  saveUser(n);
-  render();
-}
-document.getElementById('user-input').onkeydown=function(e){if(e.key==='Enter')applyUser();};
-document.getElementById('btn-user-search').onclick=applyUser;
-
-loadUser();
 </script>
 </body>
 </html>
