@@ -836,916 +836,936 @@ let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',s
 let allSessions={},myActiveSession=null,myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
 let activeSessionListenerRef=null,statsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null;
 
-// Função utilitária para capturar e exibir erros visíveis do Firebase
-function mostrarErro(err) {
-  console.error("Erro do Firebase:", err);
-  const toast = document.getElementById("global-error-toast");
-  const text = document.getElementById("global-error-text");
-  if (toast && text) {
-    text.textContent = `Erro: ${err.message || "Falha na gravação dos dados. Verifique suas regras do Firebase."}`;
-    toast.style.display = "flex";
-    setTimeout(() => {
-      toast.style.display = "none";
-    }, 6000);
+// Função utilitária para capturar e exibir erros visíveis
+function showGlobalError(msg) {
+  const t = document.getElementById("global-error-toast");
+  document.getElementById("global-error-text").innerText = msg;
+  t.style.display = "flex";
+  setTimeout(() => { t.style.display = "none"; }, 5000);
+}
+
+// Prevenção de perda de escuta
+db.ref(".info/connected").on("value", (snap) => {
+  const d = document.getElementById("conn-dot");
+  const t = document.getElementById("conn-text");
+  if (snap.val() === true) {
+    d.className = "conn-dot ok";
+    t.innerText = "Conectado à Estante";
+  } else {
+    d.className = "conn-dot";
+    t.innerText = "Reconectando...";
   }
-}
-
-function escHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
-function cvColor(t){let s=0;for(let i=0;i<(t||'').length;i++)s+=t.charCodeAt(i);return COVER_BG[s%COVER_BG.length];}
-function sKey(n){return(n||'').replace(/[.#$\[\]\/]/g,'_');}
-
-function padronizarNome(n){
-  if(!n) return '';
-  var limpo = n.trim();
-  if(!limpo) return '';
-  return limpo.charAt(0).toUpperCase() + limpo.slice(1).toLowerCase();
-}
-
-function loadUser(){
-  var raw = localStorage.getItem('epv_user')||'';
-  currentUser = padronizarNome(raw);
-  attachUserListeners();
-}
-function saveUser(n){
-  var padrao = padronizarNome(n);
-  if(padrao===currentUser)return;
-  currentUser = padrao;
-  localStorage.setItem('epv_user',padrao);
-  attachUserListeners();
-}
-
-function attachUserListeners(){
-  if(activeSessionListenerRef)activeSessionListenerRef.off();
-  if(statsListenerRef)statsListenerRef.off();
-  myActiveSession=null;
-  myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
-  if(!currentUser){render();return;}
-  var key=sKey(currentUser);
-  
-  activeSessionListenerRef = activeSessionsRef.child(key);
-  activeSessionListenerRef.on("value", snap => {
-    myActiveSession = snap.val();
-    render();
-  }, err => mostrarErro(err));
-
-  statsListenerRef = statsRef.child(key);
-  statsListenerRef.on("value", snap => {
-    if(snap.exists()) {
-      myStats = snap.val();
-    }
-    render();
-  }, err => mostrarErro(err));
-}
-
-// Monitorar conexao
-db.ref(".info/connected").on("value", snap => {
-  const dot=document.getElementById("conn-dot");
-  const txt=document.getElementById("conn-text");
-  if(!dot||!txt)return;
-  if(snap.val()===true){
-    dot.className="conn-dot ok";
-    txt.textContent="Conectado";
-  }else{
-    dot.className="conn-dot";
-    txt.textContent="Conectando...";
-  }
-}, err => mostrarErro(err));
-
-// Monitorar livros global
-booksRef.on("value", snap => {
-  books = snap.val()||{};
-  render();
-}, err => mostrarErro(err));
-
-// Monitorar sessões geral (histórico)
-sessionsRef.on("value", snap => {
-  allSessions = snap.val()||{};
-  render();
-}, err => mostrarErro(err));
-
-document.addEventListener("DOMContentLoaded",()=>{
-  loadUser();
-  const ui = document.getElementById("user-input");
-  if(ui) ui.value = currentUser;
-
-  document.getElementById("btn-user-search").addEventListener("click",()=>{
-    const n = document.getElementById("user-input").value;
-    saveUser(n);
-  });
-  document.getElementById("user-input").addEventListener("keyup",e=>{
-    if(e.key==='Enter') saveUser(e.target.value);
-  });
-
-  document.getElementById("tab-estante").addEventListener("click",()=>{ switchTab('estante'); });
-  document.getElementById("tab-desejos").addEventListener("click",()=>{ switchTab('desejos'); });
-  document.getElementById("tab-cronometro").addEventListener("click",()=>{ switchTab('cronometro'); });
-
-  document.getElementById("search-input").addEventListener("input",e=>{
-    searchTerm = e.target.value.toLowerCase();
-    render();
-  });
-  document.getElementById("filter-status").addEventListener("change",e=>{
-    filterStatus = e.target.value;
-    render();
-  });
-  document.getElementById("sort-mode").addEventListener("change",e=>{
-    sortMode = e.target.value;
-    render();
-  });
-  document.getElementById("btn-add").addEventListener("click",()=>{
-    showForm();
-  });
-
-  setInterval(tickCrono, 1000);
 });
 
-function switchTab(t){
-  activeTab = t;
-  document.getElementById("tab-estante").classList.remove("active");
-  document.getElementById("tab-desejos").classList.remove("active");
-  document.getElementById("tab-cronometro").classList.remove("active");
-
-  const tb = document.querySelector(".toolbar");
-  const bc = document.getElementById("book-count");
-
-  if(t==='estante'){
-    document.getElementById("tab-estante").classList.add("active");
-    tb.style.display = "flex";
-    bc.style.display = "block";
-    isolatedBookId = null;
-  } else if(t==='desejos'){
-    document.getElementById("tab-desejos").classList.add("active");
-    tb.style.display = "flex";
-    bc.style.display = "block";
-    isolatedBookId = null;
-  } else {
-    document.getElementById("tab-cronometro").classList.add("active");
-    tb.style.display = "none";
-    bc.style.display = "none";
-  }
-  render();
+// Ordenação Alfanumérica Natural (Ignora acentos e maiúsculas/minúsculas)
+function naturalCompare(a, b) {
+  return a.localeCompare(b, 'pt-BR', { sensitivity: 'base', numeric: true });
 }
 
-function showForm(id=null){
-  editingId = id;
-  pendingCoverData = null;
-  const area = document.getElementById("form-area");
-  
-  let bk = {title:'',author:'',pages:0,status:'Na estante',rating:0,review:'',coverUrl:'',wishlist:false};
-  if(id && books[id]) bk = books[id];
+// Formatação de nome de usuário padrão (Iniciais em maiúsculas, sem espaços extras)
+function formatUsername(name) {
+  if (!name) return "";
+  return name.trim().toLowerCase().split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
 
-  const isWish = (activeTab === 'desejos');
-  const checked = (id ? bk.wishlist : isWish) ? 'checked' : '';
+// ─── CARREGAMENTO DE DADOS (LIVROS) ───
+booksRef.on("value", (snap) => {
+  try {
+    books = snap.val() || {};
+    renderAll();
+  } catch(e) {
+    showGlobalError("Erro ao sincronizar livros: " + e.message);
+  }
+}, (err) => {
+  showGlobalError("Erro de leitura do Firebase: " + err.message);
+});
+
+// Listener global para input de usuário
+document.getElementById("user-input").addEventListener("input", (e) => {
+  currentUser = formatUsername(e.target.value);
+});
+
+// Busca ou filtro por usuário ao clicar no botão de busca
+document.getElementById("btn-user-search").addEventListener("click", () => {
+  renderAll();
+});
+
+document.getElementById("search-input").addEventListener("input", (e) => {
+  searchTerm = e.target.value.toLowerCase();
+  renderAll();
+});
+
+document.getElementById("filter-status").addEventListener("change", (e) => {
+  filterStatus = e.target.value;
+  renderAll();
+});
+
+document.getElementById("sort-mode").addEventListener("change", (e) => {
+  sortMode = e.target.value;
+  renderAll();
+});
+
+// ─── TABS ───
+document.getElementById("tab-estante").addEventListener("click", () => switchTab("estante"));
+document.getElementById("tab-desejos").addEventListener("click", () => switchTab("desejos"));
+document.getElementById("tab-cronometro").addEventListener("click", () => switchTab("cronometro"));
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("books-area").style.display = "block";
+  document.getElementById("crono-area").style.display = "none";
+  document.querySelector(".toolbar").style.display = "flex";
+
+  if (tab === "estante") {
+    document.getElementById("tab-estante").classList.add("active");
+    viewMode = "grid";
+    filterStatus = "Todos";
+    document.getElementById("filter-status").value = "Todos";
+  } else if (tab === "desejos") {
+    document.getElementById("tab-desejos").classList.add("active");
+    viewMode = "grid";
+    filterStatus = "Quero ler";
+    document.getElementById("filter-status").value = "Quero ler";
+  } else if (tab === "cronometro") {
+    document.getElementById("tab-cronometro").classList.add("active");
+    document.getElementById("books-area").style.display = "none";
+    document.getElementById("crono-area").style.display = "block";
+    document.querySelector(".toolbar").style.display = "none";
+    initCronoArea();
+  }
+  renderAll();
+}
+
+// ─── RENDERS ───
+function renderAll() {
+  if (activeTab === "cronometro") return;
+  
+  const booksArea = document.getElementById("books-area");
+  const backContainer = document.getElementById("back-container");
+  booksArea.innerHTML = "";
+  backContainer.innerHTML = "";
+
+  let list = [];
+  for (let id in books) {
+    let b = books[id];
+    b.id = id;
+    
+    // Filtro por nome de usuário (Leitor) se preenchido
+    if (currentUser.trim() !== "") {
+      let matchUser = false;
+      if (b.progress) {
+        for (let u in b.progress) {
+          if (u.toLowerCase().includes(currentUser.toLowerCase())) {
+            matchUser = true;
+            break;
+          }
+        }
+      }
+      if (!matchUser) continue;
+    }
+
+    // Filtros de busca geral
+    let matchSearch = b.title.toLowerCase().includes(searchTerm) || b.author.toLowerCase().includes(searchTerm);
+    if (!matchSearch) continue;
+
+    // Filtros de status das tabs / select
+    if (activeTab === "desejos") {
+      if (b.wishlist !== true) continue;
+    } else {
+      if (b.wishlist === true) continue;
+      if (filterStatus !== "Todos" && b.status !== filterStatus) continue;
+    }
+
+    list.push(b);
+  }
+
+  // Ordenação
+  if (sortMode === "recent") {
+    list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  } else if (sortMode === "title") {
+    list.sort((a, b) => naturalCompare(a.title, b.title));
+  } else if (sortMode === "author") {
+    list.sort((a, b) => naturalCompare(a.author, b.author));
+  }
+
+  document.getElementById("book-count").innerText = `${list.length} livro(s) encontrado(s)`;
+
+  if (list.length === 0) {
+    booksArea.innerHTML = `<p class="empty-state">✦ Nenhum livro encontrado nesta estante ✦</p>`;
+    return;
+  }
+
+  // Se um livro está isolado
+  if (isolatedBookId && books[isolatedBookId]) {
+    backContainer.innerHTML = `
+      <div class="back-shelf-container">
+        <button class="btn-back-shelf" onclick="isolateBook(null)">← Voltar para Estante Completa</button>
+      </div>
+    `;
+    const singleBook = books[isolatedBookId];
+    singleBook.id = isolatedBookId;
+    renderListLayout([singleBook], booksArea);
+    return;
+  }
+
+  // Renderização default em nichos (grade) para as estantes
+  if (viewMode === 'grid') {
+    renderNicheLayout(list, booksArea);
+  } else {
+    renderListLayout(list, booksArea);
+  }
+}
+
+// ─── FORMATO DE NICHO (GRADE) RECONSTRUÍDO ───
+function renderNicheLayout(list, container) {
+  const shelf = document.createElement("div");
+  shelf.className = "shelf-area";
+  
+  const railTop = document.createElement("div");
+  railTop.className = "shelf-rail-top";
+  shelf.appendChild(railTop);
+
+  const grid = document.createElement("div");
+  grid.className = "niche-grid";
+
+  list.forEach((b, index) => {
+    // Adiciona divisória de madeira entre os nichos (apenas desktop)
+    if (index > 0) {
+      const div = document.createElement("div");
+      div.className = "niche-col-divider";
+      grid.appendChild(div);
+    }
+
+    const niche = document.createElement("div");
+    niche.className = "niche";
+    niche.onclick = () => isolateBook(b.id);
+
+    // Seleção de cor de fundo alternativa se não tiver foto
+    const bgIdx = (b.title.charCodeAt(0) || 0) % COVER_BG.length;
+    const coverBg = COVER_BG[bgIdx];
+
+    const content = document.createElement("div");
+    content.className = "niche-content";
+
+    // Imagem/Capa
+    let coverHtml = '';
+    if (b.cover) {
+      coverHtml = `<div class="niche-cover"><img src="${b.cover}" alt="Capa" /></div>`;
+    } else {
+      coverHtml = `<div class="niche-cover no-img" style="background:${coverBg}">📚</div>`;
+    }
+
+    // Badge de Desejos
+    let wishHtml = b.wishlist ? `<div class="wish-badge" title="Lista de Desejos">✦</div>` : '';
+
+    // Progresso simplificado no Nicho
+    let progHtml = '';
+    if (b.pages > 0) {
+      let maxPct = 0;
+      if (b.progress) {
+        for (let u in b.progress) {
+          let p = b.progress[u];
+          let pct = Math.min(100, Math.round(((p.page || 0) / b.pages) * 100));
+          if (pct > maxPct) maxPct = pct;
+        }
+      }
+      progHtml = `
+        <div class="niche-progress">
+          <div class="niche-prog-row">
+            <div class="niche-prog-label">
+              <span>Progresso Máximo</span>
+              <span>${maxPct}%</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-fill" style="width: ${maxPct}%"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    content.innerHTML = `
+      ${wishHtml}
+      ${coverHtml}
+      <div class="niche-title">${b.title}</div>
+      <div class="niche-author">${b.author}</div>
+      <div><span class="sb ${STATUS_CLS[b.status] || 'sb-estante'}">${b.status}</span></div>
+      ${progHtml}
+      <div class="niche-ornament">✦ ⚜ ✦</div>
+    `;
+
+    niche.appendChild(content);
+    grid.appendChild(niche);
+  });
+
+  shelf.appendChild(grid);
+
+  const railBot = document.createElement("div");
+  railBot.className = "shelf-rail-bot";
+  shelf.appendChild(railBot);
+
+  container.appendChild(shelf);
+}
+
+// Renderização detalhada do livro (Lista isolada)
+function renderListLayout(list, container) {
+  const wrap = document.createElement("div");
+  wrap.className = "list-wrap";
+
+  list.forEach(b => {
+    const card = document.createElement("div");
+    card.className = "list-card";
+    
+    const bgIdx = (b.title.charCodeAt(0) || 0) % COVER_BG.length;
+    const coverBg = COVER_BG[bgIdx];
+
+    let coverHtml = '';
+    if (b.cover) {
+      coverHtml = `<div class="list-cover"><img src="${b.cover}" alt="Capa" /></div>`;
+    } else {
+      coverHtml = `<div class="list-cover no-img" style="background:${coverBg}">📚</div>`;
+    }
+
+    let wishHtml = b.wishlist ? `<div class="list-wish-badge">✦ Lista de Desejos</div>` : '';
+
+    // Render das linhas de leitores
+    let progRowsHtml = '';
+    if (b.progress) {
+      for (let user in b.progress) {
+        let p = b.progress[user];
+        let maxPages = b.pages || 100;
+        let pct = Math.min(100, Math.round(((p.page || 0) / maxPages) * 100));
+        let dateStr = p.date ? ` em ${p.date.split('-').reverse().join('/')}` : '';
+        
+        progRowsHtml += `
+          <div class="progress-row-item">
+            <div class="progress-row-content">
+              <div class="progress-row-label">
+                <span><strong>${user}</strong>: pág. ${p.page || 0}/${maxPages} (${pct}%)${dateStr}</span>
+                <span>${p.status || ''}</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width: ${pct}%"></div>
+              </div>
+            </div>
+            <button class="btn-del-prog" onclick="deleteProgress(event, '${b.id}', '${user}')" title="Excluir progresso do leitor">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        `;
+      }
+    } else {
+      progRowsHtml = `<div class="progress-empty">Nenhum leitor registrou progresso neste volume ainda.</div>`;
+    }
+
+    // Formulário de novo progresso do leitor ativo
+    let userProgressHtml = '';
+    if (currentUser.trim() !== '') {
+      let myP = (b.progress && b.progress[currentUser]) ? b.progress[currentUser] : {page:0, status:'Lendo', date:''};
+      userProgressHtml = `
+        <div class="my-progress" onclick="event.stopPropagation()">
+          <label>Minha Pág:</label>
+          <input type="number" id="prog-p-${b.id}" value="${myP.page || 0}" min="0" max="${b.pages || 9999}"/>
+          
+          <label>Meu Status:</label>
+          <select id="prog-s-${b.id}">
+            ${STATUS_OPTIONS.map(opt => `<option value="${opt}" ${myP.status===opt ? 'selected' : ''}>${opt}</option>`).join('')}
+          </select>
+          
+          <label>Data:</label>
+          <input type="date" id="prog-d-${b.id}" value="${myP.date || ''}"/>
+          
+          <button class="btn-save-progress primary" onclick="saveProgress('${b.id}')">Salvar Meu Progresso</button>
+        </div>
+      `;
+    } else {
+      userProgressHtml = `<p class="no-user-hint">* Digite seu nome no topo da página para salvar ou alterar seu progresso.</p>`;
+    }
+
+    // Notas e Avaliações Estrelas
+    let starsHtml = '';
+    let avg = calculateAvgRating(b);
+    let totalR = b.ratings ? Object.keys(b.ratings).length : 0;
+    
+    if (currentUser.trim() !== '') {
+      let myRating = (b.ratings && b.ratings[currentUser]) ? b.ratings[currentUser] : 0;
+      let interactiveStars = '';
+      for (let i = 1; i <= 5; i++) {
+        interactiveStars += `<span class="star interactive ${i <= myRating ? 'filled' : 'empty'}" onclick="rateBook(event, '${b.id}', ${i})">★</span>`;
+      }
+      starsHtml = `
+        <div class="ratings-row" onclick="event.stopPropagation()">
+          <span>Sua Avaliação: ${interactiveStars}</span>
+          <span>Média Global: <span class="star filled">★</span> ${avg} (${totalR} aval.)</span>
+        </div>
+      `;
+    } else {
+      starsHtml = `
+        <div class="ratings-row">
+          <span>Média Global: <span class="star filled">★</span> ${avg} (${totalR} aval.)</span>
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <div class="list-cover-wrap">
+        ${coverHtml}
+        ${wishHtml}
+      </div>
+      <div class="list-body">
+        <div class="list-head">
+          <div>
+            <div class="list-title">${b.title}</div>
+            <div class="list-meta">Por ${b.author} — ${b.pages || '???'} páginas</div>
+          </div>
+          <div style="display:flex; gap: 8px;">
+            <button class="btn-icon edit-btn" onclick="openEditForm(event, '${b.id}')" title="Editar informações do livro">
+              <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </button>
+            <button class="btn-icon danger" onclick="deleteBook(event, '${b.id}')" title="Excluir livro completo">
+              <svg viewBox="0 0 24 24" style="stroke:#c07070;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="progress-rows">
+          ${progRowsHtml}
+        </div>
+        
+        ${userProgressHtml}
+        ${starsHtml}
+      </div>
+    `;
+
+    wrap.appendChild(card);
+  });
+
+  container.appendChild(wrap);
+}
+
+function isolateBook(id) {
+  isolatedBookId = id;
+  renderAll();
+}
+
+function calculateAvgRating(book) {
+  if (!book.ratings) return '0.0';
+  let sum = 0, count = 0;
+  for (let u in book.ratings) {
+    sum += book.ratings[u];
+    count++;
+  }
+  return (sum / count).toFixed(1);
+}
+
+// ─── SALVAR / EXCLUIR PROGRESSO ───
+function saveProgress(bookId) {
+  if (!currentUser.trim()) return;
+  const pVal = parseInt(document.getElementById(`prog-p-${bookId}`).value) || 0;
+  const sVal = document.getElementById(`prog-s-${bookId}`).value;
+  const dVal = document.getElementById(`prog-d-${bookId}`).value;
+
+  const book = books[bookId];
+  if (book && book.pages && pVal > book.pages) {
+    alert(`O progresso não pode exceder o total de páginas (${book.pages}).`);
+    return;
+  }
+
+  // Salva no nó do leitor individual
+  booksRef.child(`${bookId}/progress/${currentUser}`).set({
+    page: pVal,
+    status: sVal,
+    date: dVal
+  }).then(() => {
+    // Atualiza o status geral do livro baseado no leitor que salvou por último
+    booksRef.child(`${bookId}/status`).set(sVal);
+  }).catch(e => {
+    showGlobalError("Erro ao salvar progresso: " + e.message);
+  });
+}
+
+function deleteProgress(e, bookId, user) {
+  e.stopPropagation();
+  if (confirm(`Remover os registros de progresso do leitor "${user}"?`)) {
+    booksRef.child(`${bookId}/progress/${user}`).remove()
+      .catch(e => showGlobalError("Erro ao excluir progresso: " + e.message));
+  }
+}
+
+function rateBook(e, bookId, rating) {
+  e.stopPropagation();
+  if (!currentUser.trim()) return;
+  booksRef.child(`${bookId}/ratings/${currentUser}`).set(rating)
+    .catch(e => showGlobalError("Erro ao avaliar: " + e.message));
+}
+
+// ─── GERENCIAMENTO DE LIVROS (ADD/EDIT/DELETE) ───
+document.getElementById("btn-add").addEventListener("click", () => {
+  editingId = null;
+  pendingCoverData = null;
+  renderForm();
+});
+
+function openEditForm(e, id) {
+  e.stopPropagation();
+  editingId = id;
+  pendingCoverData = books[id].cover || null;
+  renderForm();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function renderForm() {
+  const area = document.getElementById("form-area");
+  const isEdit = editingId !== null;
+  const b = isEdit ? books[editingId] : {title:'', author:'', pages:'', status:'Na estante', cover:'', wishlist: (activeTab === "desejos")};
 
   area.innerHTML = `
     <div class="form-overlay">
-      <h2>${id ? '✦ Editar Livro' : '✦ Adicionar Novo Livro'}</h2>
+      <h2>✦ ${isEdit ? 'Editar Livro' : 'Adicionar Novo Livro'}</h2>
+      <div class="form-error" id="form-error"></div>
+      
       <div class="form-grid">
-        <div class="form-field">
-          <label>Título *</label>
-          <input type="text" id="f-title" value="${escHtml(bk.title)}" placeholder="Ex: O Hobbit"/>
+        <div class="form-field" style="flex:1 1 100%;">
+          <label>Título do Livro *</label>
+          <input type="text" id="f-title" value="${b.title}" placeholder="Ex: O Retrato de Dorian Gray"/>
         </div>
         <div class="form-field">
-          <label>Autor</label>
-          <input type="text" id="f-author" value="${escHtml(bk.author)}" placeholder="Ex: J.R.R. Tolkien"/>
-        </div>
-      </div>
-      <div class="form-grid">
-        <div class="form-field">
-          <label>Total de Páginas</label>
-          <input type="number" id="f-pages" value="${bk.pages||''}" placeholder="Ex: 270"/>
+          <label>Autor / Escritor *</label>
+          <input type="text" id="f-author" value="${b.author}" placeholder="Ex: Oscar Wilde"/>
         </div>
         <div class="form-field">
-          <label>Status</label>
+          <label>Total de Páginas *</label>
+          <input type="number" id="f-pages" value="${b.pages || ''}" placeholder="Ex: 320" min="1"/>
+        </div>
+        <div class="form-field">
+          <label>Status Inicial</label>
           <select id="f-status">
-            ${STATUS_OPTIONS.map(o=>`<option value="${o}" ${bk.status===o?'selected':''}>${o}</option>`).join('')}
+            ${STATUS_OPTIONS.map(opt => `<option value="${opt}" ${b.status===opt ? 'selected' : ''}>${opt}</option>`).join('')}
           </select>
         </div>
       </div>
 
       <div class="wish-row">
-        <input type="checkbox" id="f-wish" ${checked}/>
+        <input type="checkbox" id="f-wishlist" ${b.wishlist ? 'checked' : ''}/>
         <div>
-          <label for="f-wish">Lista de Desejos</label>
-          <div class="wish-desc">Marque se você ainda não possui o livro físico/digital.</div>
+          <label for="f-wishlist">Adicionar apenas na Lista de Desejos</label>
+          <div class="wish-desc">Livros salvos aqui não ocupam espaço na estante física até serem adquiridos.</div>
         </div>
       </div>
 
       <div class="cover-row">
-        <div class="cover-preview" id="f-cover-prev">
-          ${bk.coverUrl ? `<img src="${bk.coverUrl}"/>` : '📖'}
+        <div class="cover-preview" id="f-cover-preview">
+          ${pendingCoverData ? `<img src="${pendingCoverData}"/>` : '📷'}
         </div>
         <div class="cover-controls">
-          <label style="font-size:13px;color:var(--text-sub);font-style:italic;">Capa do Livro</label>
-          <input type="file" id="f-file" accept="image/*"/>
-          <div class="hint">Escolha uma imagem para usar como capa.</div>
+          <label style="font-size:13px; color:var(--text-sub); font-style:italic;">Foto / Capa do Livro</label>
+          <input type="file" id="f-cover-file" accept="image/*" onchange="handleCoverUpload(event)"/>
+          <span class="hint">Escolha uma foto da galeria ou câmera</span>
         </div>
       </div>
 
-      <div class="form-error" id="f-err"></div>
       <div class="form-actions">
-        <button class="primary" id="btn-f-save">✦ Salvar</button>
-        <button id="btn-f-cancel">Cancelar</button>
-        ${id ? `<button class="danger spacer-btn" id="btn-f-del">Excluir Livro</button>` : ''}
+        <button class="primary" onclick="saveBook()">✦ Gravar Livro</button>
+        <button onclick="closeForm()">Cancelar</button>
       </div>
     </div>
   `;
-
-  document.getElementById("f-file").addEventListener("change", e=>{
-    const file = e.target.files[0];
-    if(!file)return;
-    const reader = new FileReader();
-    reader.onload = ev=>{
-      pendingCoverData = ev.target.result;
-      document.getElementById("f-cover-prev").innerHTML = `<img src="${pendingCoverData}"/>`;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  document.getElementById("btn-f-cancel").addEventListener("click", hideForm);
-  document.getElementById("btn-f-save").addEventListener("click", saveForm);
-  if(id){
-    document.getElementById("btn-f-del").addEventListener("click", deleteBook);
-  }
-
-  area.scrollIntoView({behavior:'smooth'});
 }
 
-function hideForm(){
+function handleCoverUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    pendingCoverData = e.target.result;
+    document.getElementById("f-cover-preview").innerHTML = `<img src="${pendingCoverData}"/>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function closeForm() {
   document.getElementById("form-area").innerHTML = "";
   editingId = null;
   pendingCoverData = null;
 }
 
-function saveForm(){
+function saveBook() {
   const title = document.getElementById("f-title").value.trim();
   const author = document.getElementById("f-author").value.trim();
-  const pages = parseInt(document.getElementById("f-pages").value)||0;
+  const pages = parseInt(document.getElementById("f-pages").value) || 0;
   const status = document.getElementById("f-status").value;
-  const wishlist = document.getElementById("f-wish").checked;
-  const errDiv = document.getElementById("f-err");
+  const wishlist = document.getElementById("f-wishlist").checked;
+  const errDiv = document.getElementById("form-error");
 
-  if(!title){
-    errDiv.textContent = "O título é obrigatório.";
+  if (!title || !author || pages <= 0) {
+    errDiv.innerText = "Preencha o título, autor e número de páginas corretamente.";
     errDiv.style.display = "block";
     return;
   }
+
   errDiv.style.display = "none";
-
-  let old = {progress:{}};
-  if(editingId && books[editingId]) old = books[editingId];
-
-  let coverUrl = old.coverUrl||'';
-  if(pendingCoverData) coverUrl = pendingCoverData;
 
   const data = {
     title,
     author,
     pages,
-    status,
-    coverUrl,
+    status: wishlist ? 'Quero ler' : status,
     wishlist,
-    rating: old.rating||0,
-    review: old.review||'',
-    progress: old.progress||{},
-    updatedAt: firebase.database.ServerValue.TIMESTAMP
+    cover: pendingCoverData || "",
+    timestamp: firebase.database.ServerValue.TIMESTAMP
   };
 
-  if(!editingId){
-    data.createdAt = firebase.database.ServerValue.TIMESTAMP;
-    booksRef.push(data)
-      .then(() => hideForm())
-      .catch(err => {
-        mostrarErro(err);
-        errDiv.textContent = "Falha ao gravar no Firebase: " + err.message;
-        errDiv.style.display = "block";
-      });
-  } else {
+  if (editingId) {
     booksRef.child(editingId).update(data)
-      .then(() => hideForm())
-      .catch(err => {
-        mostrarErro(err);
-        errDiv.textContent = "Falha ao atualizar no Firebase: " + err.message;
+      .then(() => closeForm())
+      .catch(e => {
+        errDiv.innerText = "Erro ao atualizar: " + e.message;
+        errDiv.style.display = "block";
+      });
+  } else {
+    booksRef.push(data)
+      .then(() => closeForm())
+      .catch(e => {
+        errDiv.innerText = "Erro ao salvar: " + e.message;
         errDiv.style.display = "block";
       });
   }
 }
 
-function deleteBook(){
-  if(!editingId)return;
-  if(!confirm("Tem certeza que deseja excluir permanentemente este livro?"))return;
-  booksRef.child(editingId).remove()
-    .then(()=>{
-      hideForm();
-      isolatedBookId = null;
-    })
-    .catch(err => mostrarErro(err));
-}
-
-function getBookUserProgress(bk, u){
-  if(!bk.progress||!u) return null;
-  const k = sKey(u);
-  return bk.progress[k]||null;
-}
-
-function saveBookUserProgress(bookId, pgVal, dVal, finished){
-  if(!bookId||!currentUser)return;
-  const k = sKey(currentUser);
-  const bk = books[bookId];
-  if(!bk)return;
-
-  let progressUpdate = {
-    page: pgVal,
-    date: dVal||new Date().toISOString().split('T')[0]
-  };
-
-  const tasks = [];
-
-  // Se progresso atingiu o limite de paginas e esta Lendo, muda pra Lido
-  if(bk.pages > 0 && pgVal >= bk.pages && bk.status === 'Lendo' && finished) {
-    tasks.push(booksRef.child(bookId).child("status").set("Lido").catch(err => mostrarErro(err)));
-  }
-
-  tasks.push(booksRef.child(bookId).child("progress").child(k).set(progressUpdate).catch(err => mostrarErro(err)));
-
-  Promise.all(tasks).then(()=>{
-    render();
-  });
-}
-
-function removeBookUserProgress(bookId){
-  if(!bookId||!currentUser)return;
-  if(!confirm("Deseja mesmo zerar seu progresso neste livro?"))return;
-  const k = sKey(currentUser);
-  booksRef.child(bookId).child("progress").child(k).remove()
-    .then(() => render())
-    .catch(err => mostrarErro(err));
-}
-
-function rateBook(bookId, stars){
-  if(!bookId)return;
-  booksRef.child(bookId).child("rating").set(stars)
-    .catch(err => mostrarErro(err));
-}
-
-function render(){
-  const listMode = (currentUser && !isolatedBookId);
-  const booksArea = document.getElementById("books-area");
-  const cronoArea = document.getElementById("crono-area");
-  const backContainer = document.getElementById("back-container");
-
-  if(activeTab==='cronometro'){
-    booksArea.style.display = "none";
-    backContainer.innerHTML = "";
-    cronoArea.style.display = "block";
-    renderCronometro();
-    return;
-  }
-
-  cronoArea.style.display = "none";
-  booksArea.style.display = "block";
-
-  // Filtrar lista de desejos vs estante normal
-  let arr = Object.keys(books).map(id=>({id, ...books[id]}));
-  
-  if(activeTab==='desejos'){
-    arr = arr.filter(b => b.wishlist === true);
-  } else {
-    arr = arr.filter(b => b.wishlist !== true);
-  }
-
-  // Filtro de isolamento de livro (ao clicar num livro sem usuário logado)
-  if(isolatedBookId){
-    arr = arr.filter(b => b.id === isolatedBookId);
-    backContainer.innerHTML = `
-      <div class="back-shelf-container">
-        <button class="btn-back-shelf" onclick="isolatedBookId=null; render();">← Voltar para Estante</button>
-      </div>
-    `;
-  } else {
-    backContainer.innerHTML = "";
-  }
-
-  // Filtros de busca e status
-  if(!isolatedBookId){
-    if(filterStatus!=='Todos'){
-      arr = arr.filter(b => b.status === filterStatus);
-    }
-    if(searchTerm){
-      arr = arr.filter(b => 
-        (b.title||'').toLowerCase().includes(searchTerm) || 
-        (b.author||'').toLowerCase().includes(searchTerm)
-      );
-    }
-    // Ordenação
-    if(sortMode==='title'){
-      arr.sort((a,b)=>(a.title||'').localeCompare(b.title||''));
-    } else if(sortMode==='author'){
-      arr.sort((a,b)=>(a.author||'').localeCompare(b.author||''));
-    } else {
-      arr.sort((a,b)=>(b.updatedAt||0) - (a.updatedAt||0));
-    }
-  }
-
-  document.getElementById("book-count").textContent = `Exibindo ${arr.length} livro(s)`;
-
-  if(arr.length===0){
-    booksArea.innerHTML = `<p class="empty-state">✦ Nenhum livro encontrado nesta seção ✦</p>`;
-    return;
-  }
-
-  if(listMode){
-    // Exibição em Lista com Andamento de cada Leitor
-    booksArea.className = "list-wrap";
-    booksArea.innerHTML = arr.map(b => renderListCard(b)).join('');
-  } else {
-    // Exibição Tradicional em Nichos da Estante
-    booksArea.className = "shelf-area";
-    
-    let shelfHtml = `<div class="shelf-rail-top"></div><div class="niche-grid">`;
-    arr.forEach((b, idx) => {
-      if(idx > 0 && idx % 4 === 0){
-        shelfHtml += `</div><div class="shelf-rail-bot"></div><div class="shelf-rail-top"></div><div class="niche-grid">`;
-      } else if (idx > 0) {
-        shelfHtml += `<div class="niche-col-divider"></div>`;
-      }
-      shelfHtml += renderNiche(b);
-    });
-    shelfHtml += `</div><div class="shelf-rail-bot"></div>`;
-    booksArea.innerHTML = shelfHtml;
+function deleteBook(e, id) {
+  e.stopPropagation();
+  if (confirm("Você tem certeza de que deseja remover este livro completamente da estante virtual?")) {
+    booksRef.child(id).remove()
+      .then(() => {
+        if (isolatedBookId === id) isolatedBookId = null;
+        renderAll();
+      })
+      .catch(e => showGlobalError("Erro ao remover livro: " + e.message));
   }
 }
 
-function renderNiche(b){
-  const color = cvColor(b.title);
-  const hasCover = !!b.coverUrl;
-  
-  // Calcula progresso geral (primeiro leitor que achar, se houver)
-  let progHtml = '';
-  let maxPct = 0;
-  if(b.progress && Object.keys(b.progress).length > 0){
-    const readers = Object.keys(b.progress);
-    const firstReader = readers[0];
-    const pData = b.progress[firstReader];
-    if(b.pages > 0 && pData && pData.page){
-      maxPct = Math.min(100, Math.round((pData.page / b.pages) * 100));
-      progHtml = `
-        <div class="niche-progress">
-          <div class="niche-prog-row">
-            <div class="niche-prog-label">
-              <span>Leitor: ${escHtml(padronizarNome(firstReader))}</span>
-              <span>${maxPct}%</span>
-            </div>
-            <div class="prog-track"><div class="prog-fill" style="width:${maxPct}%"></div></div>
-          </div>
-        </div>
-      `;
-    }
-  }
-
-  const editIcon = `
-    <span class="edit-btn" style="position:absolute;bottom:6px;right:6px;z-index:10;" onclick="event.stopPropagation(); showForm('${b.id}');">
-      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    </span>
-  `;
-
-  return `
-    <div class="niche" onclick="onBookClick('${b.id}')">
-      <div class="niche-content">
-        <div class="niche-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
-          ${hasCover ? `<img src="${b.coverUrl}"/>` : '📖'}
-          ${b.wishlist ? `<div class="wish-badge">❤</div>` : ''}
-        </div>
-        <div class="niche-title">${escHtml(b.title)}</div>
-        <div class="niche-author">${escHtml(b.author||'Autor desconhecido')}</div>
-        <div><span class="sb ${STATUS_CLS[b.status]||'sb-estante'}">${b.status}</span></div>
-        ${progHtml}
-        <div class="niche-ornament">❦</div>
-      </div>
-      ${editIcon}
-    </div>
-  `;
-}
-
-function renderListCard(b){
-  const color = cvColor(b.title);
-  const hasCover = !!b.coverUrl;
-  const myProg = getBookUserProgress(b, currentUser);
-
-  // Calcula barra de progresso do usuário logado
-  let progBarHtml = '';
-  if(b.pages > 0){
-    const curPage = myProg ? (myProg.page||0) : 0;
-    const pct = Math.min(100, Math.round((curPage / b.pages) * 100));
-    progBarHtml = `
-      <div class="progress-row-item">
-        <div class="progress-row-content">
-          <div class="progress-row-label">
-            <span>Seu Progresso: pág. ${curPage} de ${b.pages}</span>
-            <span>${pct}%</span>
-          </div>
-          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-        </div>
-        ${myProg ? `
-          <button class="btn-del-prog" title="Zerar progresso" onclick="event.stopPropagation(); removeBookUserProgress('${b.id}')">
-            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-          </button>
-        ` : ''}
-      </div>
-    `;
-  } else {
-    progBarHtml = `<div class="progress-empty">Defina o total de páginas nas configurações para marcar progresso.</div>`;
-  }
-
-  // Estrelas interativas
-  let starHtml = '';
-  for(let i=1; i<=5; i++){
-    const isFilled = i <= (b.rating||0);
-    starHtml += `<span class="star interactive ${isFilled?'filled':'empty'}" onclick="event.stopPropagation(); rateBook('${b.id}', ${i})">★</span>`;
-  }
-
-  // Inputs de andamento rápido
-  const curPageInput = myProg ? (myProg.page||0) : 0;
-  const curDateInput = myProg ? (myProg.date||'') : '';
-
-  const progressFormHtml = `
-    <div class="my-progress" onclick="event.stopPropagation();">
-      <label>Página atual:</label>
-      <input type="number" id="pg-${b.id}" value="${curPageInput||''}" placeholder="Ex: 45" style="width:90px;"/>
-      <label>Data leitura:</label>
-      <input type="date" id="dt-${b.id}" value="${curDateInput}"/>
-      <button class="primary btn-save-progress" onclick="saveQuickProgress('${b.id}')">Atualizar Progresso</button>
-    </div>
-  `;
-
-  return `
-    <div class="list-card" onclick="showForm('${b.id}')">
-      <div class="list-cover-wrap">
-        <div class="list-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
-          ${hasCover ? `<img src="${b.coverUrl}"/>` : '📖'}
-        </div>
-        ${b.wishlist ? `<div class="list-wish-badge">DESEJO</div>` : ''}
-      </div>
-      <div class="list-body">
-        <div class="list-head">
-          <div>
-            <div class="list-title">${escHtml(b.title)}</div>
-            <div class="list-meta">por ${escHtml(b.author||'Autor desconhecido')}</div>
-          </div>
-          <span class="sb ${STATUS_CLS[b.status]||'sb-estante'}">${b.status}</span>
-        </div>
-
-        <div class="progress-rows">
-          ${progBarHtml}
-        </div>
-
-        <div class="ratings-row">
-          <span>Avaliação: ${starHtml}</span>
-        </div>
-
-        ${progressFormHtml}
-      </div>
-    </div>
-  `;
-}
-
-function onBookClick(id){
-  if(currentUser) {
-    showForm(id);
-  } else {
-    isolatedBookId = id;
-    render();
-  }
-}
-
-function saveQuickProgress(bookId){
-  const pgVal = parseInt(document.getElementById(`pg-${bookId}`).value)||0;
-  const dVal = document.getElementById(`dt-${bookId}`).value;
-  saveBookUserProgress(bookId, pgVal, dVal, true);
-}
-
-
-/* ─── CRONÔMETRO LOGIC ─── */
-
-function tickCrono(){
-  if(activeTab !== 'cronometro'|| !myActiveSession) return;
-  const elapsed = Math.floor((Date.now() - myActiveSession.startTimestamp)/1000);
-  const display = document.getElementById("crono-live-timer");
-  if(display) display.textContent = formatSec(elapsed);
-}
-
-function formatSec(s){
-  const h = Math.floor(s/3600);
-  const m = Math.floor((s%3600)/60);
-  const sec = s%60;
-  return [
-    h.toString().padStart(2,'0'),
-    m.toString().padStart(2,'0'),
-    sec.toString().padStart(2,'0')
-  ].join(':');
-}
-
-function renderCronometro(){
+// ─── CRONÔMETRO DE LEITURA ───
+function initCronoArea() {
   const area = document.getElementById("crono-area");
-  if(!currentUser){
-    area.innerHTML = `
-      <div class="crono-wrap">
-        <div class="crono-intro">
-          <h2>Cronômetro de Leitura</h2>
-          <p class="no-user-hint">Defina seu nome no cabeçalho acima para gerenciar suas sessões e histórico de leitura.</p>
+  area.innerHTML = `
+    <div class="crono-wrap">
+      <div class="crono-intro">
+        <h2>✦ Templo do Tempo de Leitura ✦</h2>
+        <p>Monitore suas horas de foco e mantenha sua constância literária ativa</p>
+      </div>
+
+      <div class="crono-stats-grid">
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Sequência Atual</div>
+          <div class="crono-stat-value" id="crono-stat-streak">0 dias</div>
+          <div class="crono-stat-delta" id="crono-stat-streak-msg">Foco total!</div>
         </div>
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Maior Sequência</div>
+          <div class="crono-stat-value" id="crono-stat-record">0 dias</div>
+        </div>
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Total Lido Hoje</div>
+          <div class="crono-stat-value" id="crono-stat-today">0m</div>
+        </div>
+        <div class="crono-stat-card">
+          <div class="crono-stat-label">Total Acumulado</div>
+          <div class="crono-stat-value" id="crono-stat-total">0h 0m</div>
+        </div>
+      </div>
+
+      <div id="crono-session-container"></div>
+      
+      <div class="crono-history-title">
+        <span>ÚLTIMAS SESSÕES DE LEITURA</span>
+        <button class="danger" style="height:26px; padding:0 8px; font-size:11px;" onclick="clearHistory()">Limpar Histórico</button>
+      </div>
+      <div class="crono-history-list" id="crono-history-list"></div>
+    </div>
+  `;
+
+  if (activeSessionListenerRef) activeSessionListenerRef.off();
+  if (statsListenerRef) statsListenerRef.off();
+
+  sessionsRef.on("value", (snap) => {
+    allSessions = snap.val() || {};
+    renderCronoHistory();
+    calculateCronoStats();
+  });
+
+  if (currentUser.trim() !== '') {
+    const userSlug = currentUser.toLowerCase().replace(/\s+/g, "_");
+    
+    activeSessionListenerRef = activeSessionsRef.child(userSlug);
+    activeSessionListenerRef.on("value", (snap) => {
+      myActiveSession = snap.val();
+      renderCronoSessionCard();
+    });
+
+    statsListenerRef = statsRef.child(userSlug);
+    statsListenerRef.on("value", (snap) => {
+      myStats = snap.val() || {currentStreak:0, longestStreak:0, lastSessionDate:''};
+      calculateCronoStats();
+    });
+  } else {
+    myActiveSession = null;
+    myStats = {currentStreak:0, longestStreak:0, lastSessionDate:''};
+    renderCronoSessionCard();
+    calculateCronoStats();
+  }
+}
+
+function renderCronoSessionCard() {
+  const container = document.getElementById("crono-session-container");
+  if (!container) return;
+
+  if (currentUser.trim() === '') {
+    container.innerHTML = `
+      <div class="crono-session-card" style="text-align:center;">
+        <p class="crono-empty-hint">* Identifique-se com seu nome no cabeçalho do site para iniciar sessões e salvar estatísticas de leitura.</p>
       </div>
     `;
     return;
   }
 
-  // Filtragem dos livros: REMOVE LIVROS COM STATUS "LIDO"
-  const availableBooks = Object.keys(books)
-    .map(id => ({id, ...books[id]}))
-    .filter(b => b.status !== 'Lido');
+  // Se já houver uma sessão rodando
+  if (myActiveSession) {
+    const book = books[myActiveSession.bookId] || {title: 'Livro Desconhecido', author: 'Autor Desconhecido', cover:''};
+    const bgIdx = (book.title.charCodeAt(0) || 0) % COVER_BG.length;
+    const coverBg = COVER_BG[bgIdx];
 
-  // Calcular estatísticas locais do usuário logado
-  const userKey = sKey(currentUser);
-  const userSessions = Object.keys(allSessions)
-    .map(id => ({id, ...allSessions[id]}))
-    .filter(s => s.userKey === userKey);
+    let coverHtml = book.cover ? `<img src="${book.cover}"/>` : '📚';
 
-  const totalMin = userSessions.reduce((acc,curr)=> acc + (curr.durationMinutes||0), 0);
-  const totalPag = userSessions.reduce((acc,curr)=> acc + (curr.pagesRead||0), 0);
-  const countSess = userSessions.length;
-
-  let sessHtml = '';
-  if(myActiveSession){
-    const bk = books[myActiveSession.bookId]||{title:'Livro desconhecido',author:'?'};
-    const color = cvColor(bk.title);
-    const hasCover = !!bk.coverUrl;
-    const elapsed = Math.floor((Date.now() - myActiveSession.startTimestamp)/1000);
-
-    // Progresso atual do livro para preview em tempo real
-    const myProg = getBookUserProgress(bk, currentUser);
-    const startPage = myProg ? (myProg.page || 0) : 0;
-    const totalPages = bk.pages || 0;
-
-    sessHtml = `
+    container.innerHTML = `
       <div class="crono-session-card">
-        <div class="crono-session-title">Sessão em Andamento</div>
+        <div class="crono-session-title">SESSÃO EM ANDAMENTO</div>
         <div class="crono-session-body">
-          <div class="crono-session-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
-            ${hasCover ? `<img src="${bk.coverUrl}"/>` : '📖'}
-          </div>
+          <div class="crono-session-cover ${book.cover ? '' : 'no-img'}" style="background:${book.cover ? 'transparent' : coverBg}">${coverHtml}</div>
           <div class="crono-session-info">
-            <div class="crono-session-book-title">${escHtml(bk.title)}</div>
-            <div class="crono-session-book-author">por ${escHtml(bk.author)}</div>
+            <div class="crono-session-book-title">${book.title}</div>
+            <div class="crono-session-book-author">Lendo com foco total</div>
             <div class="crono-session-meta">
               <div class="crono-meta-item">
-                <div class="crono-meta-label">TEMPO DECORRIDO</div>
-                <div class="crono-meta-value" id="crono-live-timer">${formatSec(elapsed)}</div>
+                <div class="crono-meta-label">TEMPO DECURSADO</div>
+                <div class="crono-meta-value" id="crono-timer-display">00:00:00</div>
               </div>
               <div class="crono-meta-item">
-                <div class="crono-meta-label">PÁGINAS LIDAS NESTA SESSÃO</div>
+                <div class="crono-meta-label">PÁGINA FINAL ATUAL</div>
                 <div class="crono-meta-value">
-                  <input type="number" id="crono-pages-read" value="0" min="0" oninput="updatePagePreview(${startPage}, ${totalPages})"/>
-                  <span id="crono-preview-label" style="font-size: 13px; color: var(--text-sub); margin-left: 8px;">
-                    → chega na pág. ${startPage} de ${totalPages || '?' }
-                  </span>
+                  <input type="number" id="crono-final-page" placeholder="Pág" min="0" value="${books[myActiveSession.bookId]?.progress?.[currentUser]?.page || ''}"/>
                 </div>
               </div>
             </div>
           </div>
           <div class="crono-session-actions">
-            <button class="primary" onclick="finalizarLeitura('${myActiveSession.bookId}')">Finalizar Sessão</button>
-            <button class="danger" onclick="cancelarLeitura()" style="margin-left:8px;">Descartar</button>
+            <button class="primary danger" onclick="stopCronoSession()">Concluir Sessão</button>
           </div>
         </div>
       </div>
     `;
+
+    startCronoVisualTimer(myActiveSession.startTime);
   } else {
-    // Formulário de início de cronômetro
-    let options = `<option value="">-- Escolha um livro --</option>`;
-    availableBooks.forEach(b => {
-      options += `<option value="${b.id}" ${cronoSelectedBookId===b.id?'selected':''}>${escHtml(b.title)} (${b.status})</option>`;
-    });
-
-    sessHtml = `
-      <div class="crono-session-card">
-        <div class="crono-session-title">Nova Sessão</div>
-        ${availableBooks.length === 0 ? `
-          <p class="crono-empty-hint">Adicione ou altere livros na estante para iniciar (apenas livros não lidos estão listados).</p>
-        ` : `
-          <div class="crono-start-form">
-            <select id="crono-select-book" onchange="cronoSelectedBookId=this.value">
-              ${options}
-            </select>
-            <button class="primary" onclick="iniciarLeitura()">Iniciar Leitura ⏱</button>
-          </div>
-        `}
-      </div>
-    `;
-  }
-
-  // Lista do histórico
-  let histHtml = '';
-  const sortedHist = [...userSessions].sort((a,b)=>b.timestamp - a.timestamp);
-  if(sortedHist.length===0){
-    histHtml = `<p class="crono-empty-hint">Nenhuma sessão finalizada ainda.</p>`;
-  } else {
-    histHtml = `<div class="crono-history-list">`;
-    sortedHist.forEach(s => {
-      const bk = books[s.bookId]||{title:'Livro excluído',author:'?'};
-      const color = cvColor(bk.title);
-      const hasCover = !!bk.coverUrl;
-      const dateStr = new Date(s.timestamp).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
-
-      histHtml += `
-        <div class="crono-history-item">
-          <div class="crono-history-cover ${!hasCover?'no-img':''}" style="${!hasCover?'background:'+color:''}">
-            ${hasCover ? `<img src="${bk.coverUrl}"/>` : '📖'}
-          </div>
-          <div class="crono-history-info">
-            <div class="crono-history-book">${escHtml(bk.title)}</div>
-            <div class="crono-history-date">${dateStr}</div>
-          </div>
-          <div class="crono-history-stats">
-            + ${s.pagesRead||0} pág.
-            <span>em ${s.durationMinutes||0} min</span>
-          </div>
-        </div>
-      `;
-    });
-    histHtml += `</div>`;
-  }
-
-  area.innerHTML = `
-    <div class="crono-wrap">
-      <div class="crono-intro">
-        <h2>Seu Diário de Leitura</h2>
-        <p>Acompanhe o tempo dedicado e as páginas viradas de sua jornada.</p>
-      </div>
-
-      <div class="crono-stats-grid">
-        <div class="crono-stat-card">
-          <div class="crono-stat-label">Minutos Lidos</div>
-          <div class="crono-stat-value">${totalMin}</div>
-        </div>
-        <div class="crono-stat-card">
-          <div class="crono-stat-label">Páginas Lidas</div>
-          <div class="crono-stat-value">${totalPag}</div>
-        </div>
-        <div class="crono-stat-card">
-          <div class="crono-stat-label">Sessões</div>
-          <div class="crono-stat-value">${countSess}</div>
-        </div>
-        <div class="crono-stat-card">
-          <div class="crono-stat-label">Sequência Atual</div>
-          <div class="crono-stat-value">${myStats.currentStreak||0} <span style="font-size:12px;">dias</span></div>
-          <div class="crono-stat-delta">Recorde: ${myStats.longestStreak||0}</div>
-        </div>
-      </div>
-
-      ${sessHtml}
-
-      <div class="crono-history-title">
-        <span>SESSÕES ANTERIORES</span>
-        <span>${countSess} registros</span>
-      </div>
-      ${histHtml}
-    </div>
-  `;
-}
-
-// Atualiza o preview ao vivo das páginas lidas no cronômetro
-function updatePagePreview(startPage, totalPages) {
-  const inputVal = parseInt(document.getElementById("crono-pages-read").value) || 0;
-  const previewLabel = document.getElementById("crono-preview-label");
-  if (previewLabel) {
-    const finalPage = startPage + inputVal;
-    const totalStr = totalPages ? totalPages : '?';
-    previewLabel.textContent = `→ chega na pág. ${finalPage} de ${totalStr}`;
-  }
-}
-
-function iniciarLeitura(){
-  const select = document.getElementById("crono-select-book");
-  if(!select)return;
-  const bookId = select.value;
-  if(!bookId){
-    alert("Escolha um livro primeiro!");
-    return;
-  }
-
-  const session = {
-    bookId: bookId,
-    startTimestamp: Date.now()
-  };
-
-  const userKey = sKey(currentUser);
-  activeSessionsRef.child(userKey).set(session)
-    .then(() => {
-      // Se o livro estava como "Na Estante" ou "Quero ler", muda para "Lendo" ao iniciar cronômetro
-      const bk = books[bookId];
-      if(bk && (bk.status === 'Na estante' || bk.status === 'Quero ler')) {
-        booksRef.child(bookId).child("status").set("Lendo")
-          .catch(err => mostrarErro(err));
+    // Formulário de seleção para iniciar leitura
+    clearInterval(cronoTimerInterval);
+    
+    // Filtra livros disponíveis para leitura (exclui desejos)
+    let availableBooks = [];
+    for (let id in books) {
+      if (books[id].wishlist !== true) {
+        availableBooks.push({id, title: books[id].title});
       }
-    })
-    .catch(err => mostrarErro(err));
+    }
+    availableBooks.sort((a,b) => naturalCompare(a.title, b.title));
+
+    container.innerHTML = `
+      <div class="crono-session-card">
+        <div class="crono-session-title">INICIAR NOVA JORNADA DE LEITURA</div>
+        <div class="crono-start-form">
+          <select id="crono-select-book">
+            <option value="">Selecione um livro da estante...</option>
+            ${availableBooks.map(bk => `<option value="${bk.id}">${bk.title}</option>`).join('')}
+          </select>
+          <button class="primary" onclick="startCronoSession()">✦ Iniciar Foco</button>
+        </div>
+      </div>
+    `;
+  }
 }
 
-function finalizarLeitura(bookId){
-  if(!myActiveSession)return;
-  const pageInput = document.getElementById("crono-pages-read");
-  const pagesRead = parseInt(pageInput.value)||0;
+function startCronoVisualTimer(startTime) {
+  clearInterval(cronoTimerInterval);
+  const display = document.getElementById("crono-timer-display");
+  if (!display) return;
 
-  if(pagesRead < 0){
-    alert("A quantidade de páginas lidas não pode ser negativa.");
+  function update() {
+    const delta = Math.floor((Date.now() - startTime) / 1000);
+    const hrs = Math.floor(delta / 3600).toString().padStart(2, '0');
+    const mins = Math.floor((delta % 3600) / 60).toString().padStart(2, '0');
+    const secs = (delta % 60).toString().padStart(2, '0');
+    display.innerText = `${hrs}:${mins}:${secs}`;
+  }
+  update();
+  cronoTimerInterval = setInterval(update, 1000);
+}
+
+function startCronoSession() {
+  const bId = document.getElementById("crono-select-book").value;
+  if (!bId) {
+    alert("Selecione um livro primeiro.");
     return;
   }
-
-  const durationMs = Date.now() - myActiveSession.startTimestamp;
-  const durationMin = Math.max(1, Math.round(durationMs/60000));
-
-  const userKey = sKey(currentUser);
-  const nowStr = new Date().toISOString().split('T')[0];
-
-  // Obter progresso atualizado antes de salvar
-  const bk = books[bookId];
-  const myProg = getBookUserProgress(bk, currentUser);
-  const startPage = myProg ? (myProg.page || 0) : 0;
-  const finalPage = startPage + pagesRead;
-
-  const sessionData = {
-    userKey: userKey,
-    userName: currentUser,
-    bookId: bookId,
-    timestamp: Date.now(),
-    durationMinutes: durationMin,
-    pagesRead: pagesRead,
-    startPage: startPage,
-    endPage: finalPage
-  };
-
-  // Salvar a nova sessão no histórico de sessões
-  sessionsRef.push(sessionData)
-    .then(() => {
-      // Deletar a sessão ativa
-      return activeSessionsRef.child(userKey).remove();
-    })
-    .then(() => {
-      // Atualizar o progresso do leitor no livro com o valor acumulado
-      saveBookUserProgress(bookId, finalPage, nowStr, true);
-      // Atualizar as estatísticas de ofensiva (Streak)
-      updateStreak();
-    })
-    .catch(err => mostrarErro(err));
+  const userSlug = currentUser.toLowerCase().replace(/\s+/g, "_");
+  activeSessionsRef.child(userSlug).set({
+    bookId: bId,
+    startTime: Date.now()
+  }).catch(e => showGlobalError("Erro ao iniciar sessão: " + e.message));
 }
 
-function cancelarLeitura(){
-  if(!confirm("Descartar esta sessão de leitura? O tempo decorrido não será gravado."))return;
-  const userKey = sKey(currentUser);
-  activeSessionsRef.child(userKey).remove()
-    .catch(err => mostrarErro(err));
-}
+function stopCronoSession() {
+  if (!myActiveSession) return;
+  const finalPageInput = document.getElementById("crono-final-page");
+  const finalPage = parseInt(finalPageInput ? finalPageInput.value : 0) || 0;
 
-function updateStreak(){
-  const userKey = sKey(currentUser);
+  const durationMs = Date.now() - myActiveSession.startTime;
+  const durationMin = Math.round(durationMs / 60000) || 1; 
+
+  const userSlug = currentUser.toLowerCase().replace(/\s+/g, "_");
   const todayStr = new Date().toISOString().split('T')[0];
-  const lastDate = myStats.lastSessionDate||'';
 
-  if(lastDate === todayStr) {
-    // Já atualizou hoje, apenas atualiza a última data por garantia
-    statsRef.child(userKey).child("lastSessionDate").set(todayStr)
-      .catch(err => mostrarErro(err));
-    return;
+  // Adiciona a sessão ao histórico geral
+  const newSessionRef = sessionsRef.push();
+  newSessionRef.set({
+    bookId: myActiveSession.bookId,
+    userName: currentUser,
+    date: todayStr,
+    duration: durationMin,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  }).then(() => {
+    // Atualiza o progresso do livro com a página final informada
+    if (finalPage > 0) {
+      booksRef.child(`${myActiveSession.bookId}/progress/${currentUser}`).update({
+        page: finalPage,
+        status: 'Lendo',
+        date: todayStr
+      });
+    }
+    
+    // Atualiza estatísticas e dias consecutivos
+    updateStreakStats(userSlug, todayStr);
+
+    // Limpa a sessão ativa
+    activeSessionsRef.child(userSlug).remove();
+  }).catch(e => showGlobalError("Erro ao salvar sessão: " + e.message));
+}
+
+function updateStreakStats(userSlug, todayStr) {
+  let streak = myStats.currentStreak || 0;
+  let record = myStats.longestStreak || 0;
+  let lastDate = myStats.lastSessionDate || '';
+
+  if (lastDate === todayStr) {
+    // Já registrou hoje, mantém a sequência normal
+  } else {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+    if (lastDate === yesterdayStr) {
+      streak += 1;
+    } else {
+      streak = 1;
+    }
+    if (streak > record) record = streak;
   }
 
-  let current = myStats.currentStreak||0;
-  let longest = myStats.longestStreak||0;
+  statsRef.child(userSlug).set({
+    currentStreak: streak,
+    longestStreak: record,
+    lastSessionDate: todayStr
+  });
+}
 
-  if(!lastDate){
-    current = 1;
-  } else {
-    const lastD = new Date(lastDate + 'T00:00:00');
-    const todayD = new Date(todayStr + 'T00:00:00');
-    const diffTime = Math.abs(todayD - lastD);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+function calculateCronoStats() {
+  const todayVal = document.getElementById("crono-stat-today");
+  const totalVal = document.getElementById("crono-stat-total");
+  const streakVal = document.getElementById("crono-stat-streak");
+  const recordVal = document.getElementById("crono-stat-record");
 
-    if(diffDays === 1) {
-      current += 1;
-    } else if(diffDays > 1) {
-      current = 1;
+  if (!todayVal) return;
+
+  streakVal.innerText = `${myStats.currentStreak || 0} dias`;
+  recordVal.innerText = `${myStats.longestStreak || 0} dias`;
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  let todayMins = 0;
+  let totalMins = 0;
+
+  for (let id in allSessions) {
+    let s = allSessions[id];
+    if (s.userName === currentUser) {
+      totalMins += s.duration || 0;
+      if (s.date === todayStr) {
+        todayMins += s.duration || 0;
+      }
     }
   }
 
-  if(current > longest) longest = current;
+  todayVal.innerText = `${todayMins}m`;
+  
+  const h = Math.floor(totalMins / 60);
+  const m = totalMins % 60;
+  totalVal.innerText = `${h}h ${m}m`;
+}
 
-  const newStats = {
-    currentStreak: current,
-    longestStreak: longest,
-    lastSessionDate: todayStr
-  };
+function renderCronoHistory() {
+  const listDiv = document.getElementById("crono-history-list");
+  if (!listDiv) return;
 
-  statsRef.child(userKey).set(newStats)
-    .catch(err => mostrarErro(err));
+  let arr = [];
+  for (let id in allSessions) {
+    let s = allSessions[id];
+    s.id = id;
+    arr.push(s);
+  }
+  // Mais recentes primeiro
+  arr.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+  listDiv.innerHTML = "";
+  if (arr.length === 0) {
+    listDiv.innerHTML = `<p class="crono-empty-hint">Nenhuma sessão de foco finalizada até o momento.</p>`;
+    return;
+  }
+
+  arr.forEach(s => {
+    const book = books[s.bookId] || {title: 'Livro Removido', cover:''};
+    const bgIdx = (book.title.charCodeAt(0) || 0) % COVER_BG.length;
+    const coverBg = COVER_BG[bgIdx];
+
+    let coverHtml = book.cover ? `<img src="${book.cover}"/>` : '📚';
+
+    const item = document.createElement("div");
+    item.className = "crono-history-item";
+    item.innerHTML = `
+      <div class="crono-history-cover ${book.cover ? '' : 'no-img'}" style="background:${book.cover ? 'transparent' : coverBg}">${coverHtml}</div>
+      <div class="crono-history-info">
+        <div class="crono-history-book"><strong>${s.userName}</strong> leu ${book.title}</div>
+        <div class="crono-history-date">${s.date.split('-').reverse().join('/')}</div>
+      </div>
+      <div class="crono-history-stats">
+        +${s.duration} min
+        <span>focado</span>
+      </div>
+    `;
+    listDiv.appendChild(item);
+  });
+}
+
+function clearHistory() {
+  if (confirm("Deseja realmente apagar todos os registros do histórico de foco?")) {
+    sessionsRef.remove().catch(e => showGlobalError("Erro ao remover histórico: " + e.message));
+  }
 }
 </script>
 </body>
