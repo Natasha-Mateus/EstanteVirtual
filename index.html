@@ -1405,18 +1405,22 @@ function startSession(){
   if(!book)return;
   var key=sKey(currentUser);
   var startPage=(book.progress&&book.progress[key]&&book.progress[key].page)||0;
-  var payload={bookId:bookId,bookTitle:book.title,bookAuthor:book.author||'',bookCover:book.cover||'',bookPages:book.pages,startTime:Date.now(),startPage:startPage,currentPage:startPage};
-  activeSessionsRef.child(key).set(payload);
+  var payload={bookId:bookId,bookTitle:book.title,bookAuthor:book.author||'',bookCover:book.cover||'',bookPages:book.pages,startTime:Date.now(),startPage:startPage,pagesReadSoFar:0};
+  showCronoError('');
+  activeSessionsRef.child(key).set(payload).catch(function(err){
+    showCronoError('Não foi possível iniciar a sessão: '+err.message+' (verifique as regras do Firebase para o caminho "activeSessions").');
+  });
 }
 
 function finishSession(){
   if(!myActiveSession||!currentUser)return;
   var key=sKey(currentUser);
-  var pageInput=document.getElementById('crono-page-input');
-  var endPage=Math.max(0,Math.min(myActiveSession.bookPages,parseInt((pageInput&&pageInput.value)!=null?pageInput.value:myActiveSession.currentPage,10)||0));
+  var maxReadable=myActiveSession.bookPages-myActiveSession.startPage;
+  var pageInput=document.getElementById('crono-pages-input');
+  var pagesRead=Math.max(0,Math.min(maxReadable,parseInt((pageInput&&pageInput.value)!=null?pageInput.value:myActiveSession.pagesReadSoFar,10)||0));
+  var endPage=myActiveSession.startPage+pagesRead;
   var endTime=Date.now();
   var durationSeconds=Math.max(0,Math.round((endTime-myActiveSession.startTime)/1000));
-  var pagesRead=Math.max(0,endPage-myActiveSession.startPage);
 
   var sessionRecord={
     bookId:myActiveSession.bookId,bookTitle:myActiveSession.bookTitle,bookAuthor:myActiveSession.bookAuthor||'',bookCover:myActiveSession.bookCover||'',
@@ -1425,7 +1429,10 @@ function finishSession(){
     startPage:myActiveSession.startPage,endPage:endPage,pagesRead:pagesRead,
     createdAt:endTime
   };
-  sessionsRef.push(sessionRecord);
+  showCronoError('');
+  sessionsRef.push(sessionRecord).catch(function(err){
+    showCronoError('Não foi possível salvar a sessão no histórico: '+err.message);
+  });
 
   var book=books[myActiveSession.bookId];
   if(book){
@@ -1440,10 +1447,14 @@ function finishSession(){
       updates['statuses/'+key]='Lendo';
       updates['dates/'+key]={start:dates.start||todayStr(),end:dates.end||''};
     }
-    booksRef.child(myActiveSession.bookId).update(updates);
+    booksRef.child(myActiveSession.bookId).update(updates).catch(function(err){
+      showCronoError('Sessão salva, mas não consegui atualizar a página na estante: '+err.message);
+    });
   }
 
-  activeSessionsRef.child(key).remove();
+  activeSessionsRef.child(key).remove().catch(function(err){
+    showCronoError('Sessão salva, mas não consegui encerrar o cronômetro: '+err.message);
+  });
 
   var today=todayStr();
   var last=myStats.lastSessionDate;
@@ -1452,7 +1463,16 @@ function finishSession(){
   else if(last&&daysBetween(last,today)===1)newStreak=(myStats.currentStreak||0)+1;
   else newStreak=1;
   var newLongest=Math.max(myStats.longestStreak||0,newStreak);
-  statsRef.child(key).set({currentStreak:newStreak,longestStreak:newLongest,lastSessionDate:today});
+  statsRef.child(key).set({currentStreak:newStreak,longestStreak:newLongest,lastSessionDate:today}).catch(function(err){
+    showCronoError('Sessão salva, mas não consegui atualizar sua sequência de dias: '+err.message);
+  });
+}
+
+function showCronoError(msg){
+  var el=document.getElementById('crono-error');
+  if(!el)return;
+  el.textContent=msg||'';
+  el.style.display=msg?'block':'none';
 }
 
 function manageCronoTimer(){
@@ -1479,6 +1499,7 @@ function renderCronometro(){
   var stats=computeCronoStats();
   var html='<div class="crono-wrap">';
   html+='<div class="crono-intro"><h2>✦ Cronômetro de Leitura ✦</h2><p>Acompanhe sua jornada como um atleta da mente, '+escHtml(currentUser)+'.</p></div>';
+  html+='<p class="form-error" id="crono-error" style="display:none;margin-bottom:1rem;"></p>';
 
   html+='<div class="crono-stats-grid">'
     +'<div class="crono-stat-card"><div class="crono-stat-label">Tempo total</div><div class="crono-stat-value">'+formatDuration(stats.totalSeconds)+'</div>'+(stats.totalSecondsWeek>0?'<div class="crono-stat-delta">+'+formatDuration(stats.totalSecondsWeek)+' esta semana</div>':'')+'</div>'
@@ -1492,6 +1513,8 @@ function renderCronometro(){
     var elapsedNow=Math.max(0,Math.round((Date.now()-myActiveSession.startTime)/1000));
     var cover=myActiveSession.bookCover;
     var coverHtml=cover?'<div class="crono-session-cover"><img src="'+cover+'"/></div>':'<div class="crono-session-cover no-img" style="background:'+cvColor(myActiveSession.bookTitle)+'">📖</div>';
+    var pagesReadSoFar=myActiveSession.pagesReadSoFar||0;
+    var previewPage=Math.min(myActiveSession.bookPages,myActiveSession.startPage+pagesReadSoFar);
     html+='<div class="crono-session-title">Sessão atual</div>'
       +'<div class="crono-session-body">'
         +coverHtml
@@ -1500,13 +1523,14 @@ function renderCronometro(){
           +'<div class="crono-session-book-author">'+escHtml(myActiveSession.bookAuthor||'')+'</div>'
           +'<div class="crono-session-meta">'
             +'<div class="crono-meta-item"><div class="crono-meta-label">TEMPO</div><div class="crono-meta-value" id="crono-live-timer">'+elapsedDisplay(elapsedNow)+'</div></div>'
-            +'<div class="crono-meta-item"><div class="crono-meta-label">PÁGINA</div><div class="crono-meta-value"><input type="number" min="0" max="'+myActiveSession.bookPages+'" id="crono-page-input" value="'+(myActiveSession.currentPage!=null?myActiveSession.currentPage:myActiveSession.startPage)+'"/> / '+myActiveSession.bookPages+'</div></div>'
+            +'<div class="crono-meta-item"><div class="crono-meta-label">PÁGINAS LIDAS NESTA SESSÃO</div><div class="crono-meta-value"><input type="number" min="0" max="'+(myActiveSession.bookPages-myActiveSession.startPage)+'" id="crono-pages-input" value="'+pagesReadSoFar+'"/></div></div>'
           +'</div>'
+          +'<p class="hint" id="crono-preview" style="margin-top:8px;">Começou na página '+myActiveSession.startPage+' → chega na página <strong>'+previewPage+'</strong> de '+myActiveSession.bookPages+'</p>'
         +'</div>'
         +'<div class="crono-session-actions"><button class="primary" id="btn-finish-session">Finalizar sessão</button></div>'
       +'</div>';
   } else {
-    var candidates=booksArr().filter(function(b){return !b.wishlist;});
+    var candidates=booksArr().filter(function(b){return !b.wishlist && myStatus(b)!=='Lido';});
     candidates.sort(function(a,b){return naturalCompare(a.title||'',b.title||'');});
     if(candidates.length===0){
       html+='<div class="crono-session-title">Sessão atual</div><p class="crono-empty-hint">Adicione um livro na sua estante para começar a cronometrar sua leitura.</p>';
@@ -1549,13 +1573,22 @@ function renderCronometro(){
   if(btnStart)btnStart.onclick=function(){startSession();};
   var btnFinish=document.getElementById('btn-finish-session');
   if(btnFinish)btnFinish.onclick=function(){finishSession();};
-  var pageInputEl=document.getElementById('crono-page-input');
+  var pageInputEl=document.getElementById('crono-pages-input');
   if(pageInputEl){
+    pageInputEl.oninput=function(){
+      var maxReadable=myActiveSession.bookPages-myActiveSession.startPage;
+      var v=Math.max(0,Math.min(maxReadable,parseInt(pageInputEl.value,10)||0));
+      var preview=document.getElementById('crono-preview');
+      if(preview)preview.innerHTML='Começou na página '+myActiveSession.startPage+' → chega na página <strong>'+(myActiveSession.startPage+v)+'</strong> de '+myActiveSession.bookPages;
+    };
     pageInputEl.onchange=function(){
       if(!myActiveSession)return;
-      var v=Math.max(0,Math.min(myActiveSession.bookPages,parseInt(pageInputEl.value,10)||0));
+      var maxReadable=myActiveSession.bookPages-myActiveSession.startPage;
+      var v=Math.max(0,Math.min(maxReadable,parseInt(pageInputEl.value,10)||0));
       pageInputEl.value=v;
-      activeSessionsRef.child(sKey(currentUser)).child('currentPage').set(v);
+      activeSessionsRef.child(sKey(currentUser)).child('pagesReadSoFar').set(v).catch(function(err){
+        showCronoError('Não foi possível salvar o progresso da sessão: '+err.message);
+      });
     };
   }
 }
