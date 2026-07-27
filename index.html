@@ -672,7 +672,119 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   .crono-session-actions button{width:100%;}
 }
 
+/* ─── APP SHELL / SIDEBAR ─── */
+.app-shell{display:-webkit-flex;display:flex;min-height:100vh;align-items:stretch;}
+.sidebar{
+  width:230px;flex-shrink:0;
+  background:-webkit-linear-gradient(180deg,#140c04,#0c0703);
+  background:linear-gradient(180deg,#140c04,#0c0703);
+  border-right:1px solid var(--wood-edge);
+  display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;
+  transition:width 0.22s ease;
+  position:relative;z-index:20;
+}
+.sidebar.collapsed{width:68px;}
+.sidebar-top{display:-webkit-flex;display:flex;align-items:center;gap:10px;padding:1.1rem 1rem 1rem;border-bottom:1px solid rgba(74,46,16,0.3);}
+.sidebar.collapsed .sidebar-top{justify-content:center;padding:1.1rem 0.4rem;}
+.sidebar-collapse-btn{width:30px;height:30px;padding:0;flex-shrink:0;border-radius:50%;display:-webkit-flex;display:flex;align-items:center;justify-content:center;}
+.sidebar-collapse-btn svg{width:14px;height:14px;stroke:var(--gold-dim);fill:none;stroke-width:2;transition:transform 0.22s;}
+.sidebar.collapsed .sidebar-collapse-btn svg{transform:rotate(180deg);}
+.sidebar-logo{display:-webkit-flex;display:flex;align-items:center;gap:8px;overflow:hidden;}
+.sidebar-logo-icon{font-size:20px;flex-shrink:0;}
+.sidebar-logo-text{font-family:var(--font-title);font-size:13.5px;color:var(--gold-light);letter-spacing:0.04em;line-height:1.25;white-space:nowrap;text-shadow:0 0 16px rgba(201,168,76,0.3);}
+.sidebar.collapsed .sidebar-logo-text{display:none;}
+
+.sidebar-nav{-webkit-flex:1;flex:1;padding:0.9rem 0.55rem;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-item{display:-webkit-flex;display:flex;align-items:center;gap:11px;height:41px;padding:0 11px;background:transparent;border:1px solid transparent;border-radius:var(--radius-md);color:var(--text-sub);justify-content:flex-start;text-align:left;width:100%;}
+.nav-item:hover{background:rgba(201,168,76,0.06);color:var(--gold-light);}
+.nav-item.active{background:-webkit-linear-gradient(135deg,rgba(90,42,10,0.55),rgba(61,26,6,0.55));background:linear-gradient(135deg,rgba(90,42,10,0.55),rgba(61,26,6,0.55));color:var(--gold-light);border-color:var(--border-gold);}
+.nav-icon{font-size:15px;flex-shrink:0;width:18px;text-align:center;}
+.nav-label{font-family:var(--font-title);font-size:11.5px;letter-spacing:0.03em;white-space:nowrap;overflow:hidden;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:0;}
+.sidebar.collapsed .nav-label{display:none;}
+.nav-divider{height:1px;background:rgba(74,46,16,0.4);margin:8px 8px;}
+
+.sidebar-footer{padding:1rem 0.8rem;text-align:center;border-top:1px solid rgba(74,46,16,0.3);}
+.sidebar-footer-ornament{color:var(--gold-dim);font-size:13px;margin-bottom:6px;}
+.sidebar-footer-quote{font-size:11px;font-style:italic;color:var(--text-dim);line-height:1.4;}
+.sidebar.collapsed .sidebar-footer-quote,.sidebar.collapsed .sidebar-footer-ornament{display:none;}
+
+.main-content{-webkit-flex:1;flex:1;min-width:0;}
+
+.top-header{
+  display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:12px;
+  padding:1.15rem 1.5rem;
+  background:-webkit-linear-gradient(180deg,#160d05,#100a04);
+  background:linear-gradient(180deg,#160d05,#100a04);
+  border-bottom:1px solid var(--wood-edge);
+}
+.header-greeting h1{font-family:var(--font-title);font-size:18px;color:var(--gold-light);letter-spacing:0.03em;}
+.top-header .header-right{position:static;top:auto;right:auto;}
+
+/* ─── VISÃO GERAL ─── */
+.visao-wrap{padding:1.3rem 1.5rem 3rem;}
+.month-selector{display:-webkit-flex;display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:1.1rem;}
+.month-selector button{width:32px;height:32px;padding:0;border-radius:50%;}
+.month-label{font-family:var(--font-title);font-size:13px;color:var(--gold);letter-spacing:0.05em;padding:0 8px;min-width:140px;text-align:center;}
+
+.visao-stats-grid{display:-webkit-grid;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:1.3rem;}
+.visao-charts-row{display:-webkit-grid;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:14px;margin-bottom:1.3rem;align-items:stretch;}
+.visao-lower-row{display:-webkit-grid;display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:14px;}
+
+.chart-card{
+  background:-webkit-linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
+  background:linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
+  border:1px solid var(--border-gold);border-radius:var(--radius-lg);
+  padding:1.1rem 1.2rem;box-shadow:0 6px 24px rgba(0,0,0,0.45);
+}
+.chart-card h3{font-family:var(--font-title);font-size:12.5px;color:var(--gold);letter-spacing:0.08em;margin-bottom:1rem;}
+
+.bar-chart{display:-webkit-flex;display:flex;align-items:flex-end;gap:5px;height:140px;}
+.bar-chart-col{-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.bar-chart-bar{width:65%;background:-webkit-linear-gradient(180deg,#d4822a,#c9a84c);background:linear-gradient(180deg,#d4822a,#c9a84c);border-radius:3px 3px 0 0;min-height:3px;}
+.bar-chart-bar.empty{background:rgba(90,52,24,0.3);}
+.bar-chart-bar.selected{background:-webkit-linear-gradient(180deg,#e8c97a,#c9a84c);background:linear-gradient(180deg,#e8c97a,#c9a84c);box-shadow:0 0 10px rgba(201,168,76,0.5);}
+.bar-chart-label{font-size:9.5px;color:var(--text-dim);margin-top:6px;}
+.bar-chart-value{font-size:9px;color:var(--gold-light);margin-bottom:3px;}
+
+.donut{width:120px;height:120px;border-radius:50%;margin:0 auto 14px;position:relative;box-shadow:0 4px 16px rgba(0,0,0,0.5);}
+.donut::after{content:'';position:absolute;inset:20%;background:var(--wood-mid);border-radius:50%;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);}
+.donut-legend{font-size:11.5px;}
+.donut-legend-item{display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;padding:3px 0;color:var(--text-sub);}
+.donut-legend-swatch{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:6px;}
+
+.goal-ring{width:126px;height:126px;border-radius:50%;margin:0 auto 12px;position:relative;display:-webkit-flex;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.5);}
+.goal-ring::before{content:'';position:absolute;inset:16%;background:var(--wood-mid);border-radius:50%;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);}
+.goal-ring-text{position:relative;z-index:2;text-align:center;}
+.goal-ring-pct{font-family:var(--font-title);font-size:21px;color:var(--gold-light);}
+.goal-ring-label{font-size:9.5px;color:var(--text-sub);letter-spacing:0.04em;}
+.goal-meta-info{text-align:center;font-size:11.5px;color:var(--text-sub);}
+.goal-set-inline{margin-top:10px;display:-webkit-flex;display:flex;gap:8px;justify-content:center;}
+.goal-set-inline input{width:80px;}
+
+.quick-stats-list{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:9px;}
+.quick-stats-row{display:-webkit-flex;display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-sub);border-bottom:1px dashed rgba(74,46,16,0.35);padding-bottom:8px;}
+.quick-stats-row strong{color:var(--gold-light);font-family:var(--font-title);font-weight:600;font-size:13px;}
+
+.placeholder-wrap{padding:4.5rem 1.5rem;text-align:center;color:var(--text-dim);}
+.placeholder-wrap h2{font-family:var(--font-title);color:var(--gold-light);font-size:19px;margin-bottom:8px;text-shadow:0 0 20px rgba(201,168,76,0.3);}
+.placeholder-wrap p{font-size:14px;font-style:italic;}
+
+@media(max-width:1000px){
+  .visao-charts-row{grid-template-columns:1fr;}
+  .visao-lower-row{grid-template-columns:1fr;}
+  .visao-stats-grid{grid-template-columns:repeat(2,1fr);}
+}
+
 /* ─── AJUSTES DE RESPONSIVIDADE (MOBILE) ─── */
+@media(max-width:820px){
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:68px;}
+  .sidebar .nav-label,.sidebar .sidebar-logo-text,.sidebar .sidebar-footer-quote,.sidebar .sidebar-footer-ornament{display:none;}
+  .sidebar.collapsed{width:0;overflow:hidden;border-right:none;}
+  .main-content{margin-left:68px;}
+  .sidebar.collapsed ~ .main-content{margin-left:0;}
+}
+
 @media(max-width:600px){
   .site-header{
     padding:1rem 1rem 1.2rem;
@@ -739,64 +851,89 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 </head>
 <body>
 
-<header class="site-header">
-  <div class="candle-scene">
-    <img src="./candle-scene_2_removebg.png" alt="Cena com vela acesa" style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;"/>
-  </div>
-  <div class="decor-scene">
-    <img src="./decor-scene_2_removebg.png" alt="Decoração" />
-  </div>
-  <div class="header-right">
-    <span class="user-icon">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </span>
-    <input type="text" id="user-input" placeholder="Seu nome"/>
-    <button class="btn-icon" id="btn-user-search" title="Buscar">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </button>
-  </div>
-  <div class="orn-top">✦ ✦ ✦</div>
-  <h1 class="site-title">Capítulo Compartilhado</h1>
-  <div class="orn-bot">— ✦ —</div>
-</header>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <button class="sidebar-collapse-btn" id="btn-collapse-sidebar" title="Recolher/expandir menu">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="sidebar-logo">
+        <span class="sidebar-logo-icon">📖</span>
+        <span class="sidebar-logo-text">Capítulo<br/>Compartilhado</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="visao" title="Visão Geral"><span class="nav-icon">🏠</span><span class="nav-label">Visão Geral</span></button>
+      <button class="nav-item" data-tab="estante" title="Na Estante"><span class="nav-icon">📚</span><span class="nav-label">Na Estante</span></button>
+      <button class="nav-item" data-tab="desejos" title="Lista de Desejos"><span class="nav-icon">🔖</span><span class="nav-label">Lista de Desejos</span></button>
+      <button class="nav-item" data-tab="cronometro" title="Cronômetro"><span class="nav-icon">⏱</span><span class="nav-label">Cronômetro</span></button>
+      <div class="nav-divider"></div>
+      <button class="nav-item" data-tab="metas" title="Metas de Leitura"><span class="nav-icon">🎯</span><span class="nav-label">Metas de Leitura</span></button>
+      <button class="nav-item" data-tab="estatisticas" title="Estatísticas"><span class="nav-icon">📊</span><span class="nav-label">Estatísticas</span></button>
+      <button class="nav-item" data-tab="generos" title="Gêneros"><span class="nav-icon">🏷️</span><span class="nav-label">Gêneros</span></button>
+      <button class="nav-item" data-tab="autores" title="Autores"><span class="nav-icon">✒️</span><span class="nav-label">Autores</span></button>
+      <div class="nav-divider"></div>
+      <button class="nav-item" data-tab="config" title="Configurações"><span class="nav-icon">⚙️</span><span class="nav-label">Configurações</span></button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-ornament">✦</div>
+      <p class="sidebar-footer-quote">Cada página é um passo em um mundo novo.</p>
+    </div>
+  </aside>
 
-<div class="main-tabs">
-  <button id="tab-estante" class="tab-btn active">Na Estante</button>
-  <button id="tab-desejos" class="tab-btn">Lista de Desejos</button>
-  <button id="tab-cronometro" class="tab-btn">Cronômetro</button>
+  <main class="main-content">
+    <header class="top-header">
+      <div class="header-greeting">
+        <h1 id="header-greeting-text">Bem-vindo(a)</h1>
+      </div>
+      <div class="header-right">
+        <span class="user-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span>
+        <input type="text" id="user-input" placeholder="Seu nome"/>
+        <button class="btn-icon" id="btn-user-search" title="Buscar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="conn-bar">
+      <span class="conn-dot" id="conn-dot"></span>
+      <span id="conn-text">Conectando...</span>
+    </div>
+
+    <div id="visao-area" style="display:none;"></div>
+    <div id="placeholder-area" style="display:none;"></div>
+
+    <div class="toolbar">
+      <input type="text" id="search-input" placeholder="🔍  Buscar por autor ou título"/>
+      <select id="filter-status">
+        <option value="Todos">Todos os status</option>
+        <option value="Na estante">Na estante</option>
+        <option value="Quero ler">Quero ler</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Lido">Lido</option>
+        <option value="Abandonado">Abandonado</option>
+      </select>
+      <select id="sort-mode">
+        <option value="recent">Mais recentes</option>
+        <option value="title">Título A-Z</option>
+        <option value="author">Autor A-Z</option>
+      </select>
+      <button id="btn-add" class="primary">✦ Adicionar livro</button>
+    </div>
+    <div class="book-count-bar" id="book-count">—</div>
+
+    <div id="form-area"></div>
+
+    <div id="back-container"></div>
+
+    <div id="books-area"><p class="empty-state">✦ Carregando a estante... ✦</p></div>
+
+    <div id="crono-area" style="display:none;"></div>
+  </main>
 </div>
 
-<div class="conn-bar">
-  <span class="conn-dot" id="conn-dot"></span>
-  <span id="conn-text">Conectando...</span>
-</div>
-
-<div class="toolbar">
-  <input type="text" id="search-input" placeholder="🔍  Buscar por autor ou título"/>
-  <select id="filter-status">
-    <option value="Todos">Todos os status</option>
-    <option value="Na estante">Na estante</option>
-    <option value="Quero ler">Quero ler</option>
-    <option value="Lendo">Lendo</option>
-    <option value="Lido">Lido</option>
-    <option value="Abandonado">Abandonado</option>
-  </select>
-  <select id="sort-mode">
-    <option value="recent">Mais recentes</option>
-    <option value="title">Título A-Z</option>
-    <option value="author">Autor A-Z</option>
-  </select>
-  <button id="btn-add" class="primary">✦ Adicionar livro</button>
-</div>
-<div class="book-count-bar" id="book-count">—</div>
-
-<div id="form-area"></div>
-
-<div id="back-container"></div>
-
-<div id="books-area"><p class="empty-state">✦ Carregando a estante... ✦</p></div>
-
-<div id="crono-area" style="display:none;"></div>
 
 <script>
 const firebaseConfig={
@@ -814,6 +951,7 @@ const booksRef=db.ref("books");
 const sessionsRef=db.ref("sessions");
 const activeSessionsRef=db.ref("activeSessions");
 const statsRef=db.ref("readingStats");
+const goalsRef=db.ref("readingGoals");
 
 const STATUS_OPTIONS=['Na estante','Quero ler','Lendo','Lido','Abandonado'];
 const STATUS_CLS={'Na estante':'sb-estante','Quero ler':'sb-quero','Lendo':'sb-lendo','Lido':'sb-lido','Abandonado':'sb-aband'};
@@ -826,9 +964,12 @@ const COVER_BG=[
   'linear-gradient(135deg,#1a2c2c,#2a4848)',
 ];
 
-let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null,isolatedBookId=null,activeTab='estante';
+let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null,isolatedBookId=null,activeTab='visao';
+let sidebarCollapsed=false;
+let selYear=(new Date()).getFullYear(),selMonth=(new Date()).getMonth()+1;
 let allSessions={},myActiveSession=null,myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
-let activeSessionListenerRef=null,statsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null,cronoSearchTerm='',editingSessionId=null;
+let activeSessionListenerRef=null,statsListenerRef=null,goalsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null,cronoSearchTerm='',editingSessionId=null;
+let myGoals={annualBooks:0,monthlyPages:0};
 
 function escHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 function cvColor(t){let s=0;for(let i=0;i<(t||'').length;i++)s+=t.charCodeAt(i);return COVER_BG[s%COVER_BG.length];}
@@ -857,8 +998,10 @@ function saveUser(n){
 function attachUserListeners(){
   if(activeSessionListenerRef)activeSessionListenerRef.off();
   if(statsListenerRef)statsListenerRef.off();
+  if(goalsListenerRef)goalsListenerRef.off();
   myActiveSession=null;
   myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
+  myGoals={annualBooks:0,monthlyPages:0};
   if(!currentUser){render();return;}
   var key=sKey(currentUser);
   activeSessionListenerRef=activeSessionsRef.child(key);
@@ -866,6 +1009,7 @@ function attachUserListeners(){
     myActiveSession=snap.val()||null;
     if(myActiveSession)myActiveSession.id=key;
     if(activeTab==='cronometro')renderCronometro();
+    if(activeTab==='visao')renderVisaoGeral();
     manageCronoTimer();
   });
   statsListenerRef=statsRef.child(key);
@@ -873,7 +1017,15 @@ function attachUserListeners(){
     var v=snap.val()||{};
     myStats={currentStreak:v.currentStreak||0,longestStreak:v.longestStreak||0,lastSessionDate:v.lastSessionDate||''};
     if(activeTab==='cronometro')renderCronometro();
+    if(activeTab==='visao')renderVisaoGeral();
   });
+  goalsListenerRef=goalsRef.child(key);
+  goalsListenerRef.on('value',function(snap){
+    var v=snap.val()||{};
+    myGoals={annualBooks:v.annualBooks||0,monthlyPages:v.monthlyPages||0};
+    if(activeTab==='visao')renderVisaoGeral();
+  });
+  render();
 }
 
 booksRef.on('value',snap=>{
@@ -891,6 +1043,7 @@ booksRef.on('value',snap=>{
 sessionsRef.on('value',snap=>{
   allSessions=snap.val()||{};
   if(activeTab==='cronometro')renderCronometro();
+  if(activeTab==='visao')renderVisaoGeral();
 });
 
 function booksArr(){return Object.keys(books).map(function(id){return Object.assign({id:id},books[id]);});}
@@ -937,37 +1090,81 @@ function filtered(){
   return list;
 }
 
+function updateHeaderGreeting(){
+  var el=document.getElementById('header-greeting-text');
+  if(!el)return;
+  var h=(new Date()).getHours();
+  var saud=h<12?'Bom dia':(h<18?'Boa tarde':'Boa noite');
+  el.textContent=currentUser?(saud+', '+currentUser):'Bem-vindo(a) ao Capítulo Compartilhado';
+}
+
+var PLACEHOLDER_TITLES={metas:'Metas de Leitura',estatisticas:'Estatísticas',generos:'Gêneros',autores:'Autores',config:'Configurações'};
+
 function render(){
   var ui=document.getElementById('user-input');
   if(ui)ui.value=currentUser;
+  updateHeaderGreeting();
 
-  var tE=document.getElementById('tab-estante'),tD=document.getElementById('tab-desejos'),tC=document.getElementById('tab-cronometro');
-  if(tE)tE.classList.toggle('active',activeTab==='estante');
-  if(tD)tD.classList.toggle('active',activeTab==='desejos');
-  if(tC)tC.classList.toggle('active',activeTab==='cronometro');
+  var navItems=document.querySelectorAll('.nav-item');
+  for(var ni=0;ni<navItems.length;ni++){
+    navItems[ni].classList.toggle('active',navItems[ni].getAttribute('data-tab')===activeTab);
+  }
 
   var toolbar=document.querySelector('.toolbar');
   var bookCountBar=document.getElementById('book-count');
   var booksArea=document.getElementById('books-area');
   var cronoArea=document.getElementById('crono-area');
+  var visaoArea=document.getElementById('visao-area');
+  var placeholderArea=document.getElementById('placeholder-area');
   var formArea=document.getElementById('form-area');
+
+  manageCronoTimer();
 
   if(activeTab==='cronometro'){
     if(toolbar)toolbar.style.display='none';
     if(bookCountBar)bookCountBar.style.display='none';
     if(booksArea)booksArea.style.display='none';
+    if(visaoArea)visaoArea.style.display='none';
+    if(placeholderArea)placeholderArea.style.display='none';
     if(cronoArea)cronoArea.style.display='';
     if(formArea)formArea.innerHTML='';
     document.getElementById('back-container').innerHTML='';
     renderCronometro();
-    manageCronoTimer();
     return;
   }
+
+  if(activeTab==='visao'){
+    if(toolbar)toolbar.style.display='none';
+    if(bookCountBar)bookCountBar.style.display='none';
+    if(booksArea)booksArea.style.display='none';
+    if(cronoArea)cronoArea.style.display='none';
+    if(placeholderArea)placeholderArea.style.display='none';
+    if(visaoArea)visaoArea.style.display='';
+    if(formArea)formArea.innerHTML='';
+    document.getElementById('back-container').innerHTML='';
+    renderVisaoGeral();
+    return;
+  }
+
+  if(activeTab==='metas'||activeTab==='estatisticas'||activeTab==='generos'||activeTab==='autores'||activeTab==='config'){
+    if(toolbar)toolbar.style.display='none';
+    if(bookCountBar)bookCountBar.style.display='none';
+    if(booksArea)booksArea.style.display='none';
+    if(cronoArea)cronoArea.style.display='none';
+    if(visaoArea)visaoArea.style.display='none';
+    if(placeholderArea)placeholderArea.style.display='';
+    if(formArea)formArea.innerHTML='';
+    document.getElementById('back-container').innerHTML='';
+    renderPlaceholder(activeTab);
+    return;
+  }
+
   if(toolbar)toolbar.style.display='';
   if(bookCountBar)bookCountBar.style.display='';
   if(booksArea)booksArea.style.display='';
   if(cronoArea)cronoArea.style.display='none';
-  manageCronoTimer();
+  if(visaoArea)visaoArea.style.display='none';
+  if(placeholderArea)placeholderArea.style.display='none';
 
   var total=filtered().length;
   var bc=document.getElementById('book-count');
@@ -981,6 +1178,13 @@ function render(){
   renderForm();
   renderBackContainer();
   renderBooks();
+}
+
+function renderPlaceholder(tab){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  var title=PLACEHOLDER_TITLES[tab]||'Em breve';
+  area.innerHTML='<div class="placeholder-wrap"><h2>✦ '+title+' ✦</h2><p>Essa página ainda está sendo construída — em breve chega por aqui.</p></div>';
 }
 
 function renderBackContainer() {
@@ -1002,7 +1206,7 @@ function renderBackContainer() {
 function renderForm(){
   var area=document.getElementById('form-area');
   if(!editingId){area.innerHTML='';return;}
-  var book={title:'',author:'',pages:'',cover:'',wishlist:false};
+  var book={title:'',author:'',pages:'',cover:'',wishlist:false,genre:''};
   if(editingId!=='new'){
     book=books[editingId];
     if(!book){editingId=null;area.innerHTML='';return;}
@@ -1016,7 +1220,15 @@ function renderForm(){
       +'<div class="form-field"><label>Título</label><input type="text" id="f-title" value="'+escHtml(book.title)+'"/></div>'
       +'<div class="form-field"><label>Autor</label><input type="text" id="f-author" value="'+escHtml(book.author)+'"/></div>'
       +'<div class="form-field"><label>Total de páginas</label><input type="number" id="f-pages" min="1" value="'+(book.pages||'')+'"/></div>'
+      +'<div class="form-field"><label>Gênero</label><input type="text" id="f-genre" list="genre-suggestions" value="'+escHtml(book.genre||'')+'" placeholder="Ex: Ficção"/></div>'
     +'</div>'
+    +'<datalist id="genre-suggestions">'
+      +'<option value="Ficção"></option><option value="Não-ficção"></option><option value="Romance"></option>'
+      +'<option value="Fantasia"></option><option value="Ficção Científica"></option><option value="Suspense"></option>'
+      +'<option value="Terror"></option><option value="Biografia"></option><option value="Autoajuda"></option>'
+      +'<option value="Desenvolvimento Pessoal"></option><option value="História"></option><option value="Poesia"></option>'
+      +'<option value="Infantojuvenil"></option>'
+    +'</datalist>'
     +'<div class="wish-row">'
       +'<input type="checkbox" id="f-wishlist"'+(book.wishlist?' checked':'')+'/>'
       +'<label for="f-wishlist">📌 Lista de desejos</label>'
@@ -1097,18 +1309,20 @@ function saveForm(existing){
   var author=document.getElementById('f-author').value.trim();
   var pages=parseInt(document.getElementById('f-pages').value,10);
   var wishlist=document.getElementById('f-wishlist').checked;
+  var genreEl=document.getElementById('f-genre');
+  var genre=genreEl?genreEl.value.trim():'';
   var errEl=document.getElementById('form-error');
   if(!title||!author||!pages||pages<=0){errEl.textContent='Preencha título, autor e páginas.';errEl.style.display='block';return;}
   errEl.style.display='none';
   
   if(editingId=='new'){
-    var nb={title:title,author:author,pages:pages,wishlist:wishlist,status:'Na estante',cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
+    var nb={title:title,author:author,pages:pages,genre:genre,wishlist:wishlist,status:'Na estante',cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
     booksRef.push(nb).then(function() {
        editingId=null;pendingCoverData=null;render();
     }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
   } else {
     var nb=Object.assign({},existing);
-    nb.title=title;nb.author=author;nb.pages=pages;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
+    nb.title=title;nb.author=author;nb.pages=pages;nb.genre=genre;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
     booksRef.child(editingId).set(nb).then(function() {
        editingId=null;pendingCoverData=null;render();
     }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
@@ -1225,6 +1439,8 @@ function renderNiche(book){
     +'</div>';
   }
 
+  var totalSecs=bookTotalSeconds(book.id);
+
   var coverHtml;
   if(book.cover){
     coverHtml='<div class="niche-cover"><img src="'+book.cover+'" alt="Capa"/></div>';
@@ -1241,6 +1457,7 @@ function renderNiche(book){
       +'<p class="niche-title">'+escHtml(book.title)+'</p>'
       +'<p class="niche-author">'+escHtml(book.author)+'</p>'
       +'<span class="sb '+scls+'">'+escHtml(ms)+'</span>'
+      +(totalSecs>0?'<p class="niche-author" style="color:var(--gold);">⏱ '+formatDuration(totalSecs)+'</p>':'')
       +(progHtml?'<div class="niche-progress">'+progHtml+'</div>':'')
       +'<div class="niche-ornament">— ✦ —</div>'
     +'</div>'
@@ -1314,7 +1531,7 @@ function renderListCard(book){
     +'<div class="list-body">'
       +'<div class="list-head"><div>'
         +'<p class="list-title">'+escHtml(book.title)+'</p>'
-        +'<p class="list-meta">'+escHtml(book.author)+' · '+book.pages+' páginas</p>'
+        +'<p class="list-meta">'+escHtml(book.author)+' · '+book.pages+' páginas'+(bookTotalSeconds(book.id)>0?' · ⏱ '+formatDuration(bookTotalSeconds(book.id)):'')+'</p>'
       +'</div>'
       +'<button class="edit-btn no-open" id="edit-btn-'+book.id+'" title="Editar livro" style="width:30px;height:30px;padding:0;font-size:14px;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
         +'<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
@@ -1462,11 +1679,35 @@ function startSession(bookId){
   if(!book)return;
   var key=sKey(currentUser);
   var startPage=(book.progress&&book.progress[key]&&book.progress[key].page)||0;
-  var payload={bookId:bookId,bookTitle:book.title,bookAuthor:book.author||'',bookCover:book.cover||'',bookPages:book.pages,startTime:Date.now(),startPage:startPage,pagesReadSoFar:0};
+  var payload={bookId:bookId,bookTitle:book.title,bookAuthor:book.author||'',bookCover:book.cover||'',bookPages:book.pages,startTime:Date.now(),startPage:startPage,pagesReadSoFar:0,accumulatedSeconds:0,isPaused:false,lastResumeTime:Date.now()};
   showCronoError('');
   activeSessionsRef.child(key).set(payload).catch(function(err){
     showCronoError('Não foi possível iniciar a sessão: '+err.message+' (verifique as regras do Firebase para o caminho "activeSessions").');
   });
+}
+
+function sessionElapsedSeconds(s){
+  var acc=s.accumulatedSeconds||0;
+  if(!s.isPaused){
+    acc+=Math.max(0,(Date.now()-(s.lastResumeTime||s.startTime))/1000);
+  }
+  return Math.round(acc);
+}
+
+function togglePauseSession(){
+  if(!myActiveSession||!currentUser)return;
+  var key=sKey(currentUser);
+  showCronoError('');
+  if(myActiveSession.isPaused){
+    activeSessionsRef.child(key).update({isPaused:false,lastResumeTime:Date.now()}).catch(function(err){
+      showCronoError('Não foi possível retomar a sessão: '+err.message);
+    });
+  } else {
+    var acc=(myActiveSession.accumulatedSeconds||0)+Math.max(0,(Date.now()-(myActiveSession.lastResumeTime||myActiveSession.startTime))/1000);
+    activeSessionsRef.child(key).update({isPaused:true,accumulatedSeconds:acc}).catch(function(err){
+      showCronoError('Não foi possível pausar a sessão: '+err.message);
+    });
+  }
 }
 
 function finishSession(){
@@ -1477,7 +1718,7 @@ function finishSession(){
   var pagesRead=Math.max(0,Math.min(maxReadable,parseInt((pageInput&&pageInput.value)!=null?pageInput.value:myActiveSession.pagesReadSoFar,10)||0));
   var endPage=myActiveSession.startPage+pagesRead;
   var endTime=Date.now();
-  var durationSeconds=Math.max(0,Math.round((endTime-myActiveSession.startTime)/1000));
+  var durationSeconds=sessionElapsedSeconds(myActiveSession);
 
   var sessionRecord={
     bookId:myActiveSession.bookId,bookTitle:myActiveSession.bookTitle,bookAuthor:myActiveSession.bookAuthor||'',bookCover:myActiveSession.bookCover||'',
@@ -1592,8 +1833,7 @@ function manageCronoTimer(){
 function updateLiveTimerDisplay(){
   var el=document.getElementById('crono-live-timer');
   if(!el||!myActiveSession)return;
-  var secs=Math.max(0,Math.round((Date.now()-myActiveSession.startTime)/1000));
-  el.textContent=elapsedDisplay(secs);
+  el.textContent=elapsedDisplay(sessionElapsedSeconds(myActiveSession));
 }
 
 function renderCronometro(){
@@ -1617,24 +1857,28 @@ function renderCronometro(){
 
   html+='<div class="crono-session-card">';
   if(myActiveSession){
-    var elapsedNow=Math.max(0,Math.round((Date.now()-myActiveSession.startTime)/1000));
+    var elapsedNow=sessionElapsedSeconds(myActiveSession);
     var cover=myActiveSession.bookCover;
     var coverHtml=cover?'<div class="crono-session-cover"><img src="'+cover+'"/></div>':'<div class="crono-session-cover no-img" style="background:'+cvColor(myActiveSession.bookTitle)+'">📖</div>';
     var pagesReadSoFar=myActiveSession.pagesReadSoFar||0;
     var previewPage=Math.min(myActiveSession.bookPages,myActiveSession.startPage+pagesReadSoFar);
-    html+='<div class="crono-session-title">Sessão atual</div>'
+    var isPaused=!!myActiveSession.isPaused;
+    html+='<div class="crono-session-title">Sessão atual'+(isPaused?' <span style="color:var(--amber);">· Pausada</span>':'')+'</div>'
       +'<div class="crono-session-body">'
         +coverHtml
         +'<div class="crono-session-info">'
           +'<div class="crono-session-book-title">'+escHtml(myActiveSession.bookTitle)+'</div>'
           +'<div class="crono-session-book-author">'+escHtml(myActiveSession.bookAuthor||'')+'</div>'
           +'<div class="crono-session-meta">'
-            +'<div class="crono-meta-item"><div class="crono-meta-label">TEMPO</div><div class="crono-meta-value" id="crono-live-timer">'+elapsedDisplay(elapsedNow)+'</div></div>'
+            +'<div class="crono-meta-item"><div class="crono-meta-label">TEMPO</div><div class="crono-meta-value" id="crono-live-timer" style="'+(isPaused?'opacity:0.55;':'')+'">'+elapsedDisplay(elapsedNow)+'</div></div>'
             +'<div class="crono-meta-item"><div class="crono-meta-label">PÁGINAS LIDAS NESTA SESSÃO</div><div class="crono-meta-value"><input type="number" min="0" max="'+(myActiveSession.bookPages-myActiveSession.startPage)+'" id="crono-pages-input" value="'+pagesReadSoFar+'"/></div></div>'
           +'</div>'
           +'<p class="hint" id="crono-preview" style="margin-top:8px;">Começou na página '+myActiveSession.startPage+' → chega na página <strong>'+previewPage+'</strong> de '+myActiveSession.bookPages+'</p>'
         +'</div>'
-        +'<div class="crono-session-actions"><button class="primary" id="btn-finish-session">Finalizar sessão</button></div>'
+        +'<div class="crono-session-actions" style="display:flex;gap:8px;flex-wrap:wrap;">'
+          +'<button id="btn-pause-session">'+(isPaused?'▶ Retomar':'⏸ Pausar')+'</button>'
+          +'<button class="primary" id="btn-finish-session">Finalizar sessão</button>'
+        +'</div>'
       +'</div>';
   } else {
     html+='<div class="crono-session-title">Iniciar leitura</div>'
@@ -1661,6 +1905,8 @@ function renderCronometro(){
 
   var btnFinish=document.getElementById('btn-finish-session');
   if(btnFinish)btnFinish.onclick=function(){finishSession();};
+  var btnPause=document.getElementById('btn-pause-session');
+  if(btnPause)btnPause.onclick=function(){togglePauseSession();};
   var searchEl=document.getElementById('crono-book-search');
   if(searchEl){
     searchEl.oninput=function(){
@@ -1733,35 +1979,226 @@ function renderHistoryItemHtml(s){
   +'</div>';
 }
 
-/* ── wiring ── */
-function goToTab(tab){
-  activeTab=tab;
-  isolatedBookId=null;
-  viewMode='grid';
-  render();
-  window.scrollTo({top:0,behavior:'smooth'});
+/* ── VISÃO GERAL ── */
+var GENRE_COLORS=['#c9a84c','#3a7a6a','#8a3a3a','#5a3a8a','#3a5a8a','#8a6c2a','#4a7a3a','#7a3a5a','#6a4a2a','#2a6a6a'];
+var MONTH_NAMES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function prevMonthOf(year,month){month--;if(month<1){month=12;year--;}return{year:year,month:month};}
+function nextMonthOf(year,month){month++;if(month>12){month=1;year++;}return{year:year,month:month};}
+
+function bookTotalSeconds(bookId){
+  if(!currentUser)return 0;
+  var key=sKey(currentUser);
+  var total=0;
+  var ids=Object.keys(allSessions);
+  for(var i=0;i<ids.length;i++){
+    var s=allSessions[ids[i]];
+    if(s.bookId===bookId&&s.userKey===key)total+=s.durationSeconds||0;
+  }
+  return total;
 }
-document.getElementById('tab-estante').onclick=function(){goToTab('estante');};
-document.getElementById('tab-desejos').onclick=function(){goToTab('desejos');};
-document.getElementById('tab-cronometro').onclick=function(){goToTab('cronometro');};
 
-document.getElementById('btn-add').onclick=function(){
-  editingId='new';pendingCoverData=null;render();
-  setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
-};
-document.getElementById('search-input').oninput=function(e){searchTerm=e.target.value;renderBooks();};
-document.getElementById('filter-status').onchange=function(e){filterStatus=e.target.value;renderBooks();};
-document.getElementById('sort-mode').onchange=function(e){sortMode=e.target.value;renderBooks();};
+function computeVisaoStats(year,month){
+  var key=sKey(currentUser);
+  var mySessions=getMySessions();
+  var monthSessions=mySessions.filter(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    return d.getFullYear()===year&&(d.getMonth()+1)===month;
+  });
+  var pagesMonth=0,secondsMonth=0;
+  for(var i=0;i<monthSessions.length;i++){pagesMonth+=monthSessions[i].pagesRead||0;secondsMonth+=monthSessions[i].durationSeconds||0;}
 
-function applyUser(){
-  var n=document.getElementById('user-input').value.trim();
-  saveUser(n);
-  render();
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  var booksMonth=0;
+  for(var j=0;j<allBooksArr.length;j++){
+    var b=allBooksArr[j];
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(dend){
+      var dd=new Date(dend+'T00:00:00');
+      if(dd.getFullYear()===year&&(dd.getMonth()+1)===month)booksMonth++;
+    }
+  }
+
+  var now=new Date();
+  var isCurrentMonth=(now.getFullYear()===year&&(now.getMonth()+1)===month);
+  var totalDaysInMonth=new Date(year,month,0).getDate();
+  var daysElapsed=isCurrentMonth?now.getDate():totalDaysInMonth;
+  var avgDaily=daysElapsed>0?Math.round(pagesMonth/daysElapsed):0;
+
+  return {booksMonth:booksMonth,pagesMonth:pagesMonth,secondsMonth:secondsMonth,avgDaily:avgDaily};
 }
-document.getElementById('user-input').onkeydown=function(e){if(e.key==='Enter')applyUser();};
-document.getElementById('btn-user-search').onclick=applyUser;
 
-loadUser();
-</script>
-</body>
-</html>
+function monthlyBooksForYear(year){
+  var key=sKey(currentUser);
+  var counts=new Array(12).fill(0);
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  for(var j=0;j<allBooksArr.length;j++){
+    var b=allBooksArr[j];
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(dend){
+      var dd=new Date(dend+'T00:00:00');
+      if(dd.getFullYear()===year)counts[dd.getMonth()]++;
+    }
+  }
+  return counts;
+}
+
+function genreDistribution(){
+  var counts={},total=0;
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  for(var i=0;i<allBooksArr.length;i++){
+    var g=(allBooksArr[i].genre||'').trim()||'Sem gênero';
+    counts[g]=(counts[g]||0)+1;
+    total++;
+  }
+  var arr=Object.keys(counts).map(function(g){return{genre:g,count:counts[g],pct:total?Math.round(counts[g]/total*100):0};});
+  arr.sort(function(a,b){return b.count-a.count;});
+  return {items:arr,total:total};
+}
+
+function computeAnnualGoalProgress(){
+  var key=sKey(currentUser);
+  var year=(new Date()).getFullYear();
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  var count=0;
+  for(var i=0;i<allBooksArr.length;i++){
+    var b=allBooksArr[i];
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(dend){var dd=new Date(dend+'T00:00:00');if(dd.getFullYear()===year)count++;}
+  }
+  var goal=myGoals.annualBooks||0;
+  var pct=goal>0?Math.min(100,Math.round(count/goal*100)):0;
+  return {count:count,goal:goal,pct:pct,year:year};
+}
+
+function pickCurrentBook(){
+  if(myActiveSession)return books[myActiveSession.bookId]?Object.assign({id:myActiveSession.bookId},books[myActiveSession.bookId]):null;
+  var candidates=booksArr().filter(function(b){return !b.wishlist&&myStatus(b)==='Lendo';});
+  if(candidates.length===0)return null;
+  var mySessions=getMySessions();
+  var lastSessionByBook={};
+  for(var i=0;i<mySessions.length;i++){
+    var s=mySessions[i];
+    if(!(s.bookId in lastSessionByBook))lastSessionByBook[s.bookId]=s.createdAt||0;
+  }
+  candidates.sort(function(a,b){
+    var la=lastSessionByBook[a.id]||0,lb=lastSessionByBook[b.id]||0;
+    if(lb!==la)return lb-la;
+    return(b.createdAt||0)-(a.createdAt||0);
+  });
+  return candidates[0];
+}
+
+function lastFinishedBooks(limit){
+  var key=sKey(currentUser);
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist&&myStatus(b)==='Lido';});
+  var withDate=allBooksArr.map(function(b){
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    return{book:b,end:dend};
+  }).filter(function(x){return x.end;});
+  withDate.sort(function(a,b){return new Date(b.end)-new Date(a.end);});
+  return withDate.slice(0,limit||3);
+}
+
+function deltaText(delta,suffix){
+  if(!delta)return'';
+  var sign=delta>0?'+':'';
+  return '<div class="crono-stat-delta" style="color:'+(delta>=0?'#80c070':'#c07070')+';">'+sign+delta+(suffix||'')+' vs mês anterior</div>';
+}
+function deltaTimeText(deltaSeconds){
+  if(!deltaSeconds)return'';
+  var sign=deltaSeconds>0?'+':'-';
+  return '<div class="crono-stat-delta" style="color:'+(deltaSeconds>=0?'#80c070':'#c07070')+';">'+sign+formatDuration(Math.abs(deltaSeconds))+' vs mês anterior</div>';
+}
+
+function renderVisaoGeral(){
+  var area=document.getElementById('visao-area');
+  if(!area)return;
+  if(!currentUser){
+    area.innerHTML='<div class="visao-wrap"><p class="crono-empty-hint">Digite seu nome no topo da página para ver sua visão geral de leitura.</p></div>';
+    return;
+  }
+  var y=selYear,m=selMonth;
+  var stats=computeVisaoStats(y,m);
+  var prev=prevMonthOf(y,m);
+  var prevStats=computeVisaoStats(prev.year,prev.month);
+  var deltaBooks=stats.booksMonth-prevStats.booksMonth;
+  var deltaPages=stats.pagesMonth-prevStats.pagesMonth;
+  var deltaSeconds=stats.secondsMonth-prevStats.secondsMonth;
+  var deltaAvg=stats.avgDaily-prevStats.avgDaily;
+
+  var html='<div class="visao-wrap">';
+
+  html+='<div class="month-selector">'
+    +'<button id="btn-prev-month" title="Mês anterior">‹</button>'
+    +'<span class="month-label">'+MONTH_NAMES[m-1]+' de '+y+'</span>'
+    +'<button id="btn-next-month" title="Próximo mês">›</button>'
+  +'</div>';
+
+  html+='<div class="visao-stats-grid">'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Livros lidos</div><div class="crono-stat-value">'+stats.booksMonth+'</div>'+deltaText(deltaBooks,'')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Páginas lidas</div><div class="crono-stat-value">'+stats.pagesMonth+'</div>'+deltaText(deltaPages,'')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Tempo de leitura</div><div class="crono-stat-value">'+formatDuration(stats.secondsMonth)+'</div>'+deltaTimeText(deltaSeconds)+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Média diária</div><div class="crono-stat-value">'+stats.avgDaily+' pág.</div>'+deltaText(deltaAvg,' pág.')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Sequência atual</div><div class="crono-stat-value">'+myStats.currentStreak+'</div><div class="crono-stat-delta" style="color:var(--gold);">recorde: '+myStats.longestStreak+'</div></div>'
+  +'</div>';
+
+  var yearCounts=monthlyBooksForYear(y);
+  var maxCount=Math.max(1,Math.max.apply(null,yearCounts));
+  var barsHtml='<div class="bar-chart">';
+  for(var i=0;i<12;i++){
+    var h=Math.round((yearCounts[i]/maxCount)*100);
+    var cls='bar-chart-bar'+(yearCounts[i]===0?' empty':'')+((i+1)===m?' selected':'');
+    barsHtml+='<div class="bar-chart-col">'
+      +(yearCounts[i]>0?'<div class="bar-chart-value">'+yearCounts[i]+'</div>':'')
+      +'<div class="'+cls+'" style="height:'+Math.max(h,3)+'%;"></div>'
+      +'<div class="bar-chart-label">'+MONTH_NAMES[i].slice(0,3)+'</div>'
+    +'</div>';
+  }
+  barsHtml+='</div>';
+
+  var genreData=genreDistribution();
+  var donutHtml;
+  if(genreData.total===0){
+    donutHtml='<p class="crono-empty-hint">Cadastre livros com gênero para ver essa distribuição.</p>';
+  } else {
+    var gradParts=[],acc=0;
+    for(var gi=0;gi<genreData.items.length;gi++){
+      var it=genreData.items[gi];
+      var color=GENRE_COLORS[gi%GENRE_COLORS.length];
+      var start=acc,end=acc+(it.count/genreData.total*360);
+      gradParts.push(color+' '+start+'deg '+end+'deg');
+      acc=end;
+    }
+    donutHtml='<div class="donut" style="background:conic-gradient('+gradParts.join(',')+');"></div>'
+      +'<div class="donut-legend">'
+      +genreData.items.map(function(it,idx){
+        return '<div class="donut-legend-item"><span><span class="donut-legend-swatch" style="background:'+GENRE_COLORS[idx%GENRE_COLORS.length]+';"></span>'+escHtml(it.genre)+'</span><span>'+it.pct+'%</span></div>';
+      }).join('')
+    +'</div>';
+  }
+
+  var goalProg=computeAnnualGoalProgress();
+  var goalHtml;
+  if(goalProg.goal>0){
+    goalHtml='<div class="goal-ring" style="background:conic-gradient(var(--gold) '+goalProg.pct+'%, rgba(90,52,24,0.35) 0);">'
+      +'<div class="goal-ring-text"><div class="goal-ring-pct">'+goalProg.pct+'%</div><div class="goal-ring-label">da meta</div></div>'
+    +'</div>'
+    +'<p class="goal-meta-info">Meta anual: '+goalProg.goal+' livros · Progresso: '+goalProg.count+'/'+goalProg.goal+'</p>';
+  } else {
+    goalHtml='<p class="crono-empty-hint">Defina sua meta anual de livros para acompanhar seu progresso (isso vai morar em Configurações no futuro; por enquanto, defina aqui).</p>'
+      +'<div class="goal-set-inline"><input type="number" min="1" id="goal-annual-input" placeholder="Ex: 24"/><button class="primary" id="btn-save-goal">Salvar</button></div>';
+  }
+
+  html+='<div class="visao-charts-row">'
+    +'<div class="chart-card"><h3>Livros lidos por mês ('+y+')</h3>'+barsHtml+'</div>'
+    +'<div class="chart-card" style="text-align:center;"><h3 style="text-align:left;">Distribuição por gênero</h3>'+donutHtml+'</div>'
+    +'<div class="chart-card" style="text-align:center;"><h3 style="text-align:left;">Avanço da meta anual</h3>'+goalHtml+'</div>'
+  +'</div>';
+
+  var currentBook=pickCurrentBook();
+  var currentBookHtml;
+  if(currentBook){
+    var totalSecs=bookTotalSeconds(currentBook.id);
+    var key=sKey(currentUser);
+    var myPage=(currentBoo
