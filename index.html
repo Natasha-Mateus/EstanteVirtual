@@ -770,6 +770,32 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .placeholder-wrap h2{font-family:var(--font-title);color:var(--gold-light);font-size:19px;margin-bottom:8px;text-shadow:0 0 20px rgba(201,168,76,0.3);}
 .placeholder-wrap p{font-size:14px;font-style:italic;}
 
+.stats-grid-3{display:-webkit-grid;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+.author-rank-row{display:-webkit-flex;display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed rgba(74,46,16,0.3);}
+.author-rank-row:last-child{border-bottom:none;}
+.author-rank-num{font-family:var(--font-title);font-size:16px;color:var(--gold);width:22px;text-align:center;flex-shrink:0;}
+.author-rank-name{-webkit-flex:1;flex:1;font-size:13.5px;color:var(--cream);}
+.author-rank-count{font-size:12px;color:var(--text-sub);white-space:nowrap;}
+
+.pace-display{text-align:center;padding:0.8rem 0;}
+.pace-value{font-family:var(--font-title);font-size:36px;color:var(--gold-light);text-shadow:0 0 20px rgba(201,168,76,0.35);}
+.pace-unit{font-size:12.5px;color:var(--text-sub);margin-top:2px;letter-spacing:0.04em;}
+.pace-sub{font-size:12px;color:var(--text-dim);margin-top:10px;font-style:italic;}
+
+.spotlight-session{display:-webkit-flex;display:flex;gap:14px;align-items:center;}
+.spotlight-cover{width:60px;aspect-ratio:2/3;border-radius:3px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.6);flex-shrink:0;}
+.spotlight-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.spotlight-cover.no-img{display:-webkit-flex;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.spotlight-info .spotlight-title{font-family:var(--font-title);font-size:14px;color:var(--cream);line-height:1.3;}
+.spotlight-info .spotlight-author{font-size:11.5px;font-style:italic;color:var(--text-sub);margin-top:2px;}
+.spotlight-info .spotlight-date{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:3px;}
+.spotlight-duration{font-family:var(--font-title);font-size:22px;color:var(--gold-light);margin-top:8px;}
+
+@media(max-width:900px){
+  .stats-grid-3{grid-template-columns:1fr;}
+}
+
 @media(max-width:1000px){
   .visao-charts-row{grid-template-columns:1fr;}
   .visao-lower-row{grid-template-columns:1fr;}
@@ -778,11 +804,8 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 /* ─── AJUSTES DE RESPONSIVIDADE (MOBILE) ─── */
 @media(max-width:820px){
-  .sidebar{position:fixed;top:0;left:0;bottom:0;width:68px;}
-  .sidebar .nav-label,.sidebar .sidebar-logo-text,.sidebar .sidebar-footer-quote,.sidebar .sidebar-footer-ornament{display:none;}
-  .sidebar.collapsed{width:0;overflow:hidden;border-right:none;}
-  .main-content{margin-left:68px;}
-  .sidebar.collapsed ~ .main-content{margin-left:0;}
+  .sidebar{width:200px;}
+  .sidebar.collapsed{width:60px;}
 }
 
 @media(max-width:600px){
@@ -967,6 +990,7 @@ const COVER_BG=[
 let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null,isolatedBookId=null,activeTab='visao';
 let sidebarCollapsed=false;
 let selYear=(new Date()).getFullYear(),selMonth=(new Date()).getMonth()+1;
+let statsPeriod='ano';
 let allSessions={},myActiveSession=null,myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
 let activeSessionListenerRef=null,statsListenerRef=null,goalsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null,cronoSearchTerm='',editingSessionId=null;
 let myGoals={annualBooks:0,monthlyPages:0};
@@ -1098,7 +1122,7 @@ function updateHeaderGreeting(){
   el.textContent=currentUser?(saud+', '+currentUser):'Bem-vindo(a) ao Capítulo Compartilhado';
 }
 
-var PLACEHOLDER_TITLES={metas:'Metas de Leitura',estatisticas:'Estatísticas',generos:'Gêneros',autores:'Autores',config:'Configurações'};
+var PLACEHOLDER_TITLES={metas:'Metas de Leitura',generos:'Gêneros',autores:'Autores',config:'Configurações'};
 
 function render(){
   var ui=document.getElementById('user-input');
@@ -1155,7 +1179,8 @@ function render(){
     if(placeholderArea)placeholderArea.style.display='';
     if(formArea)formArea.innerHTML='';
     document.getElementById('back-container').innerHTML='';
-    renderPlaceholder(activeTab);
+    if(activeTab==='estatisticas')renderEstatisticas();
+    else renderPlaceholder(activeTab);
     return;
   }
 
@@ -2277,6 +2302,136 @@ function renderVisaoGeral(){
   };
 }
 
+/* ── ESTATÍSTICAS ── */
+function sessionsInPeriod(period){
+  var mySessions=getMySessions();
+  if(period==='tudo')return mySessions;
+  var now=new Date();
+  return mySessions.filter(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    if(period==='mes')return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
+    return d.getFullYear()===now.getFullYear();
+  });
+}
+
+function booksFinishedInPeriod(period){
+  var key=sKey(currentUser);
+  var now=new Date();
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist&&myStatus(b)==='Lido';});
+  return allBooksArr.filter(function(b){
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(!dend)return period==='tudo';
+    var dd=new Date(dend+'T00:00:00');
+    if(period==='mes')return dd.getFullYear()===now.getFullYear()&&dd.getMonth()===now.getMonth();
+    if(period==='ano')return dd.getFullYear()===now.getFullYear();
+    return true;
+  });
+}
+
+function topAuthors(period,limit){
+  var finished=booksFinishedInPeriod(period);
+  var counts={};
+  finished.forEach(function(b){
+    var a=(b.author||'').trim()||'Desconhecido';
+    counts[a]=(counts[a]||0)+1;
+  });
+  var arr=Object.keys(counts).map(function(a){return{author:a,count:counts[a]};});
+  arr.sort(function(x,y){return y.count-x.count;});
+  return arr.slice(0,limit||5);
+}
+
+function readingPace(period){
+  var sessions=sessionsInPeriod(period);
+  var pages=0,seconds=0;
+  sessions.forEach(function(s){pages+=s.pagesRead||0;seconds+=s.durationSeconds||0;});
+  var hours=seconds/3600;
+  var pace=hours>0.0166?Math.round(pages/hours):0;
+  return {pace:pace,pages:pages,seconds:seconds};
+}
+
+function longestSession(period){
+  var sessions=sessionsInPeriod(period);
+  if(sessions.length===0)return null;
+  sessions=sessions.slice().sort(function(a,b){return(b.durationSeconds||0)-(a.durationSeconds||0);});
+  return sessions[0];
+}
+
+var PERIOD_LABELS={mes:'Este mês',ano:'Este ano',tudo:'Todo o período'};
+
+function renderEstatisticas(){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  if(!currentUser){
+    area.innerHTML='<div class="visao-wrap"><p class="crono-empty-hint">Digite seu nome no topo da página para ver suas estatísticas.</p></div>';
+    return;
+  }
+  var period=statsPeriod;
+  var html='<div class="visao-wrap">';
+  html+='<div class="crono-intro"><h2>✦ Estatísticas ✦</h2><p>Um mergulho mais fundo nos seus hábitos de leitura, '+escHtml(currentUser)+'.</p></div>';
+
+  html+='<div class="month-selector" style="justify-content:flex-start;">';
+  ['mes','ano','tudo'].forEach(function(p){
+    html+='<button class="tab-btn'+(period===p?' active':'')+'" style="height:34px;padding:0 16px;" data-period="'+p+'">'+PERIOD_LABELS[p]+'</button>';
+  });
+  html+='</div>';
+
+  html+='<div class="stats-grid-3">';
+
+  var authors=topAuthors(period,5);
+  html+='<div class="chart-card"><h3>Autor mais lido</h3>';
+  if(authors.length===0){
+    html+='<p class="crono-empty-hint">Nenhum livro concluído nesse período.</p>';
+  } else {
+    for(var ai=0;ai<authors.length;ai++){
+      html+='<div class="author-rank-row"><span class="author-rank-num">'+(ai+1)+'</span><span class="author-rank-name">'+escHtml(authors[ai].author)+'</span><span class="author-rank-count">'+authors[ai].count+(authors[ai].count===1?' livro':' livros')+'</span></div>';
+    }
+  }
+  html+='</div>';
+
+  var pace=readingPace(period);
+  html+='<div class="chart-card"><h3>Ritmo de leitura</h3>';
+  if(pace.seconds===0){
+    html+='<p class="crono-empty-hint">Nenhuma sessão registrada nesse período.</p>';
+  } else {
+    html+='<div class="pace-display"><div class="pace-value">'+pace.pace+'</div><div class="pace-unit">páginas por hora</div>'
+      +'<p class="pace-sub">'+pace.pages+' páginas em '+formatDuration(pace.seconds)+'</p></div>';
+  }
+  html+='</div>';
+
+  var longest=longestSession(period);
+  html+='<div class="chart-card"><h3>Maior sessão do período</h3>';
+  if(!longest){
+    html+='<p class="crono-empty-hint">Nenhuma sessão registrada nesse período.</p>';
+  } else {
+    var d3=new Date(longest.createdAt||longest.endTime||Date.now());
+    var dateStr3=pad(d3.getDate())+'/'+pad(d3.getMonth()+1)+'/'+d3.getFullYear();
+    var coverH3=longest.bookCover?'<div class="spotlight-cover"><img src="'+longest.bookCover+'"/></div>':'<div class="spotlight-cover no-img" style="background:'+cvColor(longest.bookTitle)+'">📖</div>';
+    html+='<div class="spotlight-session">'
+      +coverH3
+      +'<div class="spotlight-info">'
+        +'<div class="spotlight-title">'+escHtml(longest.bookTitle)+'</div>'
+        +'<div class="spotlight-author">'+escHtml(longest.bookAuthor||'')+'</div>'
+        +'<div class="spotlight-date">'+dateStr3+'</div>'
+        +'<div class="spotlight-duration">'+elapsedDisplay(longest.durationSeconds||0)+'</div>'
+      +'</div>'
+    +'</div>';
+  }
+  html+='</div>';
+
+  html+='</div>'; // stats-grid-3
+  html+='<p class="crono-empty-hint" style="margin-top:1.5rem;">Mais análises (heatmap, dia da semana, horários preferidos) chegam nas próximas rodadas.</p>';
+  html+='</div>';
+
+  area.innerHTML=html;
+
+  var periodBtns=area.querySelectorAll('[data-period]');
+  for(var pi=0;pi<periodBtns.length;pi++){
+    (function(btn){
+      btn.onclick=function(){statsPeriod=btn.getAttribute('data-period');renderEstatisticas();};
+    })(periodBtns[pi]);
+  }
+}
+
 /* ── wiring ── */
 function goToTab(tab){
   activeTab=tab;
@@ -2296,7 +2451,12 @@ function applySidebarCollapsedState(){
   var sb=document.getElementById('sidebar');
   if(sb)sb.classList.toggle('collapsed',sidebarCollapsed);
 }
-sidebarCollapsed=localStorage.getItem('epv_sidebar_collapsed')==='1';
+var storedSidebarPref=localStorage.getItem('epv_sidebar_collapsed');
+if(storedSidebarPref===null){
+  sidebarCollapsed=window.innerWidth<820;
+} else {
+  sidebarCollapsed=storedSidebarPref==='1';
+}
 applySidebarCollapsedState();
 document.getElementById('btn-collapse-sidebar').onclick=function(){
   sidebarCollapsed=!sidebarCollapsed;
