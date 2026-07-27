@@ -2201,4 +2201,126 @@ function renderVisaoGeral(){
   if(currentBook){
     var totalSecs=bookTotalSeconds(currentBook.id);
     var key=sKey(currentUser);
-    var myPage=(currentBoo
+    var myPage=(currentBook.progress&&currentBook.progress[key]&&currentBook.progress[key].page)||0;
+    var pct2=currentBook.pages?Math.min(100,Math.round(myPage/currentBook.pages*100)):0;
+    var coverHtml2=currentBook.cover?'<div class="crono-session-cover"><img src="'+currentBook.cover+'"/></div>':'<div class="crono-session-cover no-img" style="background:'+cvColor(currentBook.title)+'">📖</div>';
+    currentBookHtml='<div class="crono-session-body" style="align-items:flex-start;">'
+      +coverHtml2
+      +'<div class="crono-session-info" style="width:100%;">'
+        +'<div class="crono-session-book-title">'+escHtml(currentBook.title)+'</div>'
+        +'<div class="crono-session-book-author">'+escHtml(currentBook.author||'')+'</div>'
+        +'<div class="crono-session-meta">'
+          +'<div class="crono-meta-item"><div class="crono-meta-label">TEMPO DE LEITURA</div><div class="crono-meta-value" style="font-size:15px;">'+formatDuration(totalSecs)+'</div></div>'
+          +'<div class="crono-meta-item"><div class="crono-meta-label">PÁGINAS</div><div class="crono-meta-value" style="font-size:15px;">'+myPage+'/'+currentBook.pages+'</div></div>'
+        +'</div>'
+        +'<div class="prog-track" style="margin-top:10px;"><div class="prog-fill" style="width:'+pct2+'%"></div></div>'
+        +'<button class="primary" id="btn-continue-reading" style="margin-top:12px;width:100%;">Continuar leitura</button>'
+      +'</div>'
+    +'</div>';
+  } else {
+    currentBookHtml='<p class="crono-empty-hint">Nenhum livro em andamento no momento.</p>';
+  }
+
+  var finished=lastFinishedBooks(3);
+  var finishedHtml;
+  if(finished.length===0){
+    finishedHtml='<p class="crono-empty-hint">Ainda não há livros concluídos.</p>';
+  } else {
+    finishedHtml='<div class="crono-history-list">';
+    for(var fi=0;fi<finished.length;fi++){
+      var fb=finished[fi].book,fend=finished[fi].end;
+      var key2=sKey(currentUser);
+      var rv=(fb.ratings&&fb.ratings[key2])||0;
+      var d2=new Date(fend+'T00:00:00');
+      var dateStr2=pad(d2.getDate())+'/'+pad(d2.getMonth()+1)+'/'+d2.getFullYear();
+      var coverH2=fb.cover?'<div class="crono-history-cover"><img src="'+fb.cover+'"/></div>':'<div class="crono-history-cover no-img" style="background:'+cvColor(fb.title)+'">📖</div>';
+      finishedHtml+='<div class="crono-history-item">'
+        +coverH2
+        +'<div class="crono-history-info"><div class="crono-history-book">'+escHtml(fb.title)+'</div><div class="crono-history-date">'+dateStr2+'</div></div>'
+        +'<div class="crono-history-stats">'+starRow(rv,'visao-'+fb.id,false)+'</div>'
+      +'</div>';
+    }
+    finishedHtml+='</div>';
+  }
+
+  var qStats=computeCronoStats();
+  var quickHtml='<div class="quick-stats-list">'
+    +'<div class="quick-stats-row"><span>Total de livros lidos</span><strong>'+qStats.booksLido+'</strong></div>'
+    +'<div class="quick-stats-row"><span>Total de páginas lidas</span><strong>'+qStats.totalPages+'</strong></div>'
+    +'<div class="quick-stats-row"><span>Tempo total de leitura</span><strong>'+formatDuration(qStats.totalSeconds)+'</strong></div>'
+    +'<div class="quick-stats-row"><span>Maior sequência</span><strong>'+myStats.longestStreak+' dias</strong></div>'
+  +'</div>';
+
+  html+='<div class="visao-lower-row">'
+    +'<div class="chart-card"><h3>Livro em andamento</h3>'+currentBookHtml+'</div>'
+    +'<div class="chart-card"><h3>Últimas leituras concluídas</h3>'+finishedHtml+'</div>'
+    +'<div class="chart-card"><h3>Estatísticas rápidas</h3>'+quickHtml+'</div>'
+  +'</div>';
+
+  html+='</div>';
+  area.innerHTML=html;
+
+  var prevBtn=document.getElementById('btn-prev-month');
+  if(prevBtn)prevBtn.onclick=function(){var p=prevMonthOf(selYear,selMonth);selYear=p.year;selMonth=p.month;renderVisaoGeral();};
+  var nextBtn=document.getElementById('btn-next-month');
+  if(nextBtn)nextBtn.onclick=function(){var n=nextMonthOf(selYear,selMonth);selYear=n.year;selMonth=n.month;renderVisaoGeral();};
+  var contBtn=document.getElementById('btn-continue-reading');
+  if(contBtn)contBtn.onclick=function(){goToTab('cronometro');};
+  var saveGoalBtn=document.getElementById('btn-save-goal');
+  if(saveGoalBtn)saveGoalBtn.onclick=function(){
+    var inp=document.getElementById('goal-annual-input');
+    var v=Math.max(1,parseInt((inp&&inp.value)||0,10)||0);
+    if(!v)return;
+    goalsRef.child(sKey(currentUser)).update({annualBooks:v}).catch(function(err){
+      alert('Não foi possível salvar a meta: '+err.message);
+    });
+  };
+}
+
+/* ── wiring ── */
+function goToTab(tab){
+  activeTab=tab;
+  isolatedBookId=null;
+  viewMode='grid';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+var navItemEls=document.querySelectorAll('.nav-item');
+for(var nvi=0;nvi<navItemEls.length;nvi++){
+  (function(el){
+    el.onclick=function(){goToTab(el.getAttribute('data-tab'));};
+  })(navItemEls[nvi]);
+}
+
+function applySidebarCollapsedState(){
+  var sb=document.getElementById('sidebar');
+  if(sb)sb.classList.toggle('collapsed',sidebarCollapsed);
+}
+sidebarCollapsed=localStorage.getItem('epv_sidebar_collapsed')==='1';
+applySidebarCollapsedState();
+document.getElementById('btn-collapse-sidebar').onclick=function(){
+  sidebarCollapsed=!sidebarCollapsed;
+  localStorage.setItem('epv_sidebar_collapsed',sidebarCollapsed?'1':'0');
+  applySidebarCollapsedState();
+};
+
+document.getElementById('btn-add').onclick=function(){
+  editingId='new';pendingCoverData=null;render();
+  setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
+};
+document.getElementById('search-input').oninput=function(e){searchTerm=e.target.value;renderBooks();};
+document.getElementById('filter-status').onchange=function(e){filterStatus=e.target.value;renderBooks();};
+document.getElementById('sort-mode').onchange=function(e){sortMode=e.target.value;renderBooks();};
+
+function applyUser(){
+  var n=document.getElementById('user-input').value.trim();
+  saveUser(n);
+  render();
+}
+document.getElementById('user-input').onkeydown=function(e){if(e.key==='Enter')applyUser();};
+document.getElementById('btn-user-search').onclick=applyUser;
+
+loadUser();
+</script>
+</body>
+</html>
