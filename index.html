@@ -792,6 +792,26 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .spotlight-info .spotlight-date{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:3px;}
 .spotlight-duration{font-family:var(--font-title);font-size:22px;color:var(--gold-light);margin-top:8px;}
 
+.heatmap-card{overflow:visible;}
+.heatmap-year-selector{display:-webkit-flex;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.heatmap-year-selector button{width:30px;height:30px;padding:0;border-radius:50%;}
+.heatmap-year-label{font-family:var(--font-title);font-size:13px;color:var(--gold);letter-spacing:0.05em;}
+.heatmap-scroll{overflow-x:auto;padding-bottom:8px;}
+.heatmap-inner{display:inline-block;min-width:100%;}
+.heatmap-months{display:-webkit-flex;display:flex;gap:3px;margin-bottom:4px;}
+.heatmap-month-label{width:11px;-webkit-flex-shrink:0;flex-shrink:0;font-size:9px;color:var(--text-dim);white-space:nowrap;overflow:visible;}
+.heatmap-grid{display:-webkit-flex;display:flex;gap:3px;}
+.heatmap-week{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:3px;}
+.heatmap-cell{width:11px;height:11px;border-radius:2px;background:rgba(90,52,24,0.35);}
+.heatmap-cell.pad{background:transparent;}
+.heatmap-cell.level-1{background:#5a3418;}
+.heatmap-cell.level-2{background:#8a5a1a;}
+.heatmap-cell.level-3{background:#c9a84c;}
+.heatmap-cell.level-4{background:#e8c97a;box-shadow:0 0 4px rgba(232,201,122,0.6);}
+.heatmap-legend{display:-webkit-flex;display:flex;align-items:center;gap:4px;margin-top:12px;font-size:11px;color:var(--text-dim);justify-content:flex-end;}
+.heatmap-legend .heatmap-cell{width:10px;height:10px;}
+.heatmap-summary{font-size:12.5px;color:var(--text-sub);margin-top:10px;}
+
 @media(max-width:900px){
   .stats-grid-3{grid-template-columns:1fr;}
 }
@@ -991,6 +1011,7 @@ let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',s
 let sidebarCollapsed=false;
 let selYear=(new Date()).getFullYear(),selMonth=(new Date()).getMonth()+1;
 let statsPeriod='ano';
+let heatmapYear=(new Date()).getFullYear();
 let allSessions={},myActiveSession=null,myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
 let activeSessionListenerRef=null,statsListenerRef=null,goalsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null,cronoSearchTerm='',editingSessionId=null;
 let myGoals={annualBooks:0,monthlyPages:0};
@@ -2358,6 +2379,94 @@ function longestSession(period){
 
 var PERIOD_LABELS={mes:'Este mês',ano:'Este ano',tudo:'Todo o período'};
 
+function buildHeatmapData(year){
+  var mySessions=getMySessions();
+  var dayMap={};
+  mySessions.forEach(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    if(d.getFullYear()!==year)return;
+    var ds=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    if(!dayMap[ds])dayMap[ds]={minutes:0,pages:0};
+    dayMap[ds].minutes+=Math.round((s.durationSeconds||0)/60);
+    dayMap[ds].pages+=s.pagesRead||0;
+  });
+  return dayMap;
+}
+
+function heatmapHtml(year){
+  var dayMap=buildHeatmapData(year);
+  var start=new Date(year,0,1);
+  var end=new Date(year,11,31);
+  var startWeekday=start.getDay();
+  var cells=[];
+  for(var i=0;i<startWeekday;i++)cells.push(null);
+  var cur=new Date(start);
+  var activeDays=0,totalMinutes=0;
+  while(cur<=end){
+    var ds=cur.getFullYear()+'-'+pad(cur.getMonth()+1)+'-'+pad(cur.getDate());
+    var info=dayMap[ds]||null;
+    if(info){activeDays++;totalMinutes+=info.minutes;}
+    cells.push({date:new Date(cur),ds:ds,info:info});
+    cur.setDate(cur.getDate()+1);
+  }
+  while(cells.length%7!==0)cells.push(null);
+
+  var weeks=[];
+  for(var w=0;w<cells.length;w+=7)weeks.push(cells.slice(w,w+7));
+
+  var maxMinutes=0;
+  Object.keys(dayMap).forEach(function(k){if(dayMap[k].minutes>maxMinutes)maxMinutes=dayMap[k].minutes;});
+
+  function levelFor(minutes){
+    if(!minutes||minutes<=0||maxMinutes<=0)return 0;
+    var ratio=minutes/maxMinutes;
+    if(ratio>0.75)return 4;
+    if(ratio>0.5)return 3;
+    if(ratio>0.25)return 2;
+    return 1;
+  }
+
+  var monthLabels=new Array(weeks.length).fill('');
+  weeks.forEach(function(week,wi){
+    for(var d=0;d<week.length;d++){
+      if(week[d]&&week[d].date.getDate()===1){
+        monthLabels[wi]=MONTH_NAMES[week[d].date.getMonth()].slice(0,3);
+      }
+    }
+  });
+
+  var monthsHtml='<div class="heatmap-months">'+monthLabels.map(function(l){return'<span class="heatmap-month-label">'+l+'</span>';}).join('')+'</div>';
+
+  var gridHtml='<div class="heatmap-grid">';
+  for(var wi2=0;wi2<weeks.length;wi2++){
+    gridHtml+='<div class="heatmap-week">';
+    for(var di=0;di<7;di++){
+      var cell=weeks[wi2][di];
+      if(!cell){gridHtml+='<div class="heatmap-cell pad"></div>';continue;}
+      var lvl=cell.info?levelFor(cell.info.minutes):0;
+      var dstr=pad(cell.date.getDate())+'/'+pad(cell.date.getMonth()+1)+'/'+cell.date.getFullYear();
+      var title=cell.info?(dstr+' — '+cell.info.minutes+' min, '+cell.info.pages+' pág.'):dstr+' — sem leitura';
+      gridHtml+='<div class="heatmap-cell'+(lvl>0?' level-'+lvl:'')+'" title="'+title+'"></div>';
+    }
+    gridHtml+='</div>';
+  }
+  gridHtml+='</div>';
+
+  var legendHtml='<div class="heatmap-legend"><span>Menos</span>'
+    +'<div class="heatmap-cell"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div>'
+    +'<span>Mais</span></div>';
+
+  var summaryHtml='<p class="heatmap-summary">'+activeDays+' dias com leitura em '+year+' · '+formatDuration(totalMinutes*60)+' no total</p>';
+
+  return '<div class="heatmap-year-selector">'
+      +'<button id="btn-prev-heatmap-year" title="Ano anterior">‹</button>'
+      +'<span class="heatmap-year-label">'+year+'</span>'
+      +'<button id="btn-next-heatmap-year" title="Próximo ano"'+(year>=(new Date()).getFullYear()?' disabled style="opacity:0.35;cursor:not-allowed;"':'')+'>›</button>'
+    +'</div>'
+    +'<div class="heatmap-scroll"><div class="heatmap-inner">'+monthsHtml+gridHtml+'</div></div>'
+    +legendHtml+summaryHtml;
+}
+
 function renderEstatisticas(){
   var area=document.getElementById('placeholder-area');
   if(!area)return;
@@ -2419,7 +2528,10 @@ function renderEstatisticas(){
   html+='</div>';
 
   html+='</div>'; // stats-grid-3
-  html+='<p class="crono-empty-hint" style="margin-top:1.5rem;">Mais análises (heatmap, dia da semana, horários preferidos) chegam nas próximas rodadas.</p>';
+
+  html+='<div class="chart-card heatmap-card" style="margin-top:1.3rem;"><h3>Consistência de leitura (heatmap)</h3>'+heatmapHtml(heatmapYear)+'</div>';
+
+  html+='<p class="crono-empty-hint" style="margin-top:1.5rem;">Mais análises (dia da semana, horários preferidos, timeline) chegam nas próximas rodadas.</p>';
   html+='</div>';
 
   area.innerHTML=html;
@@ -2430,6 +2542,13 @@ function renderEstatisticas(){
       btn.onclick=function(){statsPeriod=btn.getAttribute('data-period');renderEstatisticas();};
     })(periodBtns[pi]);
   }
+
+  var prevYearBtn=document.getElementById('btn-prev-heatmap-year');
+  if(prevYearBtn)prevYearBtn.onclick=function(){heatmapYear--;renderEstatisticas();};
+  var nextYearBtn=document.getElementById('btn-next-heatmap-year');
+  if(nextYearBtn&&!nextYearBtn.disabled)nextYearBtn.onclick=function(){
+    if(heatmapYear<(new Date()).getFullYear()){heatmapYear++;renderEstatisticas();}
+  };
 }
 
 /* ── wiring ── */
