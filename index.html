@@ -61,8 +61,8 @@ input,select,textarea,button{
   appearance:none;
   outline:none;
 }
-input::-webkit-input-placeholder{color:var(--text-dim);}
-input::placeholder{color:var(--text-dim);}
+input::-webkit-input-placeholder{color:var(--cream-dim);opacity:0.7;}
+input::placeholder{color:var(--cream-dim);opacity:0.7;}
 input:focus,select:focus{border-color:var(--gold);-webkit-box-shadow:0 0 0 2px rgba(201,168,76,0.15);box-shadow:0 0 0 2px rgba(201,168,76,0.15);}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c9a84c'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
 select option{background:#1e1108;color:var(--cream);}
@@ -79,22 +79,20 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .site-header{
   position:relative;
   text-align:center;
-  padding:1.8rem 220px 1.4rem;
+  padding:1.5rem 180px 1.5rem;
   overflow:hidden;
-  background:url('wood-bg.jpg.png') center center / cover no-repeat;
+  background:url('./wood-bg.jpg.png') center center / cover no-repeat;
   border-bottom:2px solid var(--wood-edge);
 }
 
-/* dark overlay for readability */
 .site-header::before{
   content:'';
   position:absolute;
   inset:0;
-  background:rgba(4,2,0,0.45);
+  background:rgba(4,2,0,0.55);
   pointer-events:none;
 }
 
-/* ambient light at top */
 .site-header::after{
   content:'';
   position:absolute;
@@ -107,11 +105,10 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);
 }
 
-/* decor scene right */
 .decor-scene{
   position:absolute;
   top:0;right:0;
-  width:210px;
+  width:160px;
   height:100%;
   pointer-events:none;
   overflow:hidden;
@@ -122,20 +119,18 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   object-fit:cover;object-position:center bottom;
 }
 
-/* candle scene */
 .candle-scene{
   position:absolute;
   top:0;left:0;
-  width:200px;
+  width:160px;
   height:100%;
   pointer-events:none;
   overflow:hidden;
 }
 
-/* header right */
 .header-right{
   position:absolute;
-  top:0.8rem;right:1.2rem;
+  top:0.8rem;right:1rem;
   display:-webkit-flex;
   display:flex;
   -webkit-align-items:center;
@@ -145,14 +140,74 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   -webkit-flex-wrap:wrap;
   flex-wrap:wrap;
 }
-.header-right input{width:118px;height:34px;font-size:14px;background:rgba(10,6,2,0.85);border-color:var(--gold-dim);color:var(--cream);}
-.btn-icon{width:34px;height:34px;padding:0;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;font-size:15px;}
+.header-right input{
+  width:130px;
+  height:34px;
+  font-size:14px;
+  background:rgba(10,6,2,0.9);
+  border-color:var(--gold-dim);
+  color:#ffffff;
+}
+.btn-icon{
+  width:34px;
+  height:34px;
+  padding:0;
+  display:-webkit-flex;
+  display:flex;
+  -webkit-align-items:center;
+  align-items:center;
+  -webkit-justify-content:center;
+  justify-content:center;
+}
+.btn-icon svg, .user-icon svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:var(--gold-dim);
+  stroke-width:2;
+  transition: stroke 0.2s;
+}
+.btn-icon:hover svg{
+  stroke:var(--gold-light);
+}
+.user-icon svg {
+  stroke:var(--gold-dim);
+  width:20px;
+  height:20px;
+}
 
-.view-toggle{display:-webkit-flex;display:flex;gap:3px;margin-left:4px;}
-.view-toggle button{height:34px;padding:0 13px;font-family:var(--font-title);font-size:11px;letter-spacing:0.1em;background:rgba(10,6,2,0.85);color:var(--gold);border-color:var(--gold-dim);}
-.view-toggle button.active{background:-webkit-linear-gradient(135deg,#5a2a0a,#3d1a06);background:linear-gradient(135deg,#5a2a0a,#3d1a06);color:var(--gold-light);border-color:var(--gold);}
+.main-tabs{
+  display:-webkit-flex;display:flex;
+  justify-content:center;
+  gap:0;
+  background:var(--wood-dark);
+  border-bottom:1px solid rgba(74,46,16,0.3);
+  padding:0 12px;
+  -webkit-flex-wrap:wrap;flex-wrap:wrap;
+}
+.tab-btn{
+  height:44px;
+  padding:0 22px;
+  font-family:var(--font-title);
+  font-size:12px;
+  letter-spacing:0.09em;
+  background:transparent;
+  color:var(--text-sub);
+  border:none;
+  border-bottom:2px solid transparent;
+  border-radius:0;
+}
+.tab-btn:hover{
+  background:rgba(201,168,76,0.05);
+  color:var(--gold-light);
+  border-color:var(--gold-dim);
+}
+.tab-btn.active{
+  color:var(--gold-light);
+  border-bottom:2px solid var(--gold);
+  text-shadow:0 0 12px rgba(201,168,76,0.4);
+}
 
-/* ornament top */
 .orn-top{
   display:-webkit-flex;
   display:flex;
@@ -165,6 +220,8 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   color:var(--gold-dim);
   font-size:11px;
   letter-spacing:0.25em;
+  position:relative;
+  z-index:2;
 }
 .orn-top::before,.orn-top::after{
   content:'';
@@ -177,7 +234,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 .site-title{
   font-family:var(--font-title);
-  font-size:clamp(1.8rem,5.5vw,3.8rem);
+  font-size:clamp(1.6rem,4vw,2.8rem);
   font-weight:700;
   color:var(--gold-light);
   letter-spacing:0.07em;
@@ -186,7 +243,7 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   position:relative;z-index:2;
 }
 
-.orn-bot{color:var(--gold-dim);font-size:16px;letter-spacing:0.25em;}
+.orn-bot{color:var(--gold-dim);font-size:16px;letter-spacing:0.25em;position:relative;z-index:2;}
 
 /* conn bar */
 .conn-bar{
@@ -205,13 +262,11 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   -webkit-flex-wrap:wrap;flex-wrap:wrap;
   gap:8px;
   -webkit-align-items:center;align-items:center;
-  padding:0.85rem 1.5rem;
+  padding:0.85rem 1.5rem 0.4rem;
   background:-webkit-linear-gradient(180deg,#1a1006 0%,#140c04 100%);
   background:linear-gradient(180deg,#1a1006 0%,#140c04 100%);
-  border-bottom:3px solid var(--wood-edge);
   -webkit-box-shadow:0 4px 18px rgba(0,0,0,0.55);
   box-shadow:0 4px 18px rgba(0,0,0,0.55);
-  /* top gold line */
   border-top:1px solid rgba(201,168,76,0.18);
 }
 .toolbar input[type="text"]{-webkit-flex:1;flex:1;min-width:150px;}
@@ -273,17 +328,16 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 /* ─── SHELF AREA ─── */
 .shelf-area{
-  background:url('wood-bg.jpg.png') center center / cover no-repeat;
+  background:url('./wood-bg.jpg.png') center center / cover no-repeat;
   position:relative;
 }
 .shelf-area::before{
   content:'';position:absolute;inset:0;
-  background:rgba(4,2,0,0.55);
+  background:rgba(4,2,0,0.6);
   pointer-events:none;z-index:0;
 }
 .shelf-rail-top,.niche-grid,.shelf-rail-bot{position:relative;z-index:1;}
 
-/* top rail */
 .shelf-rail-top{
   height:20px;
   background:-webkit-linear-gradient(180deg,var(--wood-edge) 0%,var(--wood-rich) 70%,var(--wood-mid) 100%);
@@ -305,26 +359,22 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
   -webkit-flex-wrap:wrap;flex-wrap:wrap;
   background:var(--wood-mid);
   position:relative;
+  justify-content: center;
 }
 
 /* column dividers */
 .niche-col-divider{
-  width:28px;
-  background:
-    -webkit-linear-gradient(90deg,#1a0e06 0%,#2a1808 30%,#3a2410 50%,#2a1808 70%,#1a0e06 100%);
-  background:
-    linear-gradient(90deg,#1a0e06 0%,#2a1808 30%,#3a2410 50%,#2a1808 70%,#1a0e06 100%);
+  width:24px;
+  background:linear-gradient(90deg,#1a0e06 0%,#2a1808 30%,#3a2410 50%,#2a1808 70%,#1a0e06 100%);
   -webkit-box-shadow:inset 0 0 8px rgba(0,0,0,0.5);
   box-shadow:inset 0 0 8px rgba(0,0,0,0.5);
   -webkit-flex-shrink:0;flex-shrink:0;
   position:relative;
 }
-/* pilaster cap */
 .niche-col-divider::before{
   content:'';
   position:absolute;top:0;left:0;right:0;
   height:18px;
-  background:-webkit-linear-gradient(180deg,var(--gold-dim),transparent);
   background:linear-gradient(180deg,var(--gold-dim),transparent);
   opacity:0.25;
 }
@@ -332,52 +382,41 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 /* each book niche */
 .niche{
   -webkit-flex:1 1 180px;flex:1 1 180px;
-  min-width:150px;max-width:260px;
+  min-width:160px;max-width:220px;
   position:relative;
-  padding:22px 14px 14px;
+  padding:0;
   cursor:pointer;
   display:-webkit-flex;display:flex;
   -webkit-flex-direction:column;flex-direction:column;
-  background:
-    -webkit-radial-gradient(50% -5%, ellipse 75% 55%, rgba(212,130,42,0.18) 0%, transparent 65%),
-    url('niche-bg.jpg.png') center center / cover no-repeat;
-  background:
-    radial-gradient(ellipse 75% 55% at 50% -5%, rgba(212,130,42,0.18) 0%, transparent 65%),
-    url('niche-bg.jpg.png') center center / cover no-repeat;
-  border-right:1px solid rgba(0,0,0,0.5);
-  min-height:360px;
-  -webkit-transition:opacity 0.25s;transition:opacity 0.25s;
-}
-.niche:hover{
-  background:
-    -webkit-radial-gradient(50% -5%, ellipse 80% 60%, rgba(212,130,42,0.28) 0%, transparent 60%),
-    url('niche-bg.jpg.png') center center / cover no-repeat;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% -5%, rgba(212,130,42,0.28) 0%, transparent 60%),
-    url('niche-bg.jpg.png') center center / cover no-repeat;
+  background: url('./niche-bg.jpg.png') center center / cover no-repeat;
+  border-right:1px solid rgba(0,0,0,0.4);
+  min-height:340px;
+  -webkit-transition:background 0.25s;transition:background 0.25s;
 }
 
-/* lamp dot */
-.niche::after{
-  content:'';
-  position:absolute;top:7px;left:50%;
-  -webkit-transform:translateX(-50%);transform:translateX(-50%);
-  width:5px;height:5px;border-radius:50%;
-  background:#d4a040;
-  -webkit-box-shadow:0 0 10px 5px rgba(212,140,40,0.55);
-  box-shadow:0 0 10px 5px rgba(212,140,40,0.55);
-  z-index:1;
+.niche-content{
+  position:relative;
+  z-index:2;
+  display:-webkit-flex;display:flex;
+  -webkit-flex-direction:column;flex-direction:column;
+  gap:6px;
+  -webkit-flex:1;flex:1;
+  padding:55px 14px 12px;
+  align-items: center;
+  text-align: center;
 }
-
-.niche-content{position:relative;z-index:2;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:7px;-webkit-flex:1;flex:1;padding:8px 10px 10px;}
 
 /* book cover */
 .niche-cover{
-  width:75%;margin:0 auto;aspect-ratio:2/3;
-  border-radius:3px 3px 2px 2px;overflow:hidden;
-  -webkit-box-shadow:2px 4px 16px rgba(0,0,0,0.75),inset -2px 0 5px rgba(0,0,0,0.4);
-  box-shadow:2px 4px 16px rgba(0,0,0,0.75),inset -2px 0 5px rgba(0,0,0,0.4);
-  position:relative;-webkit-flex-shrink:0;flex-shrink:0;
+  width:68%;
+  margin:0 auto 6px;
+  aspect-ratio:2/3;
+  border-radius:3px 3px 2px 2px;
+  overflow:hidden;
+  -webkit-box-shadow:0 6px 16px rgba(0,0,0,0.85), inset -1px 0 3px rgba(0,0,0,0.4);
+  box-shadow:0 6px 16px rgba(0,0,0,0.85), inset -1px 0 3px rgba(0,0,0,0.4);
+  position:relative;
+  -webkit-flex-shrink:0;flex-shrink:0;
 }
 .niche-cover img{width:100%;height:100%;object-fit:cover;display:block;}
 .niche-cover.no-img{
@@ -388,43 +427,51 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 /* wish badge over cover */
 .wish-badge{
   position:absolute;top:5px;right:5px;
-  background:rgba(8,4,1,0.88);color:var(--gold);
-  font-family:var(--font-title);font-size:12px;font-weight:700;
-  width:22px;height:22px;border-radius:50%;
+  background:rgba(8,4,1,0.9);color:var(--gold);
+  font-family:var(--font-title);font-size:11px;font-weight:700;
+  width:20px;height:20px;border-radius:50%;
   display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;
   border:1px solid var(--gold-dim);
   -webkit-box-shadow:0 0 8px var(--gold-glow);box-shadow:0 0 8px var(--gold-glow);
   z-index:3;
 }
 
-.niche-title{font-family:var(--font-title);font-size:12.5px;font-weight:600;color:var(--cream);line-height:1.3;letter-spacing:0.02em;}
-.niche-author{font-size:13px;font-style:italic;color:var(--text-sub);}
+.niche-title{font-family:var(--font-title);font-size:11.5px;font-weight:600;color:var(--cream);line-height:1.25;letter-spacing:0.01em;width:100%;word-wrap:break-word;}
+.niche-author{font-size:11px;font-style:italic;color:var(--text-sub);width:100%;}
 
 /* status badge */
-.sb{font-size:10.5px;padding:2px 8px;border-radius:var(--radius-sm);letter-spacing:0.04em;display:inline-block;}
+.sb{font-size:10px;padding:2px 6px;border-radius:var(--radius-sm);letter-spacing:0.04em;display:inline-block;margin:2px 0;}
+.sb-estante{background:rgba(74,53,30,0.5);color:#dfbc88;}
 .sb-quero{background:rgba(100,80,40,0.45);color:#c4a96a;}
 .sb-lendo{background:rgba(140,90,10,0.5);color:#f0c060;}
 .sb-lido{background:rgba(40,80,35,0.5);color:#80c070;}
 .sb-aband{background:rgba(100,28,28,0.5);color:#c07070;}
 
 /* progress in niche */
-.niche-progress{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:5px;margin-top:2px;}
+.niche-progress{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:4px;margin-top:auto;width:100%;padding-top:4px;}
 .niche-prog-row{font-size:11px;}
-.niche-prog-label{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;color:var(--text-sub);margin-bottom:2px;}
+.niche-prog-label{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;color:var(--text-sub);margin-bottom:2px;font-size:10.5px;}
 .prog-track{height:4px;background:rgba(90,52,24,0.5);border-radius:2px;overflow:hidden;}
-.prog-fill{height:100%;background:-webkit-linear-gradient(90deg,#d4822a,#c9a84c);background:linear-gradient(90deg,#d4822a,#c9a84c);}
-
-/* ratings in niche */
-.niche-ratings{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:2px;margin-top:2px;}
-.niche-rating-row{font-size:11px;color:var(--text-sub);display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:3px;}
+.prog-fill{height:100%;background:gradient(linear,left top,right top,from(#d4822a),to(#c9a84c));background:linear-gradient(90deg,#d4822a,#c9a84c);}
 
 /* niche ornament */
-.niche-ornament{text-align:center;color:var(--gold-dim);font-size:11px;letter-spacing:0.2em;margin-top:auto;padding-top:8px;opacity:0.55;}
+.niche-ornament{text-align:center;color:var(--gold-dim);font-size:10px;letter-spacing:0.15em;margin-top:4px;opacity:0.4;}
+
+/* edit icon pure svg style */
+.edit-btn svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: var(--gold-dim);
+  stroke-width: 2;
+}
+.edit-btn:hover svg {
+  stroke: var(--gold-light);
+}
 
 /* shelf bottom rail */
 .shelf-rail-bot{
   height:22px;
-  background:-webkit-linear-gradient(180deg,var(--wood-rich) 0%,var(--wood-edge) 40%,var(--wood-rail) 100%);
   background:linear-gradient(180deg,var(--wood-rich) 0%,var(--wood-edge) 40%,var(--wood-rail) 100%);
   border-top:2px solid rgba(255,200,80,0.12);
   -webkit-box-shadow:0 6px 20px rgba(0,0,0,0.8);box-shadow:0 6px 20px rgba(0,0,0,0.8);
@@ -434,16 +481,15 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .list-wrap{padding:1.2rem 1.5rem 3rem;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:14px;}
 .list-card{
   cursor:pointer;
-  background:-webkit-linear-gradient(135deg,rgba(26,16,7,0.97),rgba(18,10,3,0.97));
   background:linear-gradient(135deg,rgba(26,16,7,0.97),rgba(18,10,3,0.97));
   border:1px solid var(--border-gold);border-radius:var(--radius-lg);
   padding:1.1rem 1.4rem;display:-webkit-flex;display:flex;gap:18px;
-  -webkit-transition:border-color 0.2s,-webkit-box-shadow 0.2s;transition:border-color 0.2s,box-shadow 0.2s;
+  transition:border-color 0.2s,box-shadow 0.2s;
   -webkit-box-shadow:0 4px 18px rgba(0,0,0,0.4);box-shadow:0 4px 18px rgba(0,0,0,0.4);
 }
-.list-card:hover{border-color:var(--gold-dim);-webkit-box-shadow:0 4px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.1);box-shadow:0 4px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.1);}
+.list-card:hover{border-color:var(--gold-dim);box-shadow:0 4px 24px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.1);}
 .list-cover-wrap{width:76px;-webkit-flex-shrink:0;flex-shrink:0;}
-.list-cover{width:100%;aspect-ratio:2/3;border-radius:3px;overflow:hidden;-webkit-box-shadow:2px 3px 12px rgba(0,0,0,0.7);box-shadow:2px 3px 12px rgba(0,0,0,0.7);position:relative;}
+.list-cover{width:100%;aspect-ratio:2/3;border-radius:3px;overflow:hidden;box-shadow:2px 3px 12px rgba(0,0,0,0.7);position:relative;}
 .list-cover img{width:100%;height:100%;object-fit:cover;display:block;}
 .list-cover.no-img{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;font-size:26px;}
 .list-wish-badge{display:inline-block;background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);color:var(--gold);font-size:11px;padding:2px 7px;border-radius:var(--radius-sm);letter-spacing:0.05em;font-family:var(--font-title);margin-top:6px;}
@@ -453,23 +499,58 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .list-meta{font-size:14px;font-style:italic;color:var(--text-sub);margin-top:3px;}
 
 .progress-rows{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:8px;margin-bottom:10px;}
-.progress-row-label{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;font-size:13px;color:var(--text-sub);margin-bottom:3px;-webkit-align-items:center;align-items:center;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:4px;}
+.progress-row-item{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:10px;width:100%;}
+.progress-row-content{-webkit-flex:1;flex:1;min-width:0;}
+.progress-row-label{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;font-size:13px;color:var(--text-sub);margin-bottom:3px;align-items:center;flex-wrap:wrap;gap:4px;}
 .progress-track{height:5px;background:rgba(90,52,24,0.5);border-radius:3px;overflow:hidden;}
-.progress-fill{height:100%;background:-webkit-linear-gradient(90deg,#d4822a,#c9a84c);background:linear-gradient(90deg,#d4822a,#c9a84c);}
+.progress-fill{height:100%;background:linear-gradient(90deg,#d4822a,#c9a84c);}
 .progress-empty{font-size:13px;font-style:italic;color:var(--text-dim);}
 
-.my-progress{
-  display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;
-  gap:8px;-webkit-flex-wrap:wrap;flex-wrap:wrap;
-  padding:10px 12px;
-  background:rgba(16,9,3,0.65);
-  border:1px solid rgba(74,46,16,0.5);border-radius:var(--radius-md);margin-top:8px;
+/* Botão de excluir progresso (Lixeira) */
+.btn-del-prog{
+  background:transparent;border:none;width:26px;height:26px;padding:0;
+  display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;
+  color:var(--text-dim);cursor:pointer;border-radius:50%;-webkit-transition:all 0.2s;transition:all 0.2s;
 }
-.my-progress label{font-size:13px;font-style:italic;color:var(--text-sub);}
-.my-progress input[type="number"]{width:76px;height:32px;font-size:14px;}
-.my-progress input[type="date"]{width:145px;height:32px;font-size:13px;color-scheme:dark;}
-.my-progress select{height:32px;font-size:14px;}
-.my-progress button{height:32px;padding:0 14px;font-size:14px;}
+.btn-del-prog:hover{
+  background:rgba(150,40,40,0.2);color:#ff6b6b;
+}
+.btn-del-prog svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;}
+
+/* Seção de andamento para celular */
+.my-progress{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  row-gap: 8px;
+  column-gap: 12px;
+  padding: 12px;
+  background: rgba(16,9,3,0.65);
+  border: 1px solid rgba(74,46,16,0.5);
+  border-radius: var(--radius-md);
+  margin-top: 8px;
+}
+.my-progress label{
+  font-size:13px;
+  font-style:italic;
+  color:var(--text-sub);
+  justify-self: end;
+  white-space: nowrap;
+}
+.my-progress input, .my-progress select {
+  width: 100% !important;
+  height: 34px;
+}
+.my-progress input[type="date"]{
+  color-scheme:dark;
+}
+.my-progress button.btn-save-progress {
+  grid-column: 1 / span 2;
+  height:34px;
+  width: 100%;
+  margin-top: 4px;
+}
+
 .no-user-hint{font-size:13px;font-style:italic;color:var(--text-dim);margin-top:8px;}
 
 .ratings-row{display:-webkit-flex;display:flex;gap:16px;-webkit-flex-wrap:wrap;flex-wrap:wrap;font-size:13px;color:var(--text-sub);margin-top:8px;}
@@ -482,83 +563,399 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 
 .empty-state{text-align:center;padding:4rem 1rem;color:var(--text-dim);font-size:16px;font-style:italic;letter-spacing:0.05em;}
 
+/* Botão de retorno quando um livro é isolado */
+.back-shelf-container {
+  padding: 1rem 1.5rem 0;
+}
+.btn-back-shelf {
+  background: rgba(20,12,4,0.85);
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+  font-family: var(--font-title);
+  font-size: 12px;
+  padding: 0 16px;
+  height: 34px;
+  letter-spacing: 0.05em;
+}
+.btn-back-shelf:hover {
+  background: var(--wood-rich);
+  color: var(--gold-light);
+}
 
+/* ─── CRONÔMETRO ─── */
+.crono-wrap{padding:1.2rem 1.5rem 3rem;}
+.crono-intro{text-align:center;margin-bottom:1.4rem;}
+.crono-intro h2{font-family:var(--font-title);font-size:19px;color:var(--gold-light);letter-spacing:0.08em;text-shadow:0 0 20px rgba(201,168,76,0.3);}
+.crono-intro p{font-size:14px;font-style:italic;color:var(--text-sub);margin-top:4px;}
+
+.crono-stats-grid{
+  display:-webkit-grid;display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-bottom:1.4rem;
+}
+.crono-stat-card{
+  background:linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
+  border:1px solid var(--border-gold);border-radius:var(--radius-md);
+  padding:0.9rem 0.8rem;text-align:center;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4);
+}
+.crono-stat-label{font-size:11px;color:var(--text-sub);letter-spacing:0.06em;font-style:italic;margin-bottom:4px;}
+.crono-stat-value{font-family:var(--font-title);font-size:22px;color:var(--gold-light);letter-spacing:0.02em;}
+.crono-stat-delta{font-size:11px;color:#80c070;margin-top:3px;}
+
+.crono-session-card{
+  background:linear-gradient(135deg,rgba(26,16,7,0.97),rgba(18,10,3,0.99));
+  border:1px solid var(--border-gold);border-radius:var(--radius-lg);
+  padding:1.3rem 1.4rem;margin-bottom:1.4rem;
+  box-shadow:0 8px 30px rgba(0,0,0,0.55),inset 0 1px 0 rgba(201,168,76,0.08);
+}
+.crono-session-title{font-family:var(--font-title);font-size:13px;color:var(--gold);letter-spacing:0.1em;margin-bottom:1rem;border-bottom:1px solid var(--border-gold);padding-bottom:0.5rem;}
+.crono-session-body{display:-webkit-flex;display:flex;gap:16px;-webkit-align-items:center;align-items:center;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
+.crono-session-cover{width:64px;aspect-ratio:2/3;border-radius:3px;overflow:hidden;box-shadow:2px 3px 12px rgba(0,0,0,0.7);flex-shrink:0;}
+.crono-session-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.crono-session-cover.no-img{display:flex;align-items:center;justify-content:center;font-size:24px;}
+.crono-session-info{flex:1;min-width:180px;}
+.crono-session-book-title{font-family:var(--font-title);font-size:16px;color:var(--cream);letter-spacing:0.02em;}
+.crono-session-book-author{font-size:13px;font-style:italic;color:var(--text-sub);margin-top:2px;}
+.crono-session-meta{display:flex;gap:22px;margin-top:10px;flex-wrap:wrap;}
+.crono-meta-item{text-align:left;}
+.crono-meta-label{font-size:10.5px;color:var(--text-dim);letter-spacing:0.05em;}
+.crono-meta-value{font-family:var(--font-title);font-size:18px;color:var(--gold-light);}
+.crono-meta-value input{width:80px;height:32px;font-family:var(--font-body);font-size:16px;padding:0 8px;}
+.crono-session-actions{margin-left:auto;flex-shrink:0;}
+.crono-session-actions button{height:40px;padding:0 22px;}
+
+.crono-start-form{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.crono-start-form select{flex:1;min-width:200px;}
+.crono-empty-hint{font-size:14px;font-style:italic;color:var(--text-dim);text-align:center;padding:1rem 0;}
+
+.crono-book-search{width:100%;margin-bottom:14px;}
+.crono-book-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-start;}
+.crono-book-card{
+  width:110px;cursor:pointer;text-align:center;
+  background:rgba(20,12,4,0.55);border:1px solid rgba(74,46,16,0.5);
+  border-radius:var(--radius-md);padding:8px;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.crono-book-card:hover{border-color:var(--gold-dim);box-shadow:0 4px 16px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.12);}
+.crono-book-card-cover{width:100%;aspect-ratio:2/3;border-radius:3px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.6);margin-bottom:6px;}
+.crono-book-card-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.crono-book-card-cover.no-img{display:flex;align-items:center;justify-content:center;font-size:20px;}
+.crono-book-card-title{font-family:var(--font-title);font-size:11px;color:var(--cream);line-height:1.25;}
+.crono-book-card-author{font-size:10.5px;font-style:italic;color:var(--text-sub);margin-top:2px;}
+.crono-book-card-btn{
+  margin-top:6px;width:100%;height:26px;padding:0;font-size:10.5px;
+  background:rgba(201,168,76,0.08);border-color:var(--gold-dim);color:var(--gold);
+}
+.crono-book-card-btn:hover{background:var(--wood-rich);color:var(--gold-light);}
+
+.crono-history-title{font-family:var(--font-title);font-size:13px;color:var(--gold);letter-spacing:0.1em;margin-bottom:0.8rem;display:flex;justify-content:space-between;align-items:center;}
+.crono-history-list{display:flex;flex-direction:column;gap:8px;}
+.crono-history-item{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(20,12,4,0.6);border:1px solid rgba(74,46,16,0.4);
+  border-radius:var(--radius-md);padding:0.65rem 0.9rem;
+}
+.crono-history-cover{width:34px;aspect-ratio:2/3;border-radius:2px;overflow:hidden;flex-shrink:0;box-shadow:1px 2px 6px rgba(0,0,0,0.6);}
+.crono-history-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.crono-history-cover.no-img{display:flex;align-items:center;justify-content:center;font-size:14px;}
+.crono-history-info{flex:1;min-width:0;}
+.crono-history-book{font-size:14px;color:var(--cream);letter-spacing:0.01em;}
+.crono-history-date{font-size:11.5px;color:var(--text-dim);font-style:italic;}
+.crono-history-stats{text-align:right;font-size:12.5px;color:var(--gold);flex-shrink:0;white-space:nowrap;}
+.crono-history-stats span{display:block;color:var(--text-sub);font-size:11px;}
+.crono-history-actions{display:flex;align-items:center;gap:6px;}
+
+@media(max-width:700px){
+  .crono-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .crono-session-actions{margin-left:0;width:100%;}
+  .crono-session-actions button{width:100%;}
+}
+
+/* ─── APP SHELL / SIDEBAR ─── */
+.app-shell{display:-webkit-flex;display:flex;min-height:100vh;align-items:stretch;}
+.sidebar{
+  width:230px;flex-shrink:0;
+  background:-webkit-linear-gradient(180deg,#140c04,#0c0703);
+  background:linear-gradient(180deg,#140c04,#0c0703);
+  border-right:1px solid var(--wood-edge);
+  display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;
+  transition:width 0.22s ease;
+  position:relative;z-index:20;
+}
+.sidebar.collapsed{width:68px;}
+.sidebar-top{display:-webkit-flex;display:flex;align-items:center;gap:10px;padding:1.1rem 1rem 1rem;border-bottom:1px solid rgba(74,46,16,0.3);}
+.sidebar.collapsed .sidebar-top{justify-content:center;padding:1.1rem 0.4rem;}
+.sidebar-collapse-btn{width:30px;height:30px;padding:0;flex-shrink:0;border-radius:50%;display:-webkit-flex;display:flex;align-items:center;justify-content:center;}
+.sidebar-collapse-btn svg{width:14px;height:14px;stroke:var(--gold-dim);fill:none;stroke-width:2;transition:transform 0.22s;}
+.sidebar.collapsed .sidebar-collapse-btn svg{transform:rotate(180deg);}
+.sidebar-logo{display:-webkit-flex;display:flex;align-items:center;gap:8px;overflow:hidden;}
+.sidebar-logo-icon{font-size:20px;flex-shrink:0;}
+.sidebar-logo-text{font-family:var(--font-title);font-size:13.5px;color:var(--gold-light);letter-spacing:0.04em;line-height:1.25;white-space:nowrap;text-shadow:0 0 16px rgba(201,168,76,0.3);}
+.sidebar.collapsed .sidebar-logo-text{display:none;}
+
+.sidebar-nav{-webkit-flex:1;flex:1;padding:0.9rem 0.55rem;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-item{display:-webkit-flex;display:flex;align-items:center;gap:11px;height:41px;padding:0 11px;background:transparent;border:1px solid transparent;border-radius:var(--radius-md);color:var(--text-sub);justify-content:flex-start;text-align:left;width:100%;}
+.nav-item:hover{background:rgba(201,168,76,0.06);color:var(--gold-light);}
+.nav-item.active{background:-webkit-linear-gradient(135deg,rgba(90,42,10,0.55),rgba(61,26,6,0.55));background:linear-gradient(135deg,rgba(90,42,10,0.55),rgba(61,26,6,0.55));color:var(--gold-light);border-color:var(--border-gold);}
+.nav-icon{font-size:15px;flex-shrink:0;width:18px;text-align:center;}
+.nav-label{font-family:var(--font-title);font-size:11.5px;letter-spacing:0.03em;white-space:nowrap;overflow:hidden;}
+.sidebar.collapsed .nav-item{justify-content:center;padding:0;}
+.sidebar.collapsed .nav-label{display:none;}
+.nav-divider{height:1px;background:rgba(74,46,16,0.4);margin:8px 8px;}
+
+.sidebar-footer{padding:1rem 0.8rem;text-align:center;border-top:1px solid rgba(74,46,16,0.3);}
+.sidebar-footer-ornament{color:var(--gold-dim);font-size:13px;margin-bottom:6px;}
+.sidebar-footer-quote{font-size:11px;font-style:italic;color:var(--text-dim);line-height:1.4;}
+.sidebar.collapsed .sidebar-footer-quote,.sidebar.collapsed .sidebar-footer-ornament{display:none;}
+
+.main-content{-webkit-flex:1;flex:1;min-width:0;}
+
+.top-header{
+  display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:12px;
+  padding:1.15rem 1.5rem;
+  background:-webkit-linear-gradient(180deg,#160d05,#100a04);
+  background:linear-gradient(180deg,#160d05,#100a04);
+  border-bottom:1px solid var(--wood-edge);
+}
+.header-greeting h1{font-family:var(--font-title);font-size:18px;color:var(--gold-light);letter-spacing:0.03em;}
+.top-header .header-right{position:static;top:auto;right:auto;}
+
+/* ─── VISÃO GERAL ─── */
+.visao-wrap{padding:1.3rem 1.5rem 3rem;}
+.month-selector{display:-webkit-flex;display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:1.1rem;}
+.month-selector button{width:32px;height:32px;padding:0;border-radius:50%;}
+.month-label{font-family:var(--font-title);font-size:13px;color:var(--gold);letter-spacing:0.05em;padding:0 8px;min-width:140px;text-align:center;}
+
+.visao-stats-grid{display:-webkit-grid;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:1.3rem;}
+.visao-charts-row{display:-webkit-grid;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:14px;margin-bottom:1.3rem;align-items:stretch;}
+.visao-lower-row{display:-webkit-grid;display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:14px;}
+
+.chart-card{
+  background:-webkit-linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
+  background:linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
+  border:1px solid var(--border-gold);border-radius:var(--radius-lg);
+  padding:1.1rem 1.2rem;box-shadow:0 6px 24px rgba(0,0,0,0.45);
+}
+.chart-card h3{font-family:var(--font-title);font-size:12.5px;color:var(--gold);letter-spacing:0.08em;margin-bottom:1rem;}
+
+.bar-chart{display:-webkit-flex;display:flex;align-items:flex-end;gap:5px;height:140px;}
+.bar-chart-col{-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.bar-chart-bar{width:65%;background:-webkit-linear-gradient(180deg,#d4822a,#c9a84c);background:linear-gradient(180deg,#d4822a,#c9a84c);border-radius:3px 3px 0 0;min-height:3px;}
+.bar-chart-bar.empty{background:rgba(90,52,24,0.3);}
+.bar-chart-bar.selected{background:-webkit-linear-gradient(180deg,#e8c97a,#c9a84c);background:linear-gradient(180deg,#e8c97a,#c9a84c);box-shadow:0 0 10px rgba(201,168,76,0.5);}
+.bar-chart-label{font-size:9.5px;color:var(--text-dim);margin-top:6px;}
+.bar-chart-value{font-size:9px;color:var(--gold-light);margin-bottom:3px;}
+
+.donut{width:120px;height:120px;border-radius:50%;margin:0 auto 14px;position:relative;box-shadow:0 4px 16px rgba(0,0,0,0.5);}
+.donut::after{content:'';position:absolute;inset:20%;background:var(--wood-mid);border-radius:50%;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);}
+.donut-legend{font-size:11.5px;}
+.donut-legend-item{display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;padding:3px 0;color:var(--text-sub);}
+.donut-legend-swatch{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:6px;}
+
+.goal-ring{width:126px;height:126px;border-radius:50%;margin:0 auto 12px;position:relative;display:-webkit-flex;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.5);}
+.goal-ring::before{content:'';position:absolute;inset:16%;background:var(--wood-mid);border-radius:50%;box-shadow:inset 0 0 10px rgba(0,0,0,0.5);}
+.goal-ring-text{position:relative;z-index:2;text-align:center;}
+.goal-ring-pct{font-family:var(--font-title);font-size:21px;color:var(--gold-light);}
+.goal-ring-label{font-size:9.5px;color:var(--text-sub);letter-spacing:0.04em;}
+.goal-meta-info{text-align:center;font-size:11.5px;color:var(--text-sub);}
+.goal-set-inline{margin-top:10px;display:-webkit-flex;display:flex;gap:8px;justify-content:center;}
+.goal-set-inline input{width:80px;}
+
+.quick-stats-list{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:9px;}
+.quick-stats-row{display:-webkit-flex;display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-sub);border-bottom:1px dashed rgba(74,46,16,0.35);padding-bottom:8px;}
+.quick-stats-row strong{color:var(--gold-light);font-family:var(--font-title);font-weight:600;font-size:13px;}
+
+.placeholder-wrap{padding:4.5rem 1.5rem;text-align:center;color:var(--text-dim);}
+.placeholder-wrap h2{font-family:var(--font-title);color:var(--gold-light);font-size:19px;margin-bottom:8px;text-shadow:0 0 20px rgba(201,168,76,0.3);}
+.placeholder-wrap p{font-size:14px;font-style:italic;}
+
+.stats-grid-3{display:-webkit-grid;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+.author-rank-row{display:-webkit-flex;display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed rgba(74,46,16,0.3);}
+.author-rank-row:last-child{border-bottom:none;}
+.author-rank-num{font-family:var(--font-title);font-size:16px;color:var(--gold);width:22px;text-align:center;flex-shrink:0;}
+.author-rank-name{-webkit-flex:1;flex:1;font-size:13.5px;color:var(--cream);}
+.author-rank-count{font-size:12px;color:var(--text-sub);white-space:nowrap;}
+
+.pace-display{text-align:center;padding:0.8rem 0;}
+.pace-value{font-family:var(--font-title);font-size:36px;color:var(--gold-light);text-shadow:0 0 20px rgba(201,168,76,0.35);}
+.pace-unit{font-size:12.5px;color:var(--text-sub);margin-top:2px;letter-spacing:0.04em;}
+.pace-sub{font-size:12px;color:var(--text-dim);margin-top:10px;font-style:italic;}
+
+.spotlight-session{display:-webkit-flex;display:flex;gap:14px;align-items:center;}
+.spotlight-cover{width:60px;aspect-ratio:2/3;border-radius:3px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.6);flex-shrink:0;}
+.spotlight-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.spotlight-cover.no-img{display:-webkit-flex;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.spotlight-info .spotlight-title{font-family:var(--font-title);font-size:14px;color:var(--cream);line-height:1.3;}
+.spotlight-info .spotlight-author{font-size:11.5px;font-style:italic;color:var(--text-sub);margin-top:2px;}
+.spotlight-info .spotlight-date{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:3px;}
+.spotlight-duration{font-family:var(--font-title);font-size:22px;color:var(--gold-light);margin-top:8px;}
+
+@media(max-width:900px){
+  .stats-grid-3{grid-template-columns:1fr;}
+}
+
+@media(max-width:1000px){
+  .visao-charts-row{grid-template-columns:1fr;}
+  .visao-lower-row{grid-template-columns:1fr;}
+  .visao-stats-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* ─── AJUSTES DE RESPONSIVIDADE (MOBILE) ─── */
+@media(max-width:820px){
+  .sidebar{width:200px;}
+  .sidebar.collapsed{width:60px;}
+}
 
 @media(max-width:600px){
-  .header-right{position:static;-webkit-justify-content:center;justify-content:center;padding:0.5rem 1rem 0;}
-  .site-title{font-size:1.6rem;}
-  .candle-scene{width:100px;height:140px;}
-  .decor-scene{width:80px;}
-  .site-header{padding:1rem 100px 1rem;}
-  .niche{min-width:130px;-webkit-flex:1 1 130px;flex:1 1 130px;}
+  .site-header{
+    padding:1rem 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .candle-scene{
+    position: relative;
+    width: 120px;
+    height: 90px;
+    margin: 0 auto 0.5rem;
+    order: 1;
+  }
+  .candle-scene img {
+    object-position: center center;
+  }
+  .decor-scene{display: none;}
+  
+  .orn-top{ order: 2; width: 100%; margin-bottom: 0.2rem;}
+  .site-title{ order: 3; font-size: 1.6rem; text-align: center; margin-bottom: 0.2rem;}
+  .orn-bot{ order: 4; margin-bottom: 1rem;}
+  
+  .header-right{
+    position: static;
+    order: 5;
+    -webkit-justify-content:center;
+    justify-content:center;
+    width: 100%;
+    padding: 0;
+    gap: 6px;
+  }
+  .header-right input{ width: 110px; }
+  
+  .niche-grid {
+    padding: 0 4px;
+    gap: 4px;
+  }
+  .niche{
+    min-width:140px;
+    -webkit-flex:1 1 140px;flex:1 1 140px;
+    max-width: 48%;
+    min-height: 310px;
+  }
+  .niche-col-divider { display: none; }
+  .niche-content { 
+    padding: 45px 8px 10px;
+    gap: 4px;
+  }
+  .niche-cover { width: 70%; }
+
   .list-card{padding:0.9rem 1rem;gap:12px;}
   .list-cover-wrap{width:58px;}
+  .back-shelf-container { padding: 0.8rem 1rem 0; }
+  
+  .my-progress {
+    grid-template-columns: 60px 1fr;
+    column-gap: 8px;
+    row-gap: 6px;
+    padding: 10px;
+  }
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ HEADER ═══════════════ -->
-<header class="site-header">
-
-  <!-- CANDLE SCENE (left) -->
-  <div class="candle-scene">
-    <img src="candle-scene2_png.png" alt="Cena com vela acesa" style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;"/>
-  </div>
-
-  <!-- DECOR SCENE (right) -->
-  <div class="decor-scene">
-    <img src="decor-scene_png.png" alt="Decoração" />
-  </div>
-
-  <!-- USER / CONTROLS -->
-  <div class="header-right">
-    <span style="color:var(--text-sub);font-size:17px;">👤</span>
-    <input type="text" id="user-input" placeholder="Seu nome"/>
-    <button class="btn-icon" id="btn-user-search" title="Buscar">🔍</button>
-    <div class="view-toggle">
-      <button id="btn-grid" class="active">Grade</button>
-      <button id="btn-list">Lista</button>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <button class="sidebar-collapse-btn" id="btn-collapse-sidebar" title="Recolher/expandir menu">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="sidebar-logo">
+        <span class="sidebar-logo-icon">📖</span>
+        <span class="sidebar-logo-text">Capítulo<br/>Compartilhado</span>
+      </div>
     </div>
-  </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="visao" title="Visão Geral"><span class="nav-icon">🏠</span><span class="nav-label">Visão Geral</span></button>
+      <button class="nav-item" data-tab="estante" title="Na Estante"><span class="nav-icon">📚</span><span class="nav-label">Na Estante</span></button>
+      <button class="nav-item" data-tab="desejos" title="Lista de Desejos"><span class="nav-icon">🔖</span><span class="nav-label">Lista de Desejos</span></button>
+      <button class="nav-item" data-tab="cronometro" title="Cronômetro"><span class="nav-icon">⏱</span><span class="nav-label">Cronômetro</span></button>
+      <div class="nav-divider"></div>
+      <button class="nav-item" data-tab="metas" title="Metas de Leitura"><span class="nav-icon">🎯</span><span class="nav-label">Metas de Leitura</span></button>
+      <button class="nav-item" data-tab="estatisticas" title="Estatísticas"><span class="nav-icon">📊</span><span class="nav-label">Estatísticas</span></button>
+      <button class="nav-item" data-tab="generos" title="Gêneros"><span class="nav-icon">🏷️</span><span class="nav-label">Gêneros</span></button>
+      <button class="nav-item" data-tab="autores" title="Autores"><span class="nav-icon">✒️</span><span class="nav-label">Autores</span></button>
+      <div class="nav-divider"></div>
+      <button class="nav-item" data-tab="config" title="Configurações"><span class="nav-icon">⚙️</span><span class="nav-label">Configurações</span></button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-ornament">✦</div>
+      <p class="sidebar-footer-quote">Cada página é um passo em um mundo novo.</p>
+    </div>
+  </aside>
 
-  <!-- TITLE -->
-  <div class="orn-top">✦ ✦ ✦</div>
-  <h1 class="site-title">Capítulo Compartilhado</h1>
-  <div class="orn-bot">— ✦ —</div>
-</header>
+  <main class="main-content">
+    <header class="top-header">
+      <div class="header-greeting">
+        <h1 id="header-greeting-text">Bem-vindo(a)</h1>
+      </div>
+      <div class="header-right">
+        <span class="user-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span>
+        <input type="text" id="user-input" placeholder="Seu nome"/>
+        <button class="btn-icon" id="btn-user-search" title="Buscar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </header>
 
-<!-- CONN -->
-<div class="conn-bar">
-  <span class="conn-dot" id="conn-dot"></span>
-  <span id="conn-text">Conectando...</span>
+    <div class="conn-bar">
+      <span class="conn-dot" id="conn-dot"></span>
+      <span id="conn-text">Conectando...</span>
+    </div>
+
+    <div id="visao-area" style="display:none;"></div>
+    <div id="placeholder-area" style="display:none;"></div>
+
+    <div class="toolbar">
+      <input type="text" id="search-input" placeholder="🔍  Buscar por autor ou título"/>
+      <select id="filter-status">
+        <option value="Todos">Todos os status</option>
+        <option value="Na estante">Na estante</option>
+        <option value="Quero ler">Quero ler</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Lido">Lido</option>
+        <option value="Abandonado">Abandonado</option>
+      </select>
+      <select id="sort-mode">
+        <option value="recent">Mais recentes</option>
+        <option value="title">Título A-Z</option>
+        <option value="author">Autor A-Z</option>
+      </select>
+      <button id="btn-add" class="primary">✦ Adicionar livro</button>
+    </div>
+    <div class="book-count-bar" id="book-count">—</div>
+
+    <div id="form-area"></div>
+
+    <div id="back-container"></div>
+
+    <div id="books-area"><p class="empty-state">✦ Carregando a estante... ✦</p></div>
+
+    <div id="crono-area" style="display:none;"></div>
+  </main>
 </div>
-
-<!-- TOOLBAR -->
-<div class="toolbar">
-  <input type="text" id="search-input" placeholder="🔍  Buscar por autor ou título"/>
-  <select id="filter-status">
-    <option value="Todos">Todos os status</option>
-    <option value="Quero ler">Quero ler</option>
-    <option value="Lendo">Lendo</option>
-    <option value="Lido">Lido</option>
-    <option value="Abandonado">Abandonado</option>
-  </select>
-  <select id="sort-mode">
-    <option value="recent">Mais recentes</option>
-    <option value="title">Título A-Z</option>
-    <option value="author">Autor A-Z</option>
-  </select>
-  <button id="btn-add" class="primary">✦ Adicionar livro</button>
-</div>
-<div class="book-count-bar" id="book-count">—</div>
-
-<!-- FORM -->
-<div id="form-area"></div>
-
-<!-- BOOKS -->
-<div id="books-area"><p class="empty-state">✦ Carregando a estante... ✦</p></div>
-
 
 
 <script>
@@ -574,9 +971,13 @@ const firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 const booksRef=db.ref("books");
+const sessionsRef=db.ref("sessions");
+const activeSessionsRef=db.ref("activeSessions");
+const statsRef=db.ref("readingStats");
+const goalsRef=db.ref("readingGoals");
 
-const STATUS_OPTIONS=['Quero ler','Lendo','Lido','Abandonado'];
-const STATUS_CLS={'Quero ler':'sb-quero','Lendo':'sb-lendo','Lido':'sb-lido','Abandonado':'sb-aband'};
+const STATUS_OPTIONS=['Na estante','Quero ler','Lendo','Lido','Abandonado'];
+const STATUS_CLS={'Na estante':'sb-estante','Quero ler':'sb-quero','Lendo':'sb-lendo','Lido':'sb-lido','Abandonado':'sb-aband'};
 const COVER_BG=[
   'linear-gradient(135deg,#3d2510,#5a3418)',
   'linear-gradient(135deg,#1a2d18,#2a4a28)',
@@ -586,13 +987,70 @@ const COVER_BG=[
   'linear-gradient(135deg,#1a2c2c,#2a4848)',
 ];
 
-let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null;
+let books={},currentUser='',viewMode='grid',filterStatus='Todos',searchTerm='',sortMode='recent',editingId=null,pendingCoverData=null,isolatedBookId=null,activeTab='visao';
+let sidebarCollapsed=false;
+let selYear=(new Date()).getFullYear(),selMonth=(new Date()).getMonth()+1;
+let statsPeriod='ano';
+let allSessions={},myActiveSession=null,myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
+let activeSessionListenerRef=null,statsListenerRef=null,goalsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null,cronoSearchTerm='',editingSessionId=null;
+let myGoals={annualBooks:0,monthlyPages:0};
 
 function escHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 function cvColor(t){let s=0;for(let i=0;i<(t||'').length;i++)s+=t.charCodeAt(i);return COVER_BG[s%COVER_BG.length];}
 function sKey(n){return(n||'').replace(/[.#$\[\]\/]/g,'_');}
-function loadUser(){currentUser=localStorage.getItem('epv_user')||'';}
-function saveUser(n){currentUser=n;localStorage.setItem('epv_user',n);}
+
+function padronizarNome(n){
+  if(!n) return '';
+  var limpo = n.trim();
+  if(!limpo) return '';
+  return limpo.charAt(0).toUpperCase() + limpo.slice(1).toLowerCase();
+}
+
+function loadUser(){
+  var raw = localStorage.getItem('epv_user')||'';
+  currentUser = padronizarNome(raw);
+  attachUserListeners();
+}
+function saveUser(n){
+  var padrao = padronizarNome(n);
+  if(padrao===currentUser)return;
+  currentUser = padrao;
+  localStorage.setItem('epv_user',padrao);
+  attachUserListeners();
+}
+
+function attachUserListeners(){
+  if(activeSessionListenerRef)activeSessionListenerRef.off();
+  if(statsListenerRef)statsListenerRef.off();
+  if(goalsListenerRef)goalsListenerRef.off();
+  myActiveSession=null;
+  myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
+  myGoals={annualBooks:0,monthlyPages:0};
+  if(!currentUser){render();return;}
+  var key=sKey(currentUser);
+  activeSessionListenerRef=activeSessionsRef.child(key);
+  activeSessionListenerRef.on('value',function(snap){
+    myActiveSession=snap.val()||null;
+    if(myActiveSession)myActiveSession.id=key;
+    if(activeTab==='cronometro')renderCronometro();
+    if(activeTab==='visao')renderVisaoGeral();
+    manageCronoTimer();
+  });
+  statsListenerRef=statsRef.child(key);
+  statsListenerRef.on('value',function(snap){
+    var v=snap.val()||{};
+    myStats={currentStreak:v.currentStreak||0,longestStreak:v.longestStreak||0,lastSessionDate:v.lastSessionDate||''};
+    if(activeTab==='cronometro')renderCronometro();
+    if(activeTab==='visao')renderVisaoGeral();
+  });
+  goalsListenerRef=goalsRef.child(key);
+  goalsListenerRef.on('value',function(snap){
+    var v=snap.val()||{};
+    myGoals={annualBooks:v.annualBooks||0,monthlyPages:v.monthlyPages||0};
+    if(activeTab==='visao')renderVisaoGeral();
+  });
+  render();
+}
 
 booksRef.on('value',snap=>{
   books=snap.val()||{};
@@ -606,40 +1064,174 @@ booksRef.on('value',snap=>{
   if(ct){ct.textContent='Erro: '+err.message;}
 });
 
+sessionsRef.on('value',snap=>{
+  allSessions=snap.val()||{};
+  if(activeTab==='cronometro')renderCronometro();
+  if(activeTab==='visao')renderVisaoGeral();
+});
+
 function booksArr(){return Object.keys(books).map(function(id){return Object.assign({id:id},books[id]);});}
-function myStatus(b){var s=(b.statuses||{})[sKey(currentUser)];return s||b.status||'Quero ler';}
+function myStatus(b){var s=(b.statuses||{})[sKey(currentUser)];return s||b.status||'Na estante';}
+
+function naturalCompare(a, b) {
+  var ax = [], bx = [];
+  a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]); });
+  b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]); });
+  while(ax.length && bx.length) {
+    var an = ax.shift(), bn = bx.shift();
+    var nn = (an[0] - bn[0]);
+    if(nn) return nn;
+    var sn = an[1].localeCompare(bn[1], 'pt-BR');
+    if(sn) return sn;
+  }
+  return ax.length - bx.length;
+}
+
 function filtered(){
+  if(viewMode==='list' && isolatedBookId && books[isolatedBookId]) {
+    return [Object.assign({id:isolatedBookId}, books[isolatedBookId])];
+  }
   var list=booksArr();
+  
+  list = list.filter(function(b){
+    return activeTab==='desejos' ? (b.wishlist === true) : (!b.wishlist);
+  });
+
   if(filterStatus!=='Todos')list=list.filter(function(b){return myStatus(b)===filterStatus;});
   if(searchTerm.trim()){var t=searchTerm.trim().toLowerCase();list=list.filter(function(b){return(b.title||'').toLowerCase().indexOf(t)>-1||(b.author||'').toLowerCase().indexOf(t)>-1;});}
-  if(sortMode==='recent')list.sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0);});
-  else if(sortMode==='title')list.sort(function(a,b){return(a.title||'').localeCompare(b.title||'','pt-BR');});
-  else if(sortMode==='author')list.sort(function(a,b){return(a.author||'').localeCompare(b.author||'','pt-BR');});
+  
+  if(sortMode=='recent') {
+    list.sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0);});
+  } else if(sortMode==='title') {
+    list.sort(function(a,b){return naturalCompare(a.title||'', b.title||'');});
+  } else if(sortMode==='author') {
+    list.sort(function(a,b){
+      var compAuthor = (a.author||'').localeCompare(b.author||'','pt-BR');
+      if(compAuthor !== 0) return compAuthor;
+      return naturalCompare(a.title||'', b.title||'');
+    });
+  }
   return list;
 }
 
+function updateHeaderGreeting(){
+  var el=document.getElementById('header-greeting-text');
+  if(!el)return;
+  var h=(new Date()).getHours();
+  var saud=h<12?'Bom dia':(h<18?'Boa tarde':'Boa noite');
+  el.textContent=currentUser?(saud+', '+currentUser):'Bem-vindo(a) ao Capítulo Compartilhado';
+}
+
+var PLACEHOLDER_TITLES={metas:'Metas de Leitura',generos:'Gêneros',autores:'Autores',config:'Configurações'};
+
 function render(){
-  var total=booksArr().length;
-  var bc=document.getElementById('book-count');
-  if(bc)bc.textContent=total+(total===1?' livro':' livros')+' na estante';
   var ui=document.getElementById('user-input');
   if(ui)ui.value=currentUser;
-  var bg=document.getElementById('btn-grid'),bl=document.getElementById('btn-list');
-  if(bg){bg.classList.toggle('active',viewMode==='grid');}
-  if(bl){bl.classList.toggle('active',viewMode==='list');}
+  updateHeaderGreeting();
+
+  var navItems=document.querySelectorAll('.nav-item');
+  for(var ni=0;ni<navItems.length;ni++){
+    navItems[ni].classList.toggle('active',navItems[ni].getAttribute('data-tab')===activeTab);
+  }
+
+  var toolbar=document.querySelector('.toolbar');
+  var bookCountBar=document.getElementById('book-count');
+  var booksArea=document.getElementById('books-area');
+  var cronoArea=document.getElementById('crono-area');
+  var visaoArea=document.getElementById('visao-area');
+  var placeholderArea=document.getElementById('placeholder-area');
+  var formArea=document.getElementById('form-area');
+
+  manageCronoTimer();
+
+  if(activeTab==='cronometro'){
+    if(toolbar)toolbar.style.display='none';
+    if(bookCountBar)bookCountBar.style.display='none';
+    if(booksArea)booksArea.style.display='none';
+    if(visaoArea)visaoArea.style.display='none';
+    if(placeholderArea)placeholderArea.style.display='none';
+    if(cronoArea)cronoArea.style.display='';
+    if(formArea)formArea.innerHTML='';
+    document.getElementById('back-container').innerHTML='';
+    renderCronometro();
+    return;
+  }
+
+  if(activeTab==='visao'){
+    if(toolbar)toolbar.style.display='none';
+    if(bookCountBar)bookCountBar.style.display='none';
+    if(booksArea)booksArea.style.display='none';
+    if(cronoArea)cronoArea.style.display='none';
+    if(placeholderArea)placeholderArea.style.display='none';
+    if(visaoArea)visaoArea.style.display='';
+    if(formArea)formArea.innerHTML='';
+    document.getElementById('back-container').innerHTML='';
+    renderVisaoGeral();
+    return;
+  }
+
+  if(activeTab==='metas'||activeTab==='estatisticas'||activeTab==='generos'||activeTab==='autores'||activeTab==='config'){
+    if(toolbar)toolbar.style.display='none';
+    if(bookCountBar)bookCountBar.style.display='none';
+    if(booksArea)booksArea.style.display='none';
+    if(cronoArea)cronoArea.style.display='none';
+    if(visaoArea)visaoArea.style.display='none';
+    if(placeholderArea)placeholderArea.style.display='';
+    if(formArea)formArea.innerHTML='';
+    document.getElementById('back-container').innerHTML='';
+    if(activeTab==='estatisticas')renderEstatisticas();
+    else renderPlaceholder(activeTab);
+    return;
+  }
+
+  if(toolbar)toolbar.style.display='';
+  if(bookCountBar)bookCountBar.style.display='';
+  if(booksArea)booksArea.style.display='';
+  if(cronoArea)cronoArea.style.display='none';
+  if(visaoArea)visaoArea.style.display='none';
+  if(placeholderArea)placeholderArea.style.display='none';
+
+  var total=filtered().length;
+  var bc=document.getElementById('book-count');
+  if(bc) bc.textContent=total+(total===1?' livro':' livros')+(activeTab==='desejos'?' na lista de desejos':' na estante');
+
   var si=document.getElementById('search-input'),fs=document.getElementById('filter-status'),sm=document.getElementById('sort-mode');
   if(si)si.value=searchTerm;
   if(fs)fs.value=filterStatus;
   if(sm)sm.value=sortMode;
+  
   renderForm();
+  renderBackContainer();
   renderBooks();
 }
 
-/* ── FORM ── */
+function renderPlaceholder(tab){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  var title=PLACEHOLDER_TITLES[tab]||'Em breve';
+  area.innerHTML='<div class="placeholder-wrap"><h2>✦ '+title+' ✦</h2><p>Essa página ainda está sendo construída — em breve chega por aqui.</p></div>';
+}
+
+function renderBackContainer() {
+  var container = document.getElementById('back-container');
+  if(viewMode === 'list' && isolatedBookId) {
+    container.innerHTML = '<div class="back-shelf-container">'
+      +'<button class="btn-back-shelf" id="btn-back-shelf">↩ Ver todos os livros</button>'
+      +'</div>';
+    document.getElementById('btn-back-shelf').onclick = function() {
+      isolatedBookId = null;
+      viewMode = 'grid';
+      render();
+    };
+  } else {
+    container.innerHTML = '';
+  }
+}
+
 function renderForm(){
   var area=document.getElementById('form-area');
   if(!editingId){area.innerHTML='';return;}
-  var book={title:'',author:'',pages:'',cover:'',wishlist:false};
+  var book={title:'',author:'',pages:'',cover:'',wishlist:false,genre:''};
   if(editingId!=='new'){
     book=books[editingId];
     if(!book){editingId=null;area.innerHTML='';return;}
@@ -653,11 +1245,19 @@ function renderForm(){
       +'<div class="form-field"><label>Título</label><input type="text" id="f-title" value="'+escHtml(book.title)+'"/></div>'
       +'<div class="form-field"><label>Autor</label><input type="text" id="f-author" value="'+escHtml(book.author)+'"/></div>'
       +'<div class="form-field"><label>Total de páginas</label><input type="number" id="f-pages" min="1" value="'+(book.pages||'')+'"/></div>'
+      +'<div class="form-field"><label>Gênero</label><input type="text" id="f-genre" list="genre-suggestions" value="'+escHtml(book.genre||'')+'" placeholder="Ex: Ficção"/></div>'
     +'</div>'
+    +'<datalist id="genre-suggestions">'
+      +'<option value="Ficção"></option><option value="Não-ficção"></option><option value="Romance"></option>'
+      +'<option value="Fantasia"></option><option value="Ficção Científica"></option><option value="Suspense"></option>'
+      +'<option value="Terror"></option><option value="Biografia"></option><option value="Autoajuda"></option>'
+      +'<option value="Desenvolvimento Pessoal"></option><option value="História"></option><option value="Poesia"></option>'
+      +'<option value="Infantojuvenil"></option>'
+    +'</datalist>'
     +'<div class="wish-row">'
       +'<input type="checkbox" id="f-wishlist"'+(book.wishlist?' checked':'')+'/>'
       +'<label for="f-wishlist">📌 Lista de desejos</label>'
-      +'<span class="wish-desc">— livro ainda não comprado (aparece com $ nos cards)</span>'
+      +'<span class="wish-desc">— move o livro para a aba separada de desejos</span>'
     +'</div>'
     +'<div class="form-field" style="margin-bottom:12px;">'
       +'<label>Foto da capa</label>'
@@ -677,7 +1277,6 @@ function renderForm(){
       +(editingId!=='new'?'<button id="f-delete" class="danger spacer-btn">Excluir livro</button>':'')
     +'</div>'
   +'</div>';
-
   document.getElementById('f-cancel').onclick=function(){editingId=null;pendingCoverData=null;render();};
   document.getElementById('f-save').onclick=function(){saveForm(book);};
   document.getElementById('f-cover-file').onchange=function(e){
@@ -696,7 +1295,7 @@ function renderForm(){
   };
   attachRemove();
   var del=document.getElementById('f-delete');
-  if(del)del.onclick=function(){var id=editingId;editingId=null;pendingCoverData=null;booksRef.child(id).remove();};
+  if(del)del.onclick=function(){var id=editingId;editingId=null;pendingCoverData=null;booksRef.child(id).remove();isolatedBookId=null;};
 }
 
 function attachRemove(){
@@ -735,29 +1334,32 @@ function saveForm(existing){
   var author=document.getElementById('f-author').value.trim();
   var pages=parseInt(document.getElementById('f-pages').value,10);
   var wishlist=document.getElementById('f-wishlist').checked;
+  var genreEl=document.getElementById('f-genre');
+  var genre=genreEl?genreEl.value.trim():'';
   var errEl=document.getElementById('form-error');
   if(!title||!author||!pages||pages<=0){errEl.textContent='Preencha título, autor e páginas.';errEl.style.display='block';return;}
   errEl.style.display='none';
-  var nb;
-  if(editingId==='new'){
-    nb={title:title,author:author,pages:pages,wishlist:wishlist,cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
-    booksRef.push(nb).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
+  
+  if(editingId=='new'){
+    var nb={title:title,author:author,pages:pages,genre:genre,wishlist:wishlist,status:'Na estante',cover:pendingCoverData||'',createdAt:Date.now(),progress:{},ratings:{},statuses:{},dates:{}};
+    booksRef.push(nb).then(function() {
+       editingId=null;pendingCoverData=null;render();
+    }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';});
   } else {
-    nb=Object.assign({},existing);
-    nb.title=title;nb.author=author;nb.pages=pages;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
-    booksRef.child(editingId).set(nb).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
+    var nb=Object.assign({},existing);
+    nb.title=title;nb.author=author;nb.pages=pages;nb.genre=genre;nb.wishlist=wishlist;nb.cover=pendingCoverData||'';delete nb.id;
+    booksRef.child(editingId).set(nb).then(function() {
+       editingId=null;pendingCoverData=null;render();
+    }).catch(function(){errEl.textContent='Erro ao salvar.';errEl.style.display='block';return;});
   }
-  editingId=null;pendingCoverData=null;
 }
 
-/* ── BOOKS ── */
 function renderBooks(){
   var area=document.getElementById('books-area');
   var list=filtered();
-  if(list.length===0){area.innerHTML='<p class="empty-state">✦ Nenhum livro encontrado ✦</p>';return;}
+  if(list.length===0){area.innerHTML='<p class="empty-state">✦ Nenhum livro encontrado nesta seção ✦</p>';return;}
 
   if(viewMode==='grid'){
-    // build shelf with column dividers
     var html='<div class="shelf-area"><div class="shelf-rail-top"></div><div class="niche-grid">';
     for(var i=0;i<list.length;i++){
       html+=renderNiche(list[i]);
@@ -777,14 +1379,11 @@ function renderBooks(){
       var card=document.getElementById('card-'+book.id);
       if(card)card.onclick=function(e){
         if(e.target.closest('.no-open')||e.target.closest('.edit-btn'))return;
-        // se estiver na grade, vai para lista e rola para o card
         if(viewMode==='grid'){
+          isolatedBookId = book.id;
           viewMode='list';
           render();
-          setTimeout(function(){
-            var lc=document.getElementById('lcard-'+book.id);
-            if(lc)lc.scrollIntoView({behavior:'smooth',block:'center'});
-          },80);
+          window.scrollTo({top: 0, behavior: 'smooth'});
         }
       };
       var editBtn=document.getElementById('edit-btn-'+book.id);
@@ -793,6 +1392,26 @@ function renderBooks(){
         editingId=book.id;pendingCoverData=null;render();
         setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
       };
+      
+      var people=peopleOf(book);
+      for(var pIdx=0;pIdx<people.length;pIdx++){
+        (function(pName){
+          var delProgBtn=document.getElementById('btn-del-'+book.id+'-'+sKey(pName));
+          if(delProgBtn){
+            delProgBtn.onclick=function(e){
+              e.stopPropagation();
+              if(confirm('Deseja realmente remover o progresso de "'+pName+'" neste livro?')){
+                var key=sKey(pName);
+                booksRef.child(book.id).child('progress').child(key).remove();
+                booksRef.child(book.id).child('statuses').child(key).remove();
+                booksRef.child(book.id).child('dates').child(key).remove();
+                booksRef.child(book.id).child('ratings').child(key).remove();
+              }
+            };
+          }
+        })(people[pIdx]);
+      }
+
       var pi=document.getElementById('prog-input-'+book.id);
       var pb=document.getElementById('prog-save-'+book.id);
       var ds=document.getElementById('date-start-'+book.id);
@@ -812,20 +1431,27 @@ function renderBooks(){
 }
 
 function peopleOf(book){
-  var p=book.progress||{},r=book.ratings||{},s=book.statuses||{},d=book.dates||{};
+  var p=book.progress||{},r=book.ratings||{},s=book.statuses||{}, d=book.dates||{};
   var keys=[];
   var allKeys=Object.keys(p).concat(Object.keys(r)).concat(Object.keys(s)).concat(Object.keys(d));
   for(var i=0;i<allKeys.length;i++){if(keys.indexOf(allKeys[i])===-1)keys.push(allKeys[i]);}
   var names=keys.map(function(k){return(p[k]&&p[k].name)||k;});
-  if(currentUser&&names.indexOf(currentUser)===-1)names.push(currentUser);
-  names.sort(function(a,b){return a.localeCompare(b,'pt-BR');});
-  return names;
+  
+  var formattedNames = [];
+  for(var i=0;i<names.length;i++){
+    var standard = padronizarNome(names[i]);
+    if(standard && formattedNames.indexOf(standard)===-1) formattedNames.push(standard);
+  }
+  
+  if(currentUser && formattedNames.indexOf(currentUser)===-1) formattedNames.push(currentUser);
+  formattedNames.sort(function(a,b){return a.localeCompare(b,'pt-BR');});
+  return formattedNames;
 }
 
 function renderNiche(book){
   var ms=myStatus(book);
-  var scls=STATUS_CLS[ms]||'sb-quero';
-  var progress=book.progress||{},ratings=book.ratings||{};
+  var scls=STATUS_CLS[ms]||'sb-estante';
+  var progress=book.progress||{};
   var people=peopleOf(book);
 
   var progHtml='';
@@ -838,28 +1464,26 @@ function renderNiche(book){
     +'</div>';
   }
 
-  var ratHtml='';
-  for(var j=0;j<people.length;j++){
-    var rname=people[j],rkey=sKey(rname),rv=(ratings[rkey])||0;
-    ratHtml+='<div class="niche-rating-row"><span>'+escHtml(rname)+':</span>'+starRow(rv,book.id,false)+'</div>';
-  }
+  var totalSecs=bookTotalSeconds(book.id);
 
   var coverHtml;
   if(book.cover){
-    coverHtml='<div class="niche-cover"><img src="'+book.cover+'" alt="Capa"/>'+(book.wishlist?'<div class="wish-badge">$</div>':'')+'</div>';
+    coverHtml='<div class="niche-cover"><img src="'+book.cover+'" alt="Capa"/></div>';
   } else {
-    coverHtml='<div class="niche-cover no-img" style="background:'+cvColor(book.title)+'">📖'+(book.wishlist?'<div class="wish-badge">$</div>':'')+'</div>';
+    coverHtml='<div class="niche-cover no-img" style="background:'+cvColor(book.title)+'">📖</div>';
   }
 
   return '<div id="card-'+book.id+'" class="niche">'
     +'<div class="niche-content">'
-      +'<button id="edit-btn-'+book.id+'" class="edit-btn no-open" title="Editar livro" style="position:absolute;top:6px;right:6px;z-index:10;width:26px;height:26px;padding:0;font-size:13px;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;">✏️</button>'
+      +'<button id="edit-btn-'+book.id+'" class="edit-btn no-open" title="Editar livro" style="position:absolute;top:6px;right:6px;z-index:10;width:24px;height:24px;padding:0;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+        +'<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
+      +'</button>'
       +coverHtml
       +'<p class="niche-title">'+escHtml(book.title)+'</p>'
       +'<p class="niche-author">'+escHtml(book.author)+'</p>'
       +'<span class="sb '+scls+'">'+escHtml(ms)+'</span>'
+      +(totalSecs>0?'<p class="niche-author" style="color:var(--gold);">⏱ '+formatDuration(totalSecs)+'</p>':'')
       +(progHtml?'<div class="niche-progress">'+progHtml+'</div>':'')
-      +(ratHtml?'<div class="niche-ratings">'+ratHtml+'</div>':'')
       +'<div class="niche-ornament">— ✦ —</div>'
     +'</div>'
   +'</div>';
@@ -878,15 +1502,21 @@ function renderListCard(book){
   for(var i=0;i<people.length;i++){
     var name=people[i],key=sKey(name),p=progress[key];
     var pct=p?Math.min(100,Math.round((p.page/book.pages)*100)):0;
-    var ps=statuses[key]||'Quero ler',pcls=STATUS_CLS[ps]||'sb-quero';
+    var ps=statuses[key]||'Na estante',pcls=STATUS_CLS[ps]||'sb-estante';
     var d=dates[key]||{};
     var dstr=d.start||d.end?'<span style="font-size:11px;color:var(--text-dim);">📅 '+(d.start||'')+(d.start&&d.end?' → ':'')+d.end+'</span>':'';
-    progHtml+='<div>'
-      +'<div class="progress-row-label">'
-        +'<span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">'+escHtml(name)+' <span class="sb '+pcls+'" style="font-size:10px;padding:1px 7px;">'+escHtml(ps)+'</span> '+dstr+'</span>'
-        +'<span>'+(p?p.page+' / '+book.pages+' · '+pct+'%':'sem registro')+'</span>'
+    
+    progHtml+='<div class="progress-row-item">'
+      +'<div class="progress-row-content">'
+        +'<div class="progress-row-label">'
+          +'<span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">'+escHtml(name)+' <span class="sb '+pcls+'" style="font-size:10px;padding:1px 7px;">'+escHtml(ps)+'</span> '+dstr+'</span>'
+          +'<span>'+(p?p.page+' / '+book.pages+' · '+pct+'%':'sem registro')+'</span>'
+        +'</div>'
+        +'<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>'
       +'</div>'
-      +'<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>'
+      +'<button id="btn-del-'+book.id+'-'+key+'" class="btn-del-prog no-open" title="Remover leitor">'
+        +'<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>'
+      +'</button>'
     +'</div>';
   }
 
@@ -915,21 +1545,22 @@ function renderListCard(book){
       +'<input type="date" id="date-start-'+book.id+'" value="'+myDs+'"/>'
       +'<label>Fim</label>'
       +'<input type="date" id="date-end-'+book.id+'" value="'+myDe+'"/>'
-      +'<button id="prog-save-'+book.id+'" class="primary">Salvar</button>'
+      +'<button id="prog-save-'+book.id+'" class="primary btn-save-progress">Salvar</button>'
     +'</div>'
-    :'<p class="no-user-hint">Digite seu nome no topo para registrar progresso.</p>';
+  :'<p class="no-user-hint">Digite seu nome no topo para registrar progresso.</p>';
 
   return '<div id="lcard-'+book.id+'" class="list-card">'
     +'<div class="list-cover-wrap">'
       +coverHtml
-      +(book.wishlist?'<div style="text-align:center;margin-top:5px;"><span class="list-wish-badge">$ Lista de desejos</span></div>':'')
     +'</div>'
     +'<div class="list-body">'
       +'<div class="list-head"><div>'
         +'<p class="list-title">'+escHtml(book.title)+'</p>'
-        +'<p class="list-meta">'+escHtml(book.author)+' · '+book.pages+' páginas</p>'
+        +'<p class="list-meta">'+escHtml(book.author)+' · '+book.pages+' páginas'+(bookTotalSeconds(book.id)>0?' · ⏱ '+formatDuration(bookTotalSeconds(book.id)):'')+'</p>'
       +'</div>'
-      +'<button class="edit-btn no-open" id="edit-btn-'+book.id+'" title="Editar livro" style="width:30px;height:30px;padding:0;font-size:14px;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✏️</button>'
+      +'<button class="edit-btn no-open" id="edit-btn-'+book.id+'" title="Editar livro" style="width:30px;height:30px;padding:0;font-size:14px;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+        +'<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
+      +'</button>'
       +'</div>'
       +'<div class="progress-rows">'+(progHtml||'<p class="progress-empty">Ainda sem registros.</p>')+'</div>'
       +myControls
@@ -955,10 +1586,12 @@ function saveProgress(book){
   var ds=document.getElementById('date-start-'+book.id);
   var de=document.getElementById('date-end-'+book.id);
   var page=Math.max(0,Math.min(book.pages,parseInt((pi&&pi.value)||0,10)||0));
-  var status=ss?ss.value:'Quero ler';
-  var key=sKey(currentUser);
+  var status=ss?ss.value:'Na estante';
+  
+  var sName = padronizarNome(currentUser);
+  var key=sKey(sName);
   var updates={};
-  updates['progress/'+key]={page:page,name:currentUser};
+  updates['progress/'+key]={page:page,name:sName};
   updates['statuses/'+key]=status;
   if(ds||de)updates['dates/'+key]={start:ds?ds.value:'',end:de?de.value:''};
   booksRef.child(book.id).update(updates);
@@ -966,14 +1599,871 @@ function saveProgress(book){
 
 function saveRating(book,value){
   if(!currentUser)return;
-  var key=sKey(currentUser);
+  var sName = padronizarNome(currentUser);
+  var key=sKey(sName);
   var cur=(book.ratings||{})[key];
   booksRef.child(book.id).child('ratings').child(key).set(cur===value?0:value);
 }
 
+/* ── CRONÔMETRO ── */
+function pad(n){return n<10?'0'+n:''+n;}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function daysBetween(a,b){var da=new Date(a+'T00:00:00'),db=new Date(b+'T00:00:00');return Math.round((db-da)/86400000);}
+function elapsedDisplay(totalSeconds){
+  var h=Math.floor(totalSeconds/3600),m=Math.floor((totalSeconds%3600)/60),s=totalSeconds%60;
+  if(h>0)return h+':'+pad(m)+':'+pad(s);
+  return pad(m)+':'+pad(s);
+}
+function formatDuration(totalSeconds){
+  var h=Math.floor(totalSeconds/3600),m=Math.round((totalSeconds%3600)/60);
+  if(h>0)return h+'h '+m+'m';
+  return m+'m';
+}
+
+function getMySessions(){
+  var key=sKey(currentUser);
+  var arr=Object.keys(allSessions).map(function(id){return Object.assign({id:id},allSessions[id]);});
+  arr=arr.filter(function(s){return s.userKey===key;});
+  arr.sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0);});
+  return arr;
+}
+
+function computeCronoStats(){
+  var mySessions=getMySessions();
+  var weekAgo=Date.now()-7*86400000;
+  var totalSeconds=0,totalSecondsWeek=0,totalPages=0,totalPagesWeek=0;
+  for(var i=0;i<mySessions.length;i++){
+    var s=mySessions[i];
+    totalSeconds+=s.durationSeconds||0;
+    totalPages+=s.pagesRead||0;
+    if((s.createdAt||0)>=weekAgo){
+      totalSecondsWeek+=s.durationSeconds||0;
+      totalPagesWeek+=s.pagesRead||0;
+    }
+  }
+  var key=sKey(currentUser);
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  var booksLido=0,booksLidoMonth=0,now=new Date();
+  for(var j=0;j<allBooksArr.length;j++){
+    var b=allBooksArr[j];
+    var st=(b.statuses&&b.statuses[key])||b.status||'Na estante';
+    if(st==='Lido'){
+      booksLido++;
+      var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+      if(dend){
+        var dd=new Date(dend+'T00:00:00');
+        if(dd.getFullYear()===now.getFullYear()&&dd.getMonth()===now.getMonth())booksLidoMonth++;
+      }
+    }
+  }
+  return {totalSeconds:totalSeconds,totalSecondsWeek:totalSecondsWeek,totalPages:totalPages,totalPagesWeek:totalPagesWeek,booksLido:booksLido,booksLidoMonth:booksLidoMonth,mySessions:mySessions};
+}
+
+function cronoCandidates(){
+  var t=cronoSearchTerm.trim().toLowerCase();
+  var list=booksArr().filter(function(b){return !b.wishlist && myStatus(b)==='Lendo';});
+  if(t)list=list.filter(function(b){return(b.title||'').toLowerCase().indexOf(t)>-1||(b.author||'').toLowerCase().indexOf(t)>-1;});
+  list.sort(function(a,b){return naturalCompare(a.title||'',b.title||'');});
+  return list;
+}
+
+function cronoBookGridHtml(){
+  var list=cronoCandidates();
+  if(list.length===0){
+    return '<p class="crono-empty-hint">'+(cronoSearchTerm.trim()?'Nenhum livro encontrado.':'Nenhum livro está marcado como "Lendo" no momento. Ajuste o status de um livro na sua estante para começar a cronometrar.')+'</p>';
+  }
+  var html='<div class="crono-book-grid">';
+  for(var i=0;i<list.length;i++){
+    var b=list[i];
+    var coverHtml=b.cover?'<div class="crono-book-card-cover"><img src="'+b.cover+'"/></div>':'<div class="crono-book-card-cover no-img" style="background:'+cvColor(b.title)+'">📖</div>';
+    html+='<div class="crono-book-card" data-book-id="'+b.id+'">'
+      +coverHtml
+      +'<div class="crono-book-card-title">'+escHtml(b.title)+'</div>'
+      +'<div class="crono-book-card-author">'+escHtml(b.author)+'</div>'
+      +'<button class="crono-book-card-btn" data-book-id="'+b.id+'">▶ Iniciar</button>'
+    +'</div>';
+  }
+  html+='</div>';
+  return html;
+}
+
+function attachCronoBookGridEvents(){
+  var grid=document.getElementById('crono-book-grid');
+  if(!grid)return;
+  var cardEls=grid.querySelectorAll('.crono-book-card');
+  for(var i=0;i<cardEls.length;i++){
+    (function(el){
+      el.onclick=function(){startSession(el.getAttribute('data-book-id'));};
+    })(cardEls[i]);
+  }
+}
+
+function startSession(bookId){
+  if(!currentUser||!bookId)return;
+  var book=books[bookId];
+  if(!book)return;
+  var key=sKey(currentUser);
+  var startPage=(book.progress&&book.progress[key]&&book.progress[key].page)||0;
+  var payload={bookId:bookId,bookTitle:book.title,bookAuthor:book.author||'',bookCover:book.cover||'',bookPages:book.pages,startTime:Date.now(),startPage:startPage,pagesReadSoFar:0,accumulatedSeconds:0,isPaused:false,lastResumeTime:Date.now()};
+  showCronoError('');
+  activeSessionsRef.child(key).set(payload).catch(function(err){
+    showCronoError('Não foi possível iniciar a sessão: '+err.message+' (verifique as regras do Firebase para o caminho "activeSessions").');
+  });
+}
+
+function sessionElapsedSeconds(s){
+  var acc=s.accumulatedSeconds||0;
+  if(!s.isPaused){
+    acc+=Math.max(0,(Date.now()-(s.lastResumeTime||s.startTime))/1000);
+  }
+  return Math.round(acc);
+}
+
+function togglePauseSession(){
+  if(!myActiveSession||!currentUser)return;
+  var key=sKey(currentUser);
+  showCronoError('');
+  if(myActiveSession.isPaused){
+    activeSessionsRef.child(key).update({isPaused:false,lastResumeTime:Date.now()}).catch(function(err){
+      showCronoError('Não foi possível retomar a sessão: '+err.message);
+    });
+  } else {
+    var acc=(myActiveSession.accumulatedSeconds||0)+Math.max(0,(Date.now()-(myActiveSession.lastResumeTime||myActiveSession.startTime))/1000);
+    activeSessionsRef.child(key).update({isPaused:true,accumulatedSeconds:acc}).catch(function(err){
+      showCronoError('Não foi possível pausar a sessão: '+err.message);
+    });
+  }
+}
+
+function finishSession(){
+  if(!myActiveSession||!currentUser)return;
+  var key=sKey(currentUser);
+  var maxReadable=myActiveSession.bookPages-myActiveSession.startPage;
+  var pageInput=document.getElementById('crono-pages-input');
+  var pagesRead=Math.max(0,Math.min(maxReadable,parseInt((pageInput&&pageInput.value)!=null?pageInput.value:myActiveSession.pagesReadSoFar,10)||0));
+  var endPage=myActiveSession.startPage+pagesRead;
+  var endTime=Date.now();
+  var durationSeconds=sessionElapsedSeconds(myActiveSession);
+
+  var sessionRecord={
+    bookId:myActiveSession.bookId,bookTitle:myActiveSession.bookTitle,bookAuthor:myActiveSession.bookAuthor||'',bookCover:myActiveSession.bookCover||'',
+    userKey:key,userName:currentUser,
+    startTime:myActiveSession.startTime,endTime:endTime,durationSeconds:durationSeconds,
+    startPage:myActiveSession.startPage,endPage:endPage,pagesRead:pagesRead,
+    createdAt:endTime
+  };
+  showCronoError('');
+  sessionsRef.push(sessionRecord).catch(function(err){
+    showCronoError('Não foi possível salvar a sessão no histórico: '+err.message);
+  });
+
+  var book=books[myActiveSession.bookId];
+  if(book){
+    var updates={};
+    updates['progress/'+key]={page:endPage,name:currentUser};
+    var curStatus=(book.statuses&&book.statuses[key])||book.status||'Na estante';
+    var dates=(book.dates&&book.dates[key])||{};
+    if(endPage>=book.pages){
+      updates['statuses/'+key]='Lido';
+      updates['dates/'+key]={start:dates.start||'',end:dates.end||todayStr()};
+    } else if(pagesRead>0&&(curStatus==='Na estante'||curStatus==='Quero ler')){
+      updates['statuses/'+key]='Lendo';
+      updates['dates/'+key]={start:dates.start||todayStr(),end:dates.end||''};
+    }
+    booksRef.child(myActiveSession.bookId).update(updates).catch(function(err){
+      showCronoError('Sessão salva, mas não consegui atualizar a página na estante: '+err.message);
+    });
+  }
+
+  activeSessionsRef.child(key).remove().catch(function(err){
+    showCronoError('Sessão salva, mas não consegui encerrar o cronômetro: '+err.message);
+  });
+
+  var today=todayStr();
+  var last=myStats.lastSessionDate;
+  var newStreak;
+  if(last===today)newStreak=myStats.currentStreak||1;
+  else if(last&&daysBetween(last,today)===1)newStreak=(myStats.currentStreak||0)+1;
+  else newStreak=1;
+  var newLongest=Math.max(myStats.longestStreak||0,newStreak);
+  statsRef.child(key).set({currentStreak:newStreak,longestStreak:newLongest,lastSessionDate:today}).catch(function(err){
+    showCronoError('Sessão salva, mas não consegui atualizar sua sequência de dias: '+err.message);
+  });
+}
+
+function showCronoError(msg){
+  var el=document.getElementById('crono-error');
+  if(!el)return;
+  el.textContent=msg||'';
+  el.style.display=msg?'block':'none';
+}
+
+function getLatestSessionId(bookId,userKey){
+  var ids=Object.keys(allSessions).filter(function(id){return allSessions[id].bookId===bookId&&allSessions[id].userKey===userKey;});
+  if(!ids.length)return null;
+  ids.sort(function(a,b){return(allSessions[b].createdAt||0)-(allSessions[a].createdAt||0);});
+  return ids[0];
+}
+
+function deleteHistorySession(id){
+  var s=allSessions[id];
+  if(!s)return;
+  var isLatest=getLatestSessionId(s.bookId,s.userKey)===id;
+  var msg=isLatest
+    ?'Excluir esta sessão de "'+s.bookTitle+'"? A página do livro vai voltar para '+s.startPage+'.'
+    :'Excluir esta sessão de "'+s.bookTitle+'"? Como não é o registro mais recente deste livro, a página atual não será alterada.';
+  if(!confirm(msg))return;
+  showCronoError('');
+  sessionsRef.child(id).remove().catch(function(err){
+    showCronoError('Não foi possível excluir a sessão: '+err.message);
+  });
+  if(isLatest){
+    booksRef.child(s.bookId).child('progress').child(s.userKey).child('page').set(s.startPage).catch(function(err){
+      showCronoError('Sessão excluída, mas não consegui reverter a página: '+err.message);
+    });
+  }
+}
+
+function saveHistoryEdit(id){
+  var s=allSessions[id];
+  if(!s)return;
+  var minsEl=document.getElementById('edit-mins-'+id);
+  var pagesEl=document.getElementById('edit-pages-'+id);
+  var mins=Math.max(0,parseInt((minsEl&&minsEl.value)||0,10)||0);
+  var pagesRead=Math.max(0,parseInt((pagesEl&&pagesEl.value)||0,10)||0);
+  var book=books[s.bookId];
+  if(book)pagesRead=Math.min(pagesRead,Math.max(0,book.pages-s.startPage));
+  var newEndPage=s.startPage+pagesRead;
+  showCronoError('');
+  sessionsRef.child(id).update({durationSeconds:mins*60,pagesRead:pagesRead,endPage:newEndPage}).catch(function(err){
+    showCronoError('Não foi possível salvar a edição: '+err.message);
+  });
+  var isLatest=getLatestSessionId(s.bookId,s.userKey)===id;
+  if(isLatest&&book){
+    booksRef.child(s.bookId).child('progress').child(s.userKey).child('page').set(newEndPage).catch(function(err){
+      showCronoError('Sessão atualizada, mas não consegui atualizar a página na estante: '+err.message);
+    });
+  }
+  editingSessionId=null;
+  renderCronometro();
+}
+
+function manageCronoTimer(){
+  if(cronoTimerInterval){clearInterval(cronoTimerInterval);cronoTimerInterval=null;}
+  if(activeTab==='cronometro'&&myActiveSession){
+    cronoTimerInterval=setInterval(updateLiveTimerDisplay,1000);
+    updateLiveTimerDisplay();
+  }
+}
+function updateLiveTimerDisplay(){
+  var el=document.getElementById('crono-live-timer');
+  if(!el||!myActiveSession)return;
+  el.textContent=elapsedDisplay(sessionElapsedSeconds(myActiveSession));
+}
+
+function renderCronometro(){
+  var area=document.getElementById('crono-area');
+  if(!area)return;
+  if(!currentUser){
+    area.innerHTML='<div class="crono-wrap"><div class="crono-intro"><h2>✦ Cronômetro de Leitura ✦</h2><p>Digite seu nome no topo da página para acompanhar sua jornada como um atleta da mente.</p></div></div>';
+    return;
+  }
+  var stats=computeCronoStats();
+  var html='<div class="crono-wrap">';
+  html+='<div class="crono-intro"><h2>✦ Cronômetro de Leitura ✦</h2><p>Acompanhe sua jornada como um atleta da mente, '+escHtml(currentUser)+'.</p></div>';
+  html+='<p class="form-error" id="crono-error" style="display:none;margin-bottom:1rem;"></p>';
+
+  html+='<div class="crono-stats-grid">'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Tempo total</div><div class="crono-stat-value">'+formatDuration(stats.totalSeconds)+'</div>'+(stats.totalSecondsWeek>0?'<div class="crono-stat-delta">+'+formatDuration(stats.totalSecondsWeek)+' esta semana</div>':'')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Páginas lidas</div><div class="crono-stat-value">'+stats.totalPages+'</div>'+(stats.totalPagesWeek>0?'<div class="crono-stat-delta">+'+stats.totalPagesWeek+' esta semana</div>':'')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Livros lidos</div><div class="crono-stat-value">'+stats.booksLido+'</div>'+(stats.booksLidoMonth>0?'<div class="crono-stat-delta">+'+stats.booksLidoMonth+' este mês</div>':'')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Dias seguidos</div><div class="crono-stat-value">'+myStats.currentStreak+'</div><div class="crono-stat-delta" style="color:var(--gold);">recorde: '+myStats.longestStreak+'</div></div>'
+  +'</div>';
+
+  html+='<div class="crono-session-card">';
+  if(myActiveSession){
+    var elapsedNow=sessionElapsedSeconds(myActiveSession);
+    var cover=myActiveSession.bookCover;
+    var coverHtml=cover?'<div class="crono-session-cover"><img src="'+cover+'"/></div>':'<div class="crono-session-cover no-img" style="background:'+cvColor(myActiveSession.bookTitle)+'">📖</div>';
+    var pagesReadSoFar=myActiveSession.pagesReadSoFar||0;
+    var previewPage=Math.min(myActiveSession.bookPages,myActiveSession.startPage+pagesReadSoFar);
+    var isPaused=!!myActiveSession.isPaused;
+    html+='<div class="crono-session-title">Sessão atual'+(isPaused?' <span style="color:var(--amber);">· Pausada</span>':'')+'</div>'
+      +'<div class="crono-session-body">'
+        +coverHtml
+        +'<div class="crono-session-info">'
+          +'<div class="crono-session-book-title">'+escHtml(myActiveSession.bookTitle)+'</div>'
+          +'<div class="crono-session-book-author">'+escHtml(myActiveSession.bookAuthor||'')+'</div>'
+          +'<div class="crono-session-meta">'
+            +'<div class="crono-meta-item"><div class="crono-meta-label">TEMPO</div><div class="crono-meta-value" id="crono-live-timer" style="'+(isPaused?'opacity:0.55;':'')+'">'+elapsedDisplay(elapsedNow)+'</div></div>'
+            +'<div class="crono-meta-item"><div class="crono-meta-label">PÁGINAS LIDAS NESTA SESSÃO</div><div class="crono-meta-value"><input type="number" min="0" max="'+(myActiveSession.bookPages-myActiveSession.startPage)+'" id="crono-pages-input" value="'+pagesReadSoFar+'"/></div></div>'
+          +'</div>'
+          +'<p class="hint" id="crono-preview" style="margin-top:8px;">Começou na página '+myActiveSession.startPage+' → chega na página <strong>'+previewPage+'</strong> de '+myActiveSession.bookPages+'</p>'
+        +'</div>'
+        +'<div class="crono-session-actions" style="display:flex;gap:8px;flex-wrap:wrap;">'
+          +'<button id="btn-pause-session">'+(isPaused?'▶ Retomar':'⏸ Pausar')+'</button>'
+          +'<button class="primary" id="btn-finish-session">Finalizar sessão</button>'
+        +'</div>'
+      +'</div>';
+  } else {
+    html+='<div class="crono-session-title">Iniciar leitura</div>'
+      +'<input type="text" class="crono-book-search" id="crono-book-search" placeholder="🔍  Buscar por autor ou título" value="'+escHtml(cronoSearchTerm)+'"/>'
+      +'<div id="crono-book-grid">'+cronoBookGridHtml()+'</div>';
+  }
+  html+='</div>';
+
+  html+='<div class="crono-history-title">Histórico recente</div>';
+  var toShow=[];
+  if(stats.mySessions.length===0){
+    html+='<p class="crono-empty-hint">Suas sessões de leitura vão aparecer aqui.</p>';
+  } else {
+    html+='<div class="crono-history-list">';
+    toShow=stats.mySessions.slice(0,10);
+    for(var i=0;i<toShow.length;i++){
+      html+=renderHistoryItemHtml(toShow[i]);
+    }
+    html+='</div>';
+  }
+
+  html+='</div>';
+  area.innerHTML=html;
+
+  var btnFinish=document.getElementById('btn-finish-session');
+  if(btnFinish)btnFinish.onclick=function(){finishSession();};
+  var btnPause=document.getElementById('btn-pause-session');
+  if(btnPause)btnPause.onclick=function(){togglePauseSession();};
+  var searchEl=document.getElementById('crono-book-search');
+  if(searchEl){
+    searchEl.oninput=function(){
+      cronoSearchTerm=searchEl.value;
+      var grid=document.getElementById('crono-book-grid');
+      if(grid){grid.innerHTML=cronoBookGridHtml();attachCronoBookGridEvents();}
+    };
+  }
+  attachCronoBookGridEvents();
+  var pageInputEl=document.getElementById('crono-pages-input');
+  if(pageInputEl){
+    pageInputEl.oninput=function(){
+      var maxReadable=myActiveSession.bookPages-myActiveSession.startPage;
+      var v=Math.max(0,Math.min(maxReadable,parseInt(pageInputEl.value,10)||0));
+      var preview=document.getElementById('crono-preview');
+      if(preview)preview.innerHTML='Começou na página '+myActiveSession.startPage+' → chega na página <strong>'+(myActiveSession.startPage+v)+'</strong> de '+myActiveSession.bookPages;
+    };
+    pageInputEl.onchange=function(){
+      if(!myActiveSession)return;
+      var maxReadable=myActiveSession.bookPages-myActiveSession.startPage;
+      var v=Math.max(0,Math.min(maxReadable,parseInt(pageInputEl.value,10)||0));
+      pageInputEl.value=v;
+      activeSessionsRef.child(sKey(currentUser)).child('pagesReadSoFar').set(v).catch(function(err){
+        showCronoError('Não foi possível salvar o progresso da sessão: '+err.message);
+      });
+    };
+  }
+  for(var hi=0;hi<toShow.length;hi++){
+    (function(sess){
+      var delBtn=document.getElementById('btn-del-session-'+sess.id);
+      if(delBtn)delBtn.onclick=function(){deleteHistorySession(sess.id);};
+      var editBtn=document.getElementById('btn-edit-session-'+sess.id);
+      if(editBtn)editBtn.onclick=function(){editingSessionId=sess.id;renderCronometro();};
+      var saveBtn=document.getElementById('btn-save-session-'+sess.id);
+      if(saveBtn)saveBtn.onclick=function(){saveHistoryEdit(sess.id);};
+      var cancelBtn=document.getElementById('btn-cancel-session-'+sess.id);
+      if(cancelBtn)cancelBtn.onclick=function(){editingSessionId=null;renderCronometro();};
+    })(toShow[hi]);
+  }
+}
+
+function renderHistoryItemHtml(s){
+  var d=new Date(s.createdAt||s.endTime||Date.now());
+  var dateStr=pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
+  var coverH=s.bookCover?'<div class="crono-history-cover"><img src="'+s.bookCover+'"/></div>':'<div class="crono-history-cover no-img" style="background:'+cvColor(s.bookTitle)+'">📖</div>';
+
+  if(editingSessionId===s.id){
+    return '<div class="crono-history-item" style="flex-direction:column;align-items:stretch;">'
+      +'<div style="display:flex;gap:12px;align-items:center;">'+coverH+'<div class="crono-history-info"><div class="crono-history-book">'+escHtml(s.bookTitle)+'</div><div class="crono-history-date">'+dateStr+'</div></div></div>'
+      +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;">'
+        +'<div class="form-field" style="flex:1 1 100px;"><label>Minutos</label><input type="number" min="0" id="edit-mins-'+s.id+'" value="'+Math.round((s.durationSeconds||0)/60)+'"/></div>'
+        +'<div class="form-field" style="flex:1 1 100px;"><label>Páginas lidas</label><input type="number" min="0" id="edit-pages-'+s.id+'" value="'+(s.pagesRead||0)+'"/></div>'
+      +'</div>'
+      +'<div class="form-actions" style="margin-top:10px;"><button class="primary" id="btn-save-session-'+s.id+'">Salvar</button><button id="btn-cancel-session-'+s.id+'">Cancelar</button></div>'
+    +'</div>';
+  }
+
+  return '<div class="crono-history-item">'
+    +coverH
+    +'<div class="crono-history-info"><div class="crono-history-book">'+escHtml(s.bookTitle)+'</div><div class="crono-history-date">'+dateStr+'</div></div>'
+    +'<div class="crono-history-actions">'
+      +'<div class="crono-history-stats">⏱ '+elapsedDisplay(s.durationSeconds||0)+'<span>'+(s.pagesRead||0)+' pág.</span></div>'
+      +'<button class="edit-btn" id="btn-edit-session-'+s.id+'" title="Editar sessão" style="width:26px;height:26px;padding:0;background:rgba(10,5,2,0.85);border:1px solid var(--gold-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+        +'<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
+      +'</button>'
+      +'<button class="btn-del-prog" id="btn-del-session-'+s.id+'" title="Excluir sessão">'
+        +'<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>'
+      +'</button>'
+    +'</div>'
+  +'</div>';
+}
+
+/* ── VISÃO GERAL ── */
+var GENRE_COLORS=['#c9a84c','#3a7a6a','#8a3a3a','#5a3a8a','#3a5a8a','#8a6c2a','#4a7a3a','#7a3a5a','#6a4a2a','#2a6a6a'];
+var MONTH_NAMES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function prevMonthOf(year,month){month--;if(month<1){month=12;year--;}return{year:year,month:month};}
+function nextMonthOf(year,month){month++;if(month>12){month=1;year++;}return{year:year,month:month};}
+
+function bookTotalSeconds(bookId){
+  if(!currentUser)return 0;
+  var key=sKey(currentUser);
+  var total=0;
+  var ids=Object.keys(allSessions);
+  for(var i=0;i<ids.length;i++){
+    var s=allSessions[ids[i]];
+    if(s.bookId===bookId&&s.userKey===key)total+=s.durationSeconds||0;
+  }
+  return total;
+}
+
+function computeVisaoStats(year,month){
+  var key=sKey(currentUser);
+  var mySessions=getMySessions();
+  var monthSessions=mySessions.filter(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    return d.getFullYear()===year&&(d.getMonth()+1)===month;
+  });
+  var pagesMonth=0,secondsMonth=0;
+  for(var i=0;i<monthSessions.length;i++){pagesMonth+=monthSessions[i].pagesRead||0;secondsMonth+=monthSessions[i].durationSeconds||0;}
+
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  var booksMonth=0;
+  for(var j=0;j<allBooksArr.length;j++){
+    var b=allBooksArr[j];
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(dend){
+      var dd=new Date(dend+'T00:00:00');
+      if(dd.getFullYear()===year&&(dd.getMonth()+1)===month)booksMonth++;
+    }
+  }
+
+  var now=new Date();
+  var isCurrentMonth=(now.getFullYear()===year&&(now.getMonth()+1)===month);
+  var totalDaysInMonth=new Date(year,month,0).getDate();
+  var daysElapsed=isCurrentMonth?now.getDate():totalDaysInMonth;
+  var avgDaily=daysElapsed>0?Math.round(pagesMonth/daysElapsed):0;
+
+  return {booksMonth:booksMonth,pagesMonth:pagesMonth,secondsMonth:secondsMonth,avgDaily:avgDaily};
+}
+
+function monthlyBooksForYear(year){
+  var key=sKey(currentUser);
+  var counts=new Array(12).fill(0);
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  for(var j=0;j<allBooksArr.length;j++){
+    var b=allBooksArr[j];
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(dend){
+      var dd=new Date(dend+'T00:00:00');
+      if(dd.getFullYear()===year)counts[dd.getMonth()]++;
+    }
+  }
+  return counts;
+}
+
+function genreDistribution(){
+  var counts={},total=0;
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  for(var i=0;i<allBooksArr.length;i++){
+    var g=(allBooksArr[i].genre||'').trim()||'Sem gênero';
+    counts[g]=(counts[g]||0)+1;
+    total++;
+  }
+  var arr=Object.keys(counts).map(function(g){return{genre:g,count:counts[g],pct:total?Math.round(counts[g]/total*100):0};});
+  arr.sort(function(a,b){return b.count-a.count;});
+  return {items:arr,total:total};
+}
+
+function computeAnnualGoalProgress(){
+  var key=sKey(currentUser);
+  var year=(new Date()).getFullYear();
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist;});
+  var count=0;
+  for(var i=0;i<allBooksArr.length;i++){
+    var b=allBooksArr[i];
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(dend){var dd=new Date(dend+'T00:00:00');if(dd.getFullYear()===year)count++;}
+  }
+  var goal=myGoals.annualBooks||0;
+  var pct=goal>0?Math.min(100,Math.round(count/goal*100)):0;
+  return {count:count,goal:goal,pct:pct,year:year};
+}
+
+function pickCurrentBook(){
+  if(myActiveSession)return books[myActiveSession.bookId]?Object.assign({id:myActiveSession.bookId},books[myActiveSession.bookId]):null;
+  var candidates=booksArr().filter(function(b){return !b.wishlist&&myStatus(b)==='Lendo';});
+  if(candidates.length===0)return null;
+  var mySessions=getMySessions();
+  var lastSessionByBook={};
+  for(var i=0;i<mySessions.length;i++){
+    var s=mySessions[i];
+    if(!(s.bookId in lastSessionByBook))lastSessionByBook[s.bookId]=s.createdAt||0;
+  }
+  candidates.sort(function(a,b){
+    var la=lastSessionByBook[a.id]||0,lb=lastSessionByBook[b.id]||0;
+    if(lb!==la)return lb-la;
+    return(b.createdAt||0)-(a.createdAt||0);
+  });
+  return candidates[0];
+}
+
+function lastFinishedBooks(limit){
+  var key=sKey(currentUser);
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist&&myStatus(b)==='Lido';});
+  var withDate=allBooksArr.map(function(b){
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    return{book:b,end:dend};
+  }).filter(function(x){return x.end;});
+  withDate.sort(function(a,b){return new Date(b.end)-new Date(a.end);});
+  return withDate.slice(0,limit||3);
+}
+
+function deltaText(delta,suffix){
+  if(!delta)return'';
+  var sign=delta>0?'+':'';
+  return '<div class="crono-stat-delta" style="color:'+(delta>=0?'#80c070':'#c07070')+';">'+sign+delta+(suffix||'')+' vs mês anterior</div>';
+}
+function deltaTimeText(deltaSeconds){
+  if(!deltaSeconds)return'';
+  var sign=deltaSeconds>0?'+':'-';
+  return '<div class="crono-stat-delta" style="color:'+(deltaSeconds>=0?'#80c070':'#c07070')+';">'+sign+formatDuration(Math.abs(deltaSeconds))+' vs mês anterior</div>';
+}
+
+function renderVisaoGeral(){
+  var area=document.getElementById('visao-area');
+  if(!area)return;
+  if(!currentUser){
+    area.innerHTML='<div class="visao-wrap"><p class="crono-empty-hint">Digite seu nome no topo da página para ver sua visão geral de leitura.</p></div>';
+    return;
+  }
+  var y=selYear,m=selMonth;
+  var stats=computeVisaoStats(y,m);
+  var prev=prevMonthOf(y,m);
+  var prevStats=computeVisaoStats(prev.year,prev.month);
+  var deltaBooks=stats.booksMonth-prevStats.booksMonth;
+  var deltaPages=stats.pagesMonth-prevStats.pagesMonth;
+  var deltaSeconds=stats.secondsMonth-prevStats.secondsMonth;
+  var deltaAvg=stats.avgDaily-prevStats.avgDaily;
+
+  var html='<div class="visao-wrap">';
+
+  html+='<div class="month-selector">'
+    +'<button id="btn-prev-month" title="Mês anterior">‹</button>'
+    +'<span class="month-label">'+MONTH_NAMES[m-1]+' de '+y+'</span>'
+    +'<button id="btn-next-month" title="Próximo mês">›</button>'
+  +'</div>';
+
+  html+='<div class="visao-stats-grid">'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Livros lidos</div><div class="crono-stat-value">'+stats.booksMonth+'</div>'+deltaText(deltaBooks,'')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Páginas lidas</div><div class="crono-stat-value">'+stats.pagesMonth+'</div>'+deltaText(deltaPages,'')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Tempo de leitura</div><div class="crono-stat-value">'+formatDuration(stats.secondsMonth)+'</div>'+deltaTimeText(deltaSeconds)+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Média diária</div><div class="crono-stat-value">'+stats.avgDaily+' pág.</div>'+deltaText(deltaAvg,' pág.')+'</div>'
+    +'<div class="crono-stat-card"><div class="crono-stat-label">Sequência atual</div><div class="crono-stat-value">'+myStats.currentStreak+'</div><div class="crono-stat-delta" style="color:var(--gold);">recorde: '+myStats.longestStreak+'</div></div>'
+  +'</div>';
+
+  var yearCounts=monthlyBooksForYear(y);
+  var maxCount=Math.max(1,Math.max.apply(null,yearCounts));
+  var barsHtml='<div class="bar-chart">';
+  for(var i=0;i<12;i++){
+    var h=Math.round((yearCounts[i]/maxCount)*100);
+    var cls='bar-chart-bar'+(yearCounts[i]===0?' empty':'')+((i+1)===m?' selected':'');
+    barsHtml+='<div class="bar-chart-col">'
+      +(yearCounts[i]>0?'<div class="bar-chart-value">'+yearCounts[i]+'</div>':'')
+      +'<div class="'+cls+'" style="height:'+Math.max(h,3)+'%;"></div>'
+      +'<div class="bar-chart-label">'+MONTH_NAMES[i].slice(0,3)+'</div>'
+    +'</div>';
+  }
+  barsHtml+='</div>';
+
+  var genreData=genreDistribution();
+  var donutHtml;
+  if(genreData.total===0){
+    donutHtml='<p class="crono-empty-hint">Cadastre livros com gênero para ver essa distribuição.</p>';
+  } else {
+    var gradParts=[],acc=0;
+    for(var gi=0;gi<genreData.items.length;gi++){
+      var it=genreData.items[gi];
+      var color=GENRE_COLORS[gi%GENRE_COLORS.length];
+      var start=acc,end=acc+(it.count/genreData.total*360);
+      gradParts.push(color+' '+start+'deg '+end+'deg');
+      acc=end;
+    }
+    donutHtml='<div class="donut" style="background:conic-gradient('+gradParts.join(',')+');"></div>'
+      +'<div class="donut-legend">'
+      +genreData.items.map(function(it,idx){
+        return '<div class="donut-legend-item"><span><span class="donut-legend-swatch" style="background:'+GENRE_COLORS[idx%GENRE_COLORS.length]+';"></span>'+escHtml(it.genre)+'</span><span>'+it.pct+'%</span></div>';
+      }).join('')
+    +'</div>';
+  }
+
+  var goalProg=computeAnnualGoalProgress();
+  var goalHtml;
+  if(goalProg.goal>0){
+    goalHtml='<div class="goal-ring" style="background:conic-gradient(var(--gold) '+goalProg.pct+'%, rgba(90,52,24,0.35) 0);">'
+      +'<div class="goal-ring-text"><div class="goal-ring-pct">'+goalProg.pct+'%</div><div class="goal-ring-label">da meta</div></div>'
+    +'</div>'
+    +'<p class="goal-meta-info">Meta anual: '+goalProg.goal+' livros · Progresso: '+goalProg.count+'/'+goalProg.goal+'</p>';
+  } else {
+    goalHtml='<p class="crono-empty-hint">Defina sua meta anual de livros para acompanhar seu progresso (isso vai morar em Configurações no futuro; por enquanto, defina aqui).</p>'
+      +'<div class="goal-set-inline"><input type="number" min="1" id="goal-annual-input" placeholder="Ex: 24"/><button class="primary" id="btn-save-goal">Salvar</button></div>';
+  }
+
+  html+='<div class="visao-charts-row">'
+    +'<div class="chart-card"><h3>Livros lidos por mês ('+y+')</h3>'+barsHtml+'</div>'
+    +'<div class="chart-card" style="text-align:center;"><h3 style="text-align:left;">Distribuição por gênero</h3>'+donutHtml+'</div>'
+    +'<div class="chart-card" style="text-align:center;"><h3 style="text-align:left;">Avanço da meta anual</h3>'+goalHtml+'</div>'
+  +'</div>';
+
+  var currentBook=pickCurrentBook();
+  var currentBookHtml;
+  if(currentBook){
+    var totalSecs=bookTotalSeconds(currentBook.id);
+    var key=sKey(currentUser);
+    var myPage=(currentBook.progress&&currentBook.progress[key]&&currentBook.progress[key].page)||0;
+    var pct2=currentBook.pages?Math.min(100,Math.round(myPage/currentBook.pages*100)):0;
+    var coverHtml2=currentBook.cover?'<div class="crono-session-cover"><img src="'+currentBook.cover+'"/></div>':'<div class="crono-session-cover no-img" style="background:'+cvColor(currentBook.title)+'">📖</div>';
+    currentBookHtml='<div class="crono-session-body" style="align-items:flex-start;">'
+      +coverHtml2
+      +'<div class="crono-session-info" style="width:100%;">'
+        +'<div class="crono-session-book-title">'+escHtml(currentBook.title)+'</div>'
+        +'<div class="crono-session-book-author">'+escHtml(currentBook.author||'')+'</div>'
+        +'<div class="crono-session-meta">'
+          +'<div class="crono-meta-item"><div class="crono-meta-label">TEMPO DE LEITURA</div><div class="crono-meta-value" style="font-size:15px;">'+formatDuration(totalSecs)+'</div></div>'
+          +'<div class="crono-meta-item"><div class="crono-meta-label">PÁGINAS</div><div class="crono-meta-value" style="font-size:15px;">'+myPage+'/'+currentBook.pages+'</div></div>'
+        +'</div>'
+        +'<div class="prog-track" style="margin-top:10px;"><div class="prog-fill" style="width:'+pct2+'%"></div></div>'
+        +'<button class="primary" id="btn-continue-reading" style="margin-top:12px;width:100%;">Continuar leitura</button>'
+      +'</div>'
+    +'</div>';
+  } else {
+    currentBookHtml='<p class="crono-empty-hint">Nenhum livro em andamento no momento.</p>';
+  }
+
+  var finished=lastFinishedBooks(3);
+  var finishedHtml;
+  if(finished.length===0){
+    finishedHtml='<p class="crono-empty-hint">Ainda não há livros concluídos.</p>';
+  } else {
+    finishedHtml='<div class="crono-history-list">';
+    for(var fi=0;fi<finished.length;fi++){
+      var fb=finished[fi].book,fend=finished[fi].end;
+      var key2=sKey(currentUser);
+      var rv=(fb.ratings&&fb.ratings[key2])||0;
+      var d2=new Date(fend+'T00:00:00');
+      var dateStr2=pad(d2.getDate())+'/'+pad(d2.getMonth()+1)+'/'+d2.getFullYear();
+      var coverH2=fb.cover?'<div class="crono-history-cover"><img src="'+fb.cover+'"/></div>':'<div class="crono-history-cover no-img" style="background:'+cvColor(fb.title)+'">📖</div>';
+      finishedHtml+='<div class="crono-history-item">'
+        +coverH2
+        +'<div class="crono-history-info"><div class="crono-history-book">'+escHtml(fb.title)+'</div><div class="crono-history-date">'+dateStr2+'</div></div>'
+        +'<div class="crono-history-stats">'+starRow(rv,'visao-'+fb.id,false)+'</div>'
+      +'</div>';
+    }
+    finishedHtml+='</div>';
+  }
+
+  var qStats=computeCronoStats();
+  var quickHtml='<div class="quick-stats-list">'
+    +'<div class="quick-stats-row"><span>Total de livros lidos</span><strong>'+qStats.booksLido+'</strong></div>'
+    +'<div class="quick-stats-row"><span>Total de páginas lidas</span><strong>'+qStats.totalPages+'</strong></div>'
+    +'<div class="quick-stats-row"><span>Tempo total de leitura</span><strong>'+formatDuration(qStats.totalSeconds)+'</strong></div>'
+    +'<div class="quick-stats-row"><span>Maior sequência</span><strong>'+myStats.longestStreak+' dias</strong></div>'
+  +'</div>';
+
+  html+='<div class="visao-lower-row">'
+    +'<div class="chart-card"><h3>Livro em andamento</h3>'+currentBookHtml+'</div>'
+    +'<div class="chart-card"><h3>Últimas leituras concluídas</h3>'+finishedHtml+'</div>'
+    +'<div class="chart-card"><h3>Estatísticas rápidas</h3>'+quickHtml+'</div>'
+  +'</div>';
+
+  html+='</div>';
+  area.innerHTML=html;
+
+  var prevBtn=document.getElementById('btn-prev-month');
+  if(prevBtn)prevBtn.onclick=function(){var p=prevMonthOf(selYear,selMonth);selYear=p.year;selMonth=p.month;renderVisaoGeral();};
+  var nextBtn=document.getElementById('btn-next-month');
+  if(nextBtn)nextBtn.onclick=function(){var n=nextMonthOf(selYear,selMonth);selYear=n.year;selMonth=n.month;renderVisaoGeral();};
+  var contBtn=document.getElementById('btn-continue-reading');
+  if(contBtn)contBtn.onclick=function(){goToTab('cronometro');};
+  var saveGoalBtn=document.getElementById('btn-save-goal');
+  if(saveGoalBtn)saveGoalBtn.onclick=function(){
+    var inp=document.getElementById('goal-annual-input');
+    var v=Math.max(1,parseInt((inp&&inp.value)||0,10)||0);
+    if(!v)return;
+    goalsRef.child(sKey(currentUser)).update({annualBooks:v}).catch(function(err){
+      alert('Não foi possível salvar a meta: '+err.message);
+    });
+  };
+}
+
+/* ── ESTATÍSTICAS ── */
+function sessionsInPeriod(period){
+  var mySessions=getMySessions();
+  if(period==='tudo')return mySessions;
+  var now=new Date();
+  return mySessions.filter(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    if(period==='mes')return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
+    return d.getFullYear()===now.getFullYear();
+  });
+}
+
+function booksFinishedInPeriod(period){
+  var key=sKey(currentUser);
+  var now=new Date();
+  var allBooksArr=booksArr().filter(function(b){return !b.wishlist&&myStatus(b)==='Lido';});
+  return allBooksArr.filter(function(b){
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(!dend)return period==='tudo';
+    var dd=new Date(dend+'T00:00:00');
+    if(period==='mes')return dd.getFullYear()===now.getFullYear()&&dd.getMonth()===now.getMonth();
+    if(period==='ano')return dd.getFullYear()===now.getFullYear();
+    return true;
+  });
+}
+
+function topAuthors(period,limit){
+  var finished=booksFinishedInPeriod(period);
+  var counts={};
+  finished.forEach(function(b){
+    var a=(b.author||'').trim()||'Desconhecido';
+    counts[a]=(counts[a]||0)+1;
+  });
+  var arr=Object.keys(counts).map(function(a){return{author:a,count:counts[a]};});
+  arr.sort(function(x,y){return y.count-x.count;});
+  return arr.slice(0,limit||5);
+}
+
+function readingPace(period){
+  var sessions=sessionsInPeriod(period);
+  var pages=0,seconds=0;
+  sessions.forEach(function(s){pages+=s.pagesRead||0;seconds+=s.durationSeconds||0;});
+  var hours=seconds/3600;
+  var pace=hours>0.0166?Math.round(pages/hours):0;
+  return {pace:pace,pages:pages,seconds:seconds};
+}
+
+function longestSession(period){
+  var sessions=sessionsInPeriod(period);
+  if(sessions.length===0)return null;
+  sessions=sessions.slice().sort(function(a,b){return(b.durationSeconds||0)-(a.durationSeconds||0);});
+  return sessions[0];
+}
+
+var PERIOD_LABELS={mes:'Este mês',ano:'Este ano',tudo:'Todo o período'};
+
+function renderEstatisticas(){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  if(!currentUser){
+    area.innerHTML='<div class="visao-wrap"><p class="crono-empty-hint">Digite seu nome no topo da página para ver suas estatísticas.</p></div>';
+    return;
+  }
+  var period=statsPeriod;
+  var html='<div class="visao-wrap">';
+  html+='<div class="crono-intro"><h2>✦ Estatísticas ✦</h2><p>Um mergulho mais fundo nos seus hábitos de leitura, '+escHtml(currentUser)+'.</p></div>';
+
+  html+='<div class="month-selector" style="justify-content:flex-start;">';
+  ['mes','ano','tudo'].forEach(function(p){
+    html+='<button class="tab-btn'+(period===p?' active':'')+'" style="height:34px;padding:0 16px;" data-period="'+p+'">'+PERIOD_LABELS[p]+'</button>';
+  });
+  html+='</div>';
+
+  html+='<div class="stats-grid-3">';
+
+  var authors=topAuthors(period,5);
+  html+='<div class="chart-card"><h3>Autor mais lido</h3>';
+  if(authors.length===0){
+    html+='<p class="crono-empty-hint">Nenhum livro concluído nesse período.</p>';
+  } else {
+    for(var ai=0;ai<authors.length;ai++){
+      html+='<div class="author-rank-row"><span class="author-rank-num">'+(ai+1)+'</span><span class="author-rank-name">'+escHtml(authors[ai].author)+'</span><span class="author-rank-count">'+authors[ai].count+(authors[ai].count===1?' livro':' livros')+'</span></div>';
+    }
+  }
+  html+='</div>';
+
+  var pace=readingPace(period);
+  html+='<div class="chart-card"><h3>Ritmo de leitura</h3>';
+  if(pace.seconds===0){
+    html+='<p class="crono-empty-hint">Nenhuma sessão registrada nesse período.</p>';
+  } else {
+    html+='<div class="pace-display"><div class="pace-value">'+pace.pace+'</div><div class="pace-unit">páginas por hora</div>'
+      +'<p class="pace-sub">'+pace.pages+' páginas em '+formatDuration(pace.seconds)+'</p></div>';
+  }
+  html+='</div>';
+
+  var longest=longestSession(period);
+  html+='<div class="chart-card"><h3>Maior sessão do período</h3>';
+  if(!longest){
+    html+='<p class="crono-empty-hint">Nenhuma sessão registrada nesse período.</p>';
+  } else {
+    var d3=new Date(longest.createdAt||longest.endTime||Date.now());
+    var dateStr3=pad(d3.getDate())+'/'+pad(d3.getMonth()+1)+'/'+d3.getFullYear();
+    var coverH3=longest.bookCover?'<div class="spotlight-cover"><img src="'+longest.bookCover+'"/></div>':'<div class="spotlight-cover no-img" style="background:'+cvColor(longest.bookTitle)+'">📖</div>';
+    html+='<div class="spotlight-session">'
+      +coverH3
+      +'<div class="spotlight-info">'
+        +'<div class="spotlight-title">'+escHtml(longest.bookTitle)+'</div>'
+        +'<div class="spotlight-author">'+escHtml(longest.bookAuthor||'')+'</div>'
+        +'<div class="spotlight-date">'+dateStr3+'</div>'
+        +'<div class="spotlight-duration">'+elapsedDisplay(longest.durationSeconds||0)+'</div>'
+      +'</div>'
+    +'</div>';
+  }
+  html+='</div>';
+
+  html+='</div>'; // stats-grid-3
+  html+='<p class="crono-empty-hint" style="margin-top:1.5rem;">Mais análises (heatmap, dia da semana, horários preferidos) chegam nas próximas rodadas.</p>';
+  html+='</div>';
+
+  area.innerHTML=html;
+
+  var periodBtns=area.querySelectorAll('[data-period]');
+  for(var pi=0;pi<periodBtns.length;pi++){
+    (function(btn){
+      btn.onclick=function(){statsPeriod=btn.getAttribute('data-period');renderEstatisticas();};
+    })(periodBtns[pi]);
+  }
+}
+
 /* ── wiring ── */
-document.getElementById('btn-grid').onclick=function(){viewMode='grid';render();};
-document.getElementById('btn-list').onclick=function(){viewMode='list';render();};
+function goToTab(tab){
+  activeTab=tab;
+  isolatedBookId=null;
+  viewMode='grid';
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+var navItemEls=document.querySelectorAll('.nav-item');
+for(var nvi=0;nvi<navItemEls.length;nvi++){
+  (function(el){
+    el.onclick=function(){goToTab(el.getAttribute('data-tab'));};
+  })(navItemEls[nvi]);
+}
+
+function applySidebarCollapsedState(){
+  var sb=document.getElementById('sidebar');
+  if(sb)sb.classList.toggle('collapsed',sidebarCollapsed);
+}
+var storedSidebarPref=localStorage.getItem('epv_sidebar_collapsed');
+if(storedSidebarPref===null){
+  sidebarCollapsed=window.innerWidth<820;
+} else {
+  sidebarCollapsed=storedSidebarPref==='1';
+}
+applySidebarCollapsedState();
+document.getElementById('btn-collapse-sidebar').onclick=function(){
+  sidebarCollapsed=!sidebarCollapsed;
+  localStorage.setItem('epv_sidebar_collapsed',sidebarCollapsed?'1':'0');
+  applySidebarCollapsedState();
+};
+
 document.getElementById('btn-add').onclick=function(){
   editingId='new';pendingCoverData=null;render();
   setTimeout(function(){var fc=document.getElementById('form-card');if(fc)fc.scrollIntoView({behavior:'smooth',block:'center'});},50);
@@ -981,7 +2471,12 @@ document.getElementById('btn-add').onclick=function(){
 document.getElementById('search-input').oninput=function(e){searchTerm=e.target.value;renderBooks();};
 document.getElementById('filter-status').onchange=function(e){filterStatus=e.target.value;renderBooks();};
 document.getElementById('sort-mode').onchange=function(e){sortMode=e.target.value;renderBooks();};
-function applyUser(){var n=document.getElementById('user-input').value.trim();saveUser(n);render();}
+
+function applyUser(){
+  var n=document.getElementById('user-input').value.trim();
+  saveUser(n);
+  render();
+}
 document.getElementById('user-input').onkeydown=function(e){if(e.key==='Enter')applyUser();};
 document.getElementById('btn-user-search').onclick=applyUser;
 
