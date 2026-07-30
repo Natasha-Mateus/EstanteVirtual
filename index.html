@@ -812,6 +812,39 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .heatmap-legend .heatmap-cell{width:10px;height:10px;}
 .heatmap-summary{font-size:12.5px;color:var(--text-sub);margin-top:10px;}
 
+.stats-grid-2{display:-webkit-grid;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:1.3rem;}
+@media(max-width:800px){.stats-grid-2{grid-template-columns:1fr;}}
+
+.timeline-list{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;}
+.timeline-item{display:-webkit-flex;display:flex;gap:10px;padding:9px 0 9px 14px;border-left:2px solid rgba(74,46,16,0.5);position:relative;}
+.timeline-item::before{content:'';position:absolute;left:-6px;top:14px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(201,168,76,0.5);}
+.timeline-item:last-child{border-left-color:transparent;}
+.timeline-icon{font-size:15px;flex-shrink:0;line-height:1.5;}
+.timeline-content{-webkit-flex:1;flex:1;min-width:0;}
+.timeline-text{font-size:13px;color:var(--cream);line-height:1.4;}
+.timeline-text strong{color:var(--gold-light);font-weight:600;}
+.timeline-date{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:2px;}
+
+.list-row-card{
+  background:-webkit-linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
+  background:linear-gradient(135deg,rgba(26,16,7,0.95),rgba(18,10,3,0.97));
+  border:1px solid var(--border-gold);border-radius:var(--radius-md);
+  padding:0.9rem 1.1rem;margin-bottom:10px;cursor:pointer;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.list-row-card:hover{border-color:var(--gold-dim);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
+.list-row-header{display:-webkit-flex;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.list-row-name{font-family:var(--font-title);font-size:14px;color:var(--cream);}
+.list-row-count{font-size:12px;color:var(--gold);white-space:nowrap;}
+.list-row-bar{height:5px;background:rgba(90,52,24,0.5);border-radius:3px;overflow:hidden;margin-top:9px;}
+.list-row-fill{height:100%;background:-webkit-linear-gradient(90deg,#d4822a,#c9a84c);background:linear-gradient(90deg,#d4822a,#c9a84c);}
+
+.config-form-row{margin-bottom:18px;max-width:320px;}
+.config-form-row label{display:block;font-size:13px;color:var(--text-sub);margin-bottom:6px;font-style:italic;}
+.config-form-row input{width:100%;}
+.config-hint{font-size:12px;color:var(--text-dim);margin-top:6px;font-style:italic;}
+.config-saved-msg{color:#80c070;font-size:12.5px;margin-top:8px;display:none;}
+
 @media(max-width:900px){
   .stats-grid-3{grid-template-columns:1fr;}
 }
@@ -1012,6 +1045,7 @@ let sidebarCollapsed=false;
 let selYear=(new Date()).getFullYear(),selMonth=(new Date()).getMonth()+1;
 let statsPeriod='ano';
 let heatmapYear=(new Date()).getFullYear();
+let genreFilter='';
 let allSessions={},myActiveSession=null,myStats={currentStreak:0,longestStreak:0,lastSessionDate:''};
 let activeSessionListenerRef=null,statsListenerRef=null,goalsListenerRef=null,cronoTimerInterval=null,cronoSelectedBookId=null,cronoSearchTerm='',editingSessionId=null;
 let myGoals={annualBooks:0,monthlyPages:0};
@@ -1119,6 +1153,7 @@ function filtered(){
   });
 
   if(filterStatus!=='Todos')list=list.filter(function(b){return myStatus(b)===filterStatus;});
+  if(genreFilter)list=list.filter(function(b){return((b.genre||'').trim()||'Sem gênero')===genreFilter;});
   if(searchTerm.trim()){var t=searchTerm.trim().toLowerCase();list=list.filter(function(b){return(b.title||'').toLowerCase().indexOf(t)>-1||(b.author||'').toLowerCase().indexOf(t)>-1;});}
   
   if(sortMode=='recent') {
@@ -1201,7 +1236,10 @@ function render(){
     if(formArea)formArea.innerHTML='';
     document.getElementById('back-container').innerHTML='';
     if(activeTab==='estatisticas')renderEstatisticas();
-    else renderPlaceholder(activeTab);
+    else if(activeTab==='metas')renderMetas();
+    else if(activeTab==='generos')renderGeneros();
+    else if(activeTab==='autores')renderAutores();
+    else if(activeTab==='config')renderConfiguracoes();
     return;
   }
 
@@ -1214,7 +1252,16 @@ function render(){
 
   var total=filtered().length;
   var bc=document.getElementById('book-count');
-  if(bc) bc.textContent=total+(total===1?' livro':' livros')+(activeTab==='desejos'?' na lista de desejos':' na estante');
+  if(bc){
+    var countText=total+(total===1?' livro':' livros')+(activeTab==='desejos'?' na lista de desejos':' na estante');
+    if(genreFilter){
+      bc.innerHTML=countText+' · gênero: <strong style="color:var(--gold-light);">'+escHtml(genreFilter)+'</strong> <button id="btn-clear-genre-filter" style="height:22px;padding:0 8px;font-size:11px;margin-left:6px;">✕ limpar</button>';
+      var clearBtn=document.getElementById('btn-clear-genre-filter');
+      if(clearBtn)clearBtn.onclick=function(){genreFilter='';render();};
+    } else {
+      bc.textContent=countText;
+    }
+  }
 
   var si=document.getElementById('search-input'),fs=document.getElementById('filter-status'),sm=document.getElementById('sort-mode');
   if(si)si.value=searchTerm;
@@ -2393,6 +2440,157 @@ function buildHeatmapData(year){
   return dayMap;
 }
 
+var WEEKDAY_LABELS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+var TIME_OF_DAY_COLORS={'Madrugada':'#3a5a8a','Manhã':'#c9a84c','Tarde':'#d4822a','Noite':'#5a3a8a'};
+var TIME_OF_DAY_ORDER=['Madrugada','Manhã','Tarde','Noite'];
+
+function weekdayDistribution(period){
+  var sessions=sessionsInPeriod(period);
+  var minutes=new Array(7).fill(0);
+  sessions.forEach(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    minutes[d.getDay()]+=Math.round((s.durationSeconds||0)/60);
+  });
+  return minutes;
+}
+
+function weekdayChartHtml(period){
+  var minutes=weekdayDistribution(period);
+  var total=minutes.reduce(function(a,b){return a+b;},0);
+  if(total===0)return '<p class="crono-empty-hint">Nenhuma sessão registrada nesse período.</p>';
+  var max=Math.max(1,Math.max.apply(null,minutes));
+  var html='<div class="bar-chart">';
+  for(var i=0;i<7;i++){
+    var h=Math.round((minutes[i]/max)*100);
+    var cls='bar-chart-bar'+(minutes[i]===0?' empty':'');
+    html+='<div class="bar-chart-col">'
+      +(minutes[i]>0?'<div class="bar-chart-value">'+minutes[i]+'m</div>':'')
+      +'<div class="'+cls+'" style="height:'+Math.max(h,3)+'%;"></div>'
+      +'<div class="bar-chart-label">'+WEEKDAY_LABELS[i]+'</div>'
+    +'</div>';
+  }
+  html+='</div>';
+  return html;
+}
+
+function timeOfDayDistribution(period){
+  var sessions=sessionsInPeriod(period);
+  var buckets={'Madrugada':0,'Manhã':0,'Tarde':0,'Noite':0};
+  sessions.forEach(function(s){
+    var d=new Date(s.startTime);
+    var h=d.getHours();
+    var min=Math.round((s.durationSeconds||0)/60);
+    if(h>=0&&h<6)buckets['Madrugada']+=min;
+    else if(h>=6&&h<12)buckets['Manhã']+=min;
+    else if(h>=12&&h<18)buckets['Tarde']+=min;
+    else buckets['Noite']+=min;
+  });
+  return buckets;
+}
+
+function timeOfDayHtml(period){
+  var buckets=timeOfDayDistribution(period);
+  var total=0;
+  Object.keys(buckets).forEach(function(k){total+=buckets[k];});
+  if(total===0)return '<p class="crono-empty-hint">Nenhuma sessão registrada nesse período.</p>';
+  var gradParts=[],acc=0;
+  TIME_OF_DAY_ORDER.forEach(function(k){
+    var pct=buckets[k]/total*360;
+    if(pct>0){
+      gradParts.push(TIME_OF_DAY_COLORS[k]+' '+acc+'deg '+(acc+pct)+'deg');
+      acc+=pct;
+    }
+  });
+  var donut='<div class="donut" style="background:conic-gradient('+gradParts.join(',')+');"></div>';
+  var legend='<div class="donut-legend">'+TIME_OF_DAY_ORDER.map(function(k){
+    var pct=total?Math.round(buckets[k]/total*100):0;
+    return '<div class="donut-legend-item"><span><span class="donut-legend-swatch" style="background:'+TIME_OF_DAY_COLORS[k]+';"></span>'+k+'</span><span>'+pct+'%</span></div>';
+  }).join('')+'</div>';
+  return donut+legend;
+}
+
+function dateInPeriod(d,period){
+  if(period==='tudo')return true;
+  var now=new Date();
+  if(period==='mes')return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
+  return d.getFullYear()===now.getFullYear();
+}
+
+function computeStreakEvents(){
+  var mySessions=getMySessions();
+  var daysSet={};
+  mySessions.forEach(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    daysSet[d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())]=true;
+  });
+  var days=Object.keys(daysSet).sort();
+  var events=[],runLen=0,prevDate=null;
+  for(var i=0;i<days.length;i++){
+    var d=days[i];
+    runLen=(prevDate&&daysBetween(prevDate,d)===1)?runLen+1:1;
+    prevDate=d;
+    var isLast=(i===days.length-1);
+    var nextContinues=!isLast&&daysBetween(d,days[i+1])===1;
+    if(!nextContinues&&runLen>=3)events.push({date:d,length:runLen});
+  }
+  return events;
+}
+
+function buildTimelineEvents(period){
+  var events=[];
+  getMySessions().forEach(function(s){
+    var d=new Date(s.createdAt||s.startTime);
+    if(!dateInPeriod(d,period))return;
+    events.push({type:'session',timestamp:s.createdAt||s.startTime,date:d,bookTitle:s.bookTitle,durationSeconds:s.durationSeconds,pagesRead:s.pagesRead});
+  });
+
+  var key=sKey(currentUser);
+  booksArr().filter(function(b){return !b.wishlist;}).forEach(function(b){
+    var dend=(b.dates&&b.dates[key]&&b.dates[key].end)||'';
+    if(!dend)return;
+    var d=new Date(dend+'T12:00:00');
+    if(!dateInPeriod(d,period))return;
+    events.push({type:'finished',timestamp:d.getTime(),date:d,bookTitle:b.title,bookAuthor:b.author});
+  });
+
+  computeStreakEvents().forEach(function(ev){
+    var d=new Date(ev.date+'T12:00:00');
+    if(!dateInPeriod(d,period))return;
+    events.push({type:'streak',timestamp:d.getTime(),date:d,length:ev.length});
+  });
+
+  events.sort(function(a,b){return b.timestamp-a.timestamp;});
+  return events;
+}
+
+function timelineHtml(period){
+  var events=buildTimelineEvents(period).slice(0,25);
+  if(events.length===0)return '<p class="crono-empty-hint">Nenhuma atividade registrada nesse período.</p>';
+  var html='<div class="timeline-list">';
+  events.forEach(function(ev){
+    var dateStr=pad(ev.date.getDate())+'/'+pad(ev.date.getMonth()+1)+'/'+ev.date.getFullYear();
+    var icon,text;
+    if(ev.type==='session'){
+      icon='📖';
+      var timeStr=' às '+pad(ev.date.getHours())+':'+pad(ev.date.getMinutes());
+      text='Sessão de leitura: <strong>'+formatDuration(ev.durationSeconds||0)+'</strong> em "'+escHtml(ev.bookTitle)+'"'+(ev.pagesRead?' · '+ev.pagesRead+' pág.':'');
+      dateStr+=timeStr;
+    } else if(ev.type==='finished'){
+      icon='✅';
+      text='Concluiu <strong>"'+escHtml(ev.bookTitle)+'"</strong>'+(ev.bookAuthor?' de '+escHtml(ev.bookAuthor):'');
+    } else {
+      icon='🔥';
+      text='Bateu <strong>'+ev.length+' dias seguidos</strong> de leitura!';
+    }
+    html+='<div class="timeline-item">'
+      +'<div class="timeline-icon">'+icon+'</div>'
+      +'<div class="timeline-content"><div class="timeline-text">'+text+'</div><div class="timeline-date">'+dateStr+'</div></div>'
+    +'</div>';
+  });
+  html+='</div>';
+  return html;
+}
+
 function heatmapHtml(year){
   var dayMap=buildHeatmapData(year);
   var start=new Date(year,0,1);
@@ -2531,7 +2729,12 @@ function renderEstatisticas(){
 
   html+='<div class="chart-card heatmap-card" style="margin-top:1.3rem;"><h3>Consistência de leitura (heatmap)</h3>'+heatmapHtml(heatmapYear)+'</div>';
 
-  html+='<p class="crono-empty-hint" style="margin-top:1.5rem;">Mais análises (dia da semana, horários preferidos, timeline) chegam nas próximas rodadas.</p>';
+  html+='<div class="stats-grid-2">'
+    +'<div class="chart-card"><h3>Leitura por dia da semana</h3>'+weekdayChartHtml(period)+'</div>'
+    +'<div class="chart-card" style="text-align:center;"><h3 style="text-align:left;">Horários preferidos de leitura</h3>'+timeOfDayHtml(period)+'</div>'
+  +'</div>';
+
+  html+='<div class="chart-card" style="margin-top:1.3rem;"><h3>Timeline de atividades</h3>'+timelineHtml(period)+'</div>';
   html+='</div>';
 
   area.innerHTML=html;
@@ -2549,6 +2752,172 @@ function renderEstatisticas(){
   if(nextYearBtn&&!nextYearBtn.disabled)nextYearBtn.onclick=function(){
     if(heatmapYear<(new Date()).getFullYear()){heatmapYear++;renderEstatisticas();}
   };
+}
+
+/* ── CONFIGURAÇÕES ── */
+function renderConfiguracoes(){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  if(!currentUser){
+    area.innerHTML='<div class="visao-wrap"><p class="crono-empty-hint">Digite seu nome no topo da página para acessar suas configurações.</p></div>';
+    return;
+  }
+  var html='<div class="visao-wrap">';
+  html+='<div class="crono-intro"><h2>✦ Configurações ✦</h2><p>Preferências de '+escHtml(currentUser)+' — suas metas são só suas; sua irmã tem as dela.</p></div>';
+  html+='<div class="chart-card" style="max-width:420px;">';
+  html+='<div class="config-form-row"><label>Meta anual de livros</label><input type="number" min="1" id="cfg-annual" value="'+(myGoals.annualBooks||'')+'" placeholder="Ex: 24"/></div>';
+  html+='<div class="config-form-row"><label>Meta mensal de páginas</label><input type="number" min="1" id="cfg-monthly-pages" value="'+(myGoals.monthlyPages||'')+'" placeholder="Ex: 400"/></div>';
+  html+='<button class="primary" id="btn-save-config">Salvar</button>';
+  html+='<p class="config-saved-msg" id="config-saved-msg">Salvo!</p>';
+  html+='<p class="config-hint">Essas metas podem ser alteradas quantas vezes você quiser durante o ano.</p>';
+  html+='</div>';
+  html+='</div>';
+  area.innerHTML=html;
+
+  var saveBtn=document.getElementById('btn-save-config');
+  if(saveBtn)saveBtn.onclick=function(){
+    var a=parseInt(document.getElementById('cfg-annual').value,10)||0;
+    var m=parseInt(document.getElementById('cfg-monthly-pages').value,10)||0;
+    goalsRef.child(sKey(currentUser)).set({annualBooks:a,monthlyPages:m}).then(function(){
+      var msg=document.getElementById('config-saved-msg');
+      if(msg){msg.style.display='block';setTimeout(function(){msg.style.display='none';},2500);}
+    }).catch(function(err){
+      alert('Não foi possível salvar: '+err.message);
+    });
+  };
+}
+
+/* ── METAS DE LEITURA ── */
+function renderMetas(){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  if(!currentUser){
+    area.innerHTML='<div class="visao-wrap"><p class="crono-empty-hint">Digite seu nome no topo da página para ver suas metas.</p></div>';
+    return;
+  }
+  var html='<div class="visao-wrap">';
+  html+='<div class="crono-intro"><h2>✦ Metas de Leitura ✦</h2><p>Seu progresso em '+escHtml(currentUser)+'.</p></div>';
+
+  html+='<div class="stats-grid-2">';
+
+  html+='<div class="chart-card" style="text-align:center;">';
+  html+='<h3 style="text-align:left;">Meta anual de livros</h3>';
+  var goalProg=computeAnnualGoalProgress();
+  if(goalProg.goal>0){
+    var now=new Date();
+    var monthsRemaining=12-(now.getMonth()+1)+1;
+    var booksRemaining=Math.max(0,goalProg.goal-goalProg.count);
+    var pace=monthsRemaining>0?(booksRemaining/monthsRemaining).toFixed(1):booksRemaining;
+    html+='<div class="goal-ring" style="background:conic-gradient(var(--gold) '+goalProg.pct+'%, rgba(90,52,24,0.35) 0);">'
+      +'<div class="goal-ring-text"><div class="goal-ring-pct">'+goalProg.pct+'%</div><div class="goal-ring-label">da meta</div></div>'
+    +'</div>'
+    +'<p class="goal-meta-info">Meta anual: '+goalProg.goal+' livros · Progresso: '+goalProg.count+'/'+goalProg.goal+'</p>';
+    if(booksRemaining>0){
+      html+='<p class="config-hint" style="text-align:center;margin-top:8px;">Faltam '+booksRemaining+' livro'+(booksRemaining===1?'':'s')+' — ritmo de ~'+pace+' livro'+(pace==1?'':'s')+'/mês até dezembro de '+goalProg.year+'.</p>';
+    } else {
+      html+='<p class="config-hint" style="text-align:center;margin-top:8px;color:#80c070;">Meta já batida esse ano! 🎉</p>';
+    }
+  } else {
+    html+='<p class="crono-empty-hint">Você ainda não definiu uma meta anual. Vá em Configurações para definir.</p>';
+  }
+  html+='</div>';
+
+  html+='<div class="chart-card">';
+  html+='<h3>Meta mensal de páginas</h3>';
+  if(myGoals.monthlyPages>0){
+    var now2=new Date();
+    var monthStats=computeVisaoStats(now2.getFullYear(),now2.getMonth()+1);
+    var pct2=Math.min(100,Math.round(monthStats.pagesMonth/myGoals.monthlyPages*100));
+    html+='<p style="font-size:13px;color:var(--text-sub);margin-bottom:8px;">'+MONTH_NAMES[now2.getMonth()]+' de '+now2.getFullYear()+'</p>'
+      +'<div class="prog-track" style="height:8px;"><div class="prog-fill" style="width:'+pct2+'%"></div></div>'
+      +'<p class="goal-meta-info" style="margin-top:10px;">'+monthStats.pagesMonth+' / '+myGoals.monthlyPages+' páginas ('+pct2+'%)</p>';
+    if(monthStats.pagesMonth<myGoals.monthlyPages){
+      html+='<p class="config-hint">Faltam '+(myGoals.monthlyPages-monthStats.pagesMonth)+' páginas para bater a meta do mês.</p>';
+    } else {
+      html+='<p class="config-hint" style="color:#80c070;">Meta do mês batida! 🎉</p>';
+    }
+  } else {
+    html+='<p class="crono-empty-hint">Você ainda não definiu uma meta mensal de páginas. Vá em Configurações para definir.</p>';
+  }
+  html+='</div>';
+
+  html+='</div>'; // stats-grid-2
+  html+='</div>';
+  area.innerHTML=html;
+}
+
+/* ── AUTORES ── */
+function renderAutores(){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  var counts={};
+  booksArr().filter(function(b){return !b.wishlist;}).forEach(function(b){
+    var a=(b.author||'').trim()||'Desconhecido';
+    counts[a]=(counts[a]||0)+1;
+  });
+  var arr=Object.keys(counts).map(function(a){return{author:a,count:counts[a]};});
+  arr.sort(function(x,y){return y.count-x.count||x.author.localeCompare(y.author,'pt-BR');});
+  var max=Math.max(1,arr.length?arr[0].count:1);
+
+  var html='<div class="visao-wrap">';
+  html+='<div class="crono-intro"><h2>✦ Autores ✦</h2><p>Todos os autores da estante compartilhada.</p></div>';
+  if(arr.length===0){
+    html+='<p class="crono-empty-hint">Nenhum livro cadastrado ainda.</p>';
+  } else {
+    arr.forEach(function(it){
+      var pct=Math.round(it.count/max*100);
+      html+='<div class="list-row-card" data-author="'+escHtml(it.author)+'">'
+        +'<div class="list-row-header"><span class="list-row-name">'+escHtml(it.author)+'</span><span class="list-row-count">'+it.count+(it.count===1?' livro':' livros')+'</span></div>'
+        +'<div class="list-row-bar"><div class="list-row-fill" style="width:'+pct+'%"></div></div>'
+      +'</div>';
+    });
+  }
+  html+='</div>';
+  area.innerHTML=html;
+
+  var rows=area.querySelectorAll('[data-author]');
+  for(var i=0;i<rows.length;i++){
+    (function(el){
+      el.onclick=function(){
+        searchTerm=el.getAttribute('data-author');
+        genreFilter='';
+        goToTab('estante');
+      };
+    })(rows[i]);
+  }
+}
+
+/* ── GÊNEROS ── */
+function renderGeneros(){
+  var area=document.getElementById('placeholder-area');
+  if(!area)return;
+  var data=genreDistribution();
+
+  var html='<div class="visao-wrap">';
+  html+='<div class="crono-intro"><h2>✦ Gêneros ✦</h2><p>Distribuição da estante compartilhada por gênero.</p></div>';
+  if(data.total===0){
+    html+='<p class="crono-empty-hint">Nenhum livro cadastrado ainda.</p>';
+  } else {
+    data.items.forEach(function(it,idx){
+      html+='<div class="list-row-card" data-genre="'+escHtml(it.genre)+'">'
+        +'<div class="list-row-header"><span class="list-row-name"><span class="donut-legend-swatch" style="background:'+GENRE_COLORS[idx%GENRE_COLORS.length]+';margin-right:8px;"></span>'+escHtml(it.genre)+'</span><span class="list-row-count">'+it.count+(it.count===1?' livro':' livros')+' · '+it.pct+'%</span></div>'
+        +'<div class="list-row-bar"><div class="list-row-fill" style="width:'+it.pct+'%"></div></div>'
+      +'</div>';
+    });
+  }
+  html+='</div>';
+  area.innerHTML=html;
+
+  var rows=area.querySelectorAll('[data-genre]');
+  for(var i=0;i<rows.length;i++){
+    (function(el){
+      el.onclick=function(){
+        genreFilter=el.getAttribute('data-genre');
+        searchTerm='';
+        goToTab('estante');
+      };
+    })(rows[i]);
+  }
 }
 
 /* ── wiring ── */
