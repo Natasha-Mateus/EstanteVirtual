@@ -323,6 +323,15 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .cover-controls input[type="file"]{font-size:12px;height:auto;border:none;padding:0;background:transparent;color:var(--text-sub);}
 .hint{font-size:12px;color:var(--text-dim);font-style:italic;}
 .form-error{color:#c07070;font-size:14px;margin-bottom:8px;display:none;}
+.ai-fill-row{display:-webkit-flex;display:flex;align-items:center;gap:10px;margin-bottom:14px;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
+.ai-fill-row button{background:-webkit-linear-gradient(135deg,#3a2a5a,#241a3d);background:linear-gradient(135deg,#3a2a5a,#241a3d);border-color:#6a4a9a;color:#c9b8e8;}
+.ai-fill-row button:hover{background:-webkit-linear-gradient(135deg,#4a3570,#2e2249);background:linear-gradient(135deg,#4a3570,#2e2249);border-color:#8a6ac0;color:#ddd0f5;}
+.ai-fill-row button:disabled{opacity:0.6;cursor:default;}
+.ai-fill-hint{font-size:12px;color:var(--text-dim);font-style:italic;}
+.ai-fill-status{font-size:13px;margin-bottom:14px;padding:8px 12px;border-radius:var(--radius-sm);display:none;}
+.ai-fill-status.loading{color:var(--gold);background:rgba(201,168,76,0.08);display:block;}
+.ai-fill-status.error{color:#c07070;background:rgba(150,40,40,0.08);display:block;}
+.ai-fill-status.success{color:#80c070;background:rgba(60,120,50,0.08);display:block;}
 .form-actions{display:-webkit-flex;display:flex;gap:8px;-webkit-align-items:center;align-items:center;}
 .spacer-btn{margin-left:auto;}
 
@@ -1322,6 +1331,11 @@ function renderForm(){
       +'<option value="Desenvolvimento Pessoal"></option><option value="História"></option><option value="Poesia"></option>'
       +'<option value="Infantojuvenil"></option>'
     +'</datalist>'
+    +'<div class="ai-fill-row">'
+      +'<button type="button" id="btn-ai-fill">✦ Preencher com IA</button>'
+      +'<span class="ai-fill-hint">Digite pelo menos o título acima e clique aqui.</span>'
+    +'</div>'
+    +'<p class="ai-fill-status" id="ai-fill-status"></p>'
     +'<div class="wish-row">'
       +'<input type="checkbox" id="f-wishlist"'+(book.wishlist?' checked':'')+'/>'
       +'<label for="f-wishlist">📌 Lista de desejos</label>'
@@ -1346,6 +1360,8 @@ function renderForm(){
     +'</div>'
   +'</div>';
   document.getElementById('f-cancel').onclick=function(){editingId=null;pendingCoverData=null;render();};
+  var aiBtn=document.getElementById('btn-ai-fill');
+  if(aiBtn)aiBtn.onclick=function(){aiFillForm();};
   document.getElementById('f-save').onclick=function(){saveForm(book);};
   document.getElementById('f-cover-file').onchange=function(e){
     var file=e.target.files[0];if(!file)return;
@@ -1364,6 +1380,57 @@ function renderForm(){
   attachRemove();
   var del=document.getElementById('f-delete');
   if(del)del.onclick=function(){var id=editingId;editingId=null;pendingCoverData=null;booksRef.child(id).remove();isolatedBookId=null;};
+}
+
+function aiFillForm(){
+  var titleEl=document.getElementById('f-title');
+  var authorEl=document.getElementById('f-author');
+  var title=titleEl?titleEl.value.trim():'';
+  var author=authorEl?authorEl.value.trim():'';
+  var statusEl=document.getElementById('ai-fill-status');
+  var btn=document.getElementById('btn-ai-fill');
+
+  if(!title){
+    if(statusEl){statusEl.className='ai-fill-status error';statusEl.textContent='Digite pelo menos o título antes de buscar com IA.';}
+    return;
+  }
+
+  if(btn){btn.disabled=true;btn.textContent='Buscando...';}
+  if(statusEl){statusEl.className='ai-fill-status loading';statusEl.textContent='Consultando a IA, aguarde...';}
+
+  fetch('/api/buscar-livro',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({titulo:title,autor:author})
+  }).then(function(resp){
+    return resp.json().then(function(data){return{ok:resp.ok,data:data};});
+  }).then(function(result){
+    var data=result.data;
+    if(!result.ok||!data.encontrado){
+      if(statusEl){statusEl.className='ai-fill-status error';statusEl.textContent=(data&&data.mensagem)||'Não encontrei esse livro. Tente adicionar o autor e buscar de novo.';}
+      return;
+    }
+    if(authorEl&&data.autor)authorEl.value=data.autor;
+    var pagesEl=document.getElementById('f-pages');
+    if(pagesEl&&data.paginas)pagesEl.value=data.paginas;
+    var genreEl=document.getElementById('f-genre');
+    if(genreEl&&data.genero)genreEl.value=data.genero;
+    if(data.capaUrl){
+      pendingCoverData=data.capaUrl;
+      var preview=document.getElementById('cover-preview');
+      if(preview)preview.innerHTML='<img src="'+data.capaUrl+'"/>';
+      var slot=document.getElementById('cover-remove-slot');
+      if(slot&&!document.getElementById('f-cover-remove')){
+        slot.innerHTML='<button id="f-cover-remove" type="button" style="font-size:12px;height:28px;padding:0 10px;">Remover foto</button>';
+        attachRemove();
+      }
+    }
+    if(statusEl){statusEl.className='ai-fill-status success';statusEl.textContent='Encontrado! Revise os campos e clique em Salvar quando estiver tudo certo.';}
+  }).catch(function(err){
+    if(statusEl){statusEl.className='ai-fill-status error';statusEl.textContent='Erro ao conectar com a IA: '+err.message;}
+  }).finally(function(){
+    if(btn){btn.disabled=false;btn.textContent='✦ Preencher com IA';}
+  });
 }
 
 function attachRemove(){

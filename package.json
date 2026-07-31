@@ -1,0 +1,8 @@
+{
+  "name": "capitulo-compartilhado",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "jsdom": "^30.0.1"
+  }
+}
