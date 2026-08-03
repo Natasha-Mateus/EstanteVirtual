@@ -1415,7 +1415,9 @@ function aiFillForm(){
     if(pagesEl&&data.paginas)pagesEl.value=data.paginas;
     var genreEl=document.getElementById('f-genre');
     if(genreEl&&data.genero)genreEl.value=data.genero;
+    var foundCover=false;
     if(data.capaUrl){
+      foundCover=true;
       pendingCoverData=data.capaUrl;
       var preview=document.getElementById('cover-preview');
       if(preview)preview.innerHTML='<img src="'+data.capaUrl+'"/>';
@@ -1425,7 +1427,12 @@ function aiFillForm(){
         attachRemove();
       }
     }
-    if(statusEl){statusEl.className='ai-fill-status success';statusEl.textContent='Encontrado! Revise os campos e clique em Salvar quando estiver tudo certo.';}
+    if(statusEl){
+      statusEl.className='ai-fill-status success';
+      statusEl.textContent=foundCover
+        ?'Encontrado! Revise os campos e clique em Salvar quando estiver tudo certo.'
+        :'Encontrado! Não achei uma capa automaticamente — escolha uma foto manualmente abaixo, se quiser. Revise os outros campos e clique em Salvar.';
+    }
   }).catch(function(err){
     if(statusEl){statusEl.className='ai-fill-status error';statusEl.textContent='Erro ao conectar com a IA: '+err.message;}
   }).finally(function(){
