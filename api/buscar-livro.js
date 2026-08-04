@@ -124,6 +124,42 @@ module.exports = async function handler(req, res) {
   // compartilham faixas de IP com outros projetos, esse limite pode já estar estourado por
   // terceiros). Por isso usamos GOOGLE_BOOKS_API_KEY quando disponível — mas seguimos tentando
   // sem chave como último recurso, caso a variável não esteja configurada.
+  //
+  // Importante: só aceitamos a capa de um resultado se título/autor baterem de forma razoável
+  // com o que foi pedido. Preferimos não trazer nenhuma capa a trazer a de um livro errado.
+  function normalizar(s) {
+    return (s || '')
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9 ]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function tituloBate(consulta, resultado) {
+    const q = normalizar(consulta);
+    const r = normalizar(resultado);
+    if (!q || !r) return false;
+    if (r.includes(q) || q.includes(r)) return true;
+    const qWords = q.split(' ').filter((w) => w.length > 2);
+    if (qWords.length === 0) return false;
+    const rWords = new Set(r.split(' '));
+    const bateram = qWords.filter((w) => rWords.has(w)).length;
+    return bateram / qWords.length >= 0.6;
+  }
+
+  function autorBate(consulta, autoresResultado) {
+    const q = normalizar(consulta);
+    if (!q) return true; // sem autor pra comparar, não bloqueia
+    const lista = autoresResultado || [];
+    return lista.some((a) => {
+      const na = normalizar(a);
+      if (!na) return false;
+      if (na.includes(q) || q.includes(na)) return true;
+      return q.split(' ').some((w) => w.length > 2 && na.includes(w));
+    });
+  }
+
   let capaUrl = '';
   let capaErro = '';
   const booksApiKey = process.env.GOOGLE_BOOKS_API_KEY;
@@ -148,15 +184,22 @@ module.exports = async function handler(req, res) {
       const items = booksData.items || [];
       for (const item of items) {
         const volumeInfo = item && item.volumeInfo;
-        const thumb = volumeInfo && volumeInfo.imageLinks &&
+        if (!volumeInfo) continue;
+
+        const bateTitulo = tituloBate(tituloBusca, volumeInfo.title || '');
+        const bateAutor = autorBate(autorBusca, volumeInfo.authors);
+        if (!bateTitulo || !bateAutor) continue; // resultado não confiável o suficiente, pula
+
+        if (!parsed.paginas && volumeInfo.pageCount) parsed.paginas = volumeInfo.pageCount;
+
+        const thumb = volumeInfo.imageLinks &&
           (volumeInfo.imageLinks.thumbnail || volumeInfo.imageLinks.smallThumbnail);
         if (thumb) {
           capaUrl = thumb.replace('http://', 'https://');
-          if (!parsed.paginas && volumeInfo.pageCount) parsed.paginas = volumeInfo.pageCount;
           break;
         }
-        if (!parsed.paginas && volumeInfo && volumeInfo.pageCount) parsed.paginas = volumeInfo.pageCount;
       }
+      if (!capaUrl && items.length > 0) capaErro = 'Encontrei resultados, mas nenhum com título/autor correspondentes o suficiente.';
     } catch (e) {
       capaErro = 'Falha ao contatar Google Books: ' + e.message;
     }
