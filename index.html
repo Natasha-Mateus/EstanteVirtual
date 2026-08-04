@@ -1433,6 +1433,9 @@ function aiFillForm(){
         ?'Encontrado! Revise os campos e clique em Salvar quando estiver tudo certo.'
         :'Encontrado! Não achei uma capa automaticamente — escolha uma foto manualmente abaixo, se quiser. Revise os outros campos e clique em Salvar.';
     }
+    if(!foundCover&&data.capaDebug){
+      console.warn('[Preencher com IA] motivo da capa não encontrada:',data.capaDebug);
+    }
   }).catch(function(err){
     if(statusEl){statusEl.className='ai-fill-status error';statusEl.textContent='Erro ao conectar com a IA: '+err.message;}
   }).finally(function(){
