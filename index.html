@@ -820,6 +820,10 @@ button.danger:hover{background:rgba(80,20,20,0.6);border-color:#c07070;}
 .heatmap-legend{display:-webkit-flex;display:flex;align-items:center;gap:4px;margin-top:12px;font-size:11px;color:var(--text-dim);justify-content:flex-end;}
 .heatmap-legend .heatmap-cell{width:10px;height:10px;}
 .heatmap-summary{font-size:12.5px;color:var(--text-sub);margin-top:10px;}
+.heatmap-detail{font-size:13px;color:var(--gold-light);margin-top:10px;padding:8px 12px;background:rgba(201,168,76,0.06);border:1px solid var(--border-gold);border-radius:var(--radius-sm);min-height:20px;}
+.heatmap-cell{cursor:pointer;}
+.heatmap-cell.pad{cursor:default;}
+.heatmap-cell.selected{box-shadow:0 0 0 2px var(--gold-light);}
 
 .stats-grid-2{display:-webkit-grid;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:1.3rem;}
 @media(max-width:800px){.stats-grid-2{grid-template-columns:1fr;}}
@@ -2550,6 +2554,27 @@ function dailyDistribution(days){
   return result;
 }
 
+function dailyHoursChartHtml(){
+  var days=14;
+  var data=dailyDistribution(days);
+  var total=data.reduce(function(a,b){return a+b.minutes;},0);
+  if(total===0)return '<p class="crono-empty-hint">Nenhuma sessão nos últimos '+days+' dias.</p>';
+  var max=Math.max(1,Math.max.apply(null,data.map(function(d){return d.minutes;})));
+  var html='<div class="bar-chart">';
+  data.forEach(function(d){
+    var h=Math.round((d.minutes/max)*100);
+    var cls='bar-chart-bar'+(d.minutes===0?' empty':'');
+    var label=pad(d.date.getDate())+'/'+pad(d.date.getMonth()+1);
+    html+='<div class="bar-chart-col">'
+      +(d.minutes>0?'<div class="bar-chart-value">'+formatDuration(d.minutes*60)+'</div>':'')
+      +'<div class="'+cls+'" style="height:'+Math.max(h,3)+'%;" title="'+label+': '+formatDuration(d.minutes*60)+', '+d.pages+' pág."></div>'
+      +'<div class="bar-chart-label">'+label+'</div>'
+    +'</div>';
+  });
+  html+='</div>';
+  return html;
+}
+
 function dailyChartHtml(){
   var days=14;
   var data=dailyDistribution(days);
@@ -2806,12 +2831,16 @@ function heatmapHtml(year){
       if(!cell){gridHtml+='<div class="heatmap-cell pad"></div>';continue;}
       var lvl=cell.info?levelFor(cell.info.minutes):0;
       var dstr=pad(cell.date.getDate())+'/'+pad(cell.date.getMonth()+1)+'/'+cell.date.getFullYear();
-      var title=cell.info?(dstr+' — '+cell.info.minutes+' min, '+cell.info.pages+' pág.'):dstr+' — sem leitura';
-      gridHtml+='<div class="heatmap-cell'+(lvl>0?' level-'+lvl:'')+'" title="'+title+'"></div>';
+      var mins=cell.info?cell.info.minutes:0;
+      var pags=cell.info?cell.info.pages:0;
+      var title=cell.info?(dstr+' — '+mins+' min, '+pags+' pág.'):dstr+' — sem leitura';
+      gridHtml+='<div class="heatmap-cell'+(lvl>0?' level-'+lvl:'')+'" title="'+title+'" data-date="'+dstr+'" data-minutes="'+mins+'" data-pages="'+pags+'"></div>';
     }
     gridHtml+='</div>';
   }
   gridHtml+='</div>';
+
+  var detailHtml='<p class="heatmap-detail" id="heatmap-detail">Toque num quadradinho para ver os detalhes do dia.</p>';
 
   var legendHtml='<div class="heatmap-legend"><span>Menos</span>'
     +'<div class="heatmap-cell"></div><div class="heatmap-cell level-1"></div><div class="heatmap-cell level-2"></div><div class="heatmap-cell level-3"></div><div class="heatmap-cell level-4"></div>'
@@ -2825,7 +2854,7 @@ function heatmapHtml(year){
       +'<button id="btn-next-heatmap-year" title="Próximo ano"'+(year>=(new Date()).getFullYear()?' disabled style="opacity:0.35;cursor:not-allowed;"':'')+'>›</button>'
     +'</div>'
     +'<div class="heatmap-scroll"><div class="heatmap-inner">'+monthsHtml+gridHtml+'</div></div>'
-    +legendHtml+summaryHtml;
+    +detailHtml+legendHtml+summaryHtml;
 }
 
 function renderEstatisticas(){
@@ -2892,8 +2921,10 @@ function renderEstatisticas(){
 
   html+='<div class="stats-grid-2">'
     +'<div class="chart-card"><h3>Páginas lidas por dia (últimos 14 dias)</h3>'+dailyChartHtml()+'</div>'
-    +'<div class="chart-card"><h3>Páginas lidas por semana (últimas 10 semanas)</h3>'+weeklyChartHtml()+'</div>'
+    +'<div class="chart-card"><h3>Horas lidas por dia (últimos 14 dias)</h3>'+dailyHoursChartHtml()+'</div>'
   +'</div>';
+
+  html+='<div class="chart-card" style="margin-top:1.3rem;"><h3>Páginas lidas por semana (últimas 10 semanas)</h3>'+weeklyChartHtml()+'</div>';
 
   html+='<div class="chart-card heatmap-card" style="margin-top:1.3rem;"><h3>Consistência de leitura (heatmap)</h3>'+heatmapHtml(heatmapYear)+'</div>';
 
@@ -2920,6 +2951,26 @@ function renderEstatisticas(){
   if(nextYearBtn&&!nextYearBtn.disabled)nextYearBtn.onclick=function(){
     if(heatmapYear<(new Date()).getFullYear()){heatmapYear++;renderEstatisticas();}
   };
+
+  var heatCells=area.querySelectorAll('.heatmap-cell[data-date]');
+  for(var hc=0;hc<heatCells.length;hc++){
+    (function(cellEl){
+      cellEl.onclick=function(){
+        var detail=document.getElementById('heatmap-detail');
+        if(detail){
+          var mins=cellEl.getAttribute('data-minutes');
+          var pags=cellEl.getAttribute('data-pages');
+          var dateStr=cellEl.getAttribute('data-date');
+          detail.textContent=mins>0
+            ?dateStr+' — '+mins+' min lidos, '+pags+' páginas.'
+            :dateStr+' — nenhuma leitura registrada.';
+        }
+        var prevSelected=area.querySelector('.heatmap-cell.selected');
+        if(prevSelected)prevSelected.classList.remove('selected');
+        cellEl.classList.add('selected');
+      };
+    })(heatCells[hc]);
+  }
 }
 
 /* ── CONFIGURAÇÕES ── */
